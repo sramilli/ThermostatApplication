@@ -136,12 +136,12 @@ public class Thermostat implements GpioPinListenerDigital {
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         GpioPin tPin = event.getPin();
         if (tPin == iModeButton.getPin()) {
-            System.out.println("Mode Button pressed!");
-            //TODO
-            //iController.switchMode();
-            //System.out.println("Switch to MODE " + iController.getState());
+            System.out.println("Thermostat: Mode Button pressed!");
+            
+            iController.switchMode();
+            System.out.println("Thermostat: Switched to MODE " + iController.getState());
         } else if (tPin == iManualTherostat.getPin()) {
-            System.out.println("Manual thermostat change!");
+            System.out.println("Thermostat: Manual thermostat change!");
             //TODO
             /*if (iManualTherostat.getPin().getValue() == ON) {  // pushing down //+Vcc
              System.out.println("Detected Manual Thermostat ON");
@@ -217,36 +217,44 @@ public class Thermostat implements GpioPinListenerDigital {
                 timer = null;
             }
             if (iStatusLED != null) {
+                System.out.println("Thermostat: Turning off Status LED");
                 iStatusLED.close();
                 iStatusLED = null;
             }
             if (iHeaterRelay != null) {
+                System.out.println("Thermostat: Turning off Relay");
                 iHeaterRelay.close();
                 iHeaterRelay = null;
             }
             if (iGreenLED != null) {
+                System.out.println("Thermostat: Turning off green LED");
                 iGreenLED.close();
                 iGreenLED = null;
             }
             if (iYellowLED != null) {
+                System.out.println("Thermostat: Turning off yellow LED");
                 iYellowLED.close();
                 iYellowLED = null;
             }
             if (iRedLED != null) {
+                System.out.println("Thermostat: Turning off red LED");
                 iRedLED.close();
                 iRedLED = null;
             }
             if (iModeButton != null) {
+                System.out.println("Thermostat: Turning off Mode Button");
                 iModeButton.setInputListener(null);
                 iModeButton.close();
                 iModeButton = null;
             }
             if (iManualTherostat != null) {
+                System.out.println("Thermostat: Turning off manual thermostat input");
                 iManualTherostat.setInputListener(null);
                 iManualTherostat.close();
                 iManualTherostat = null;
             }
             if (iSMSGateway != null) {
+                System.out.println("Thermostat: Turning off SMSGateway");
                 iSMSGateway.stop();
                 iSMSGateway = null;
             }

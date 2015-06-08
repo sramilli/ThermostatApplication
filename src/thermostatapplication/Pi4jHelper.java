@@ -14,7 +14,7 @@ import com.pi4j.io.gpio.RaspiPin;
  * @author Ste
  */
 public class Pi4jHelper {
-        public static final Pin getPin(int p) {
+        public static Pin getPin(int p) {
         switch (p) {
             case 0:
                 return RaspiPin.GPIO_00;

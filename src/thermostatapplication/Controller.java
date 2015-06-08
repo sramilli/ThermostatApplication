@@ -33,7 +33,7 @@ class Controller {
         activateOutput();
     }
 
-    public int switchMode() throws IOException {
+    public int switchMode() {
         //Controlled manually by pushing Mode button
         if (iState >= 3) {
             iState = 1;
@@ -64,7 +64,7 @@ class Controller {
             switch (iState) {
                 case 1:
                     //ON
-                    System.out.println("Switching to On");
+                    System.out.println("Switching Thermostat to On");
                     iHeaterStatus.turnOn();
                     iHeaterRelay.turnOn();
                     iLedGreen.turnOn();
@@ -72,7 +72,7 @@ class Controller {
                     iLedRed.turnOff();
                     break;
                 case 2: //MANUAL
-                    System.out.println("Switching to Thermostat");
+                    System.out.println("Switching Thermostat to Manual");
                     iHeaterStatus.turnOff();
                     iHeaterRelay.turnOff();
                     iLedGreen.turnOff();
@@ -80,7 +80,7 @@ class Controller {
                     iLedRed.turnOff();
                     break;
                 case 3: //OFF
-                    System.out.println("Switching to Off");
+                    System.out.println("Switching Thermostat to Off");
                     iHeaterStatus.turnOff();
                     iHeaterRelay.turnOff();
                     iLedGreen.turnOff();

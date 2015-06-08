@@ -46,17 +46,19 @@ public class Led {
         //GPIOPinConfig tConfig = new GPIOPinConfig(DeviceConfig.DEFAULT, aPin, GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_PUSH_PULL, GPIOPinConfig.TRIGGER_BOTH_EDGES, iInitialStatus);
         //iLED = (GPIOPin)DeviceManager.open(tConfig);
         //iLED.setValue(iInitialStatus);
-        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, getInitialStatus(aInitialStatusHigh));
+        GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, getInitialStatus(aInitialStatusHigh));
         pin.setShutdownOptions(true, getInitialStatus(aInitialStatusHigh));
-        System.out.println("Initialized Led on pin "+aPin+". Prop: "+pin.getProperties());
+        System.out.println("Initialized Led on pin "+aPin+".");
     }
     
     public void turnOn(){
-        iPin.high();
+        //iPin.high();
+        setValue(true);
     }
     
     public void turnOff(){
-        iPin.low();
+        //iPin.low();
+        setValue(false);
     }
     
     public void setValue(boolean aValue){
@@ -101,13 +103,13 @@ public class Led {
         if (iPin != null){
             iPin.removeAllListeners();
             //NB!! Removes everything! Every pin!
-            if (gpio != null){
-                gpio.shutdown();  
-            }
+            //if (gpio != null){
+            //    gpio.shutdown();  
+            //}
         }
     }
     
-    private final PinState getInitialStatus(boolean aInitialStatusHigh) {
+    private PinState getInitialStatus(boolean aInitialStatusHigh) {
         if (aInitialStatusHigh) return PinState.HIGH;
         else return PinState.LOW;
     }

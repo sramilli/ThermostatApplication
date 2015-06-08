@@ -31,32 +31,35 @@ public class Relay {
     /*private GPIOPin iRelay;
     private boolean iInitialStatus = true;*/
     
-    final GpioController gpio = GpioFactory.getInstance();
+    GpioController gpio = GpioFactory.getInstance();
+    GpioPinDigitalOutput pin;
     
     public Relay(int aPin){
         /*GPIOPinConfig tConfig = new GPIOPinConfig(DeviceConfig.DEFAULT, aPin, GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_PUSH_PULL, GPIOPinConfig.TRIGGER_BOTH_EDGES, iInitialStatus);
         iRelay = (GPIOPin)DeviceManager.open(tConfig);
         iRelay.setValue(iInitialStatus);*/
-        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, PinState.HIGH);
+        pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, PinState.HIGH);
         pin.setShutdownOptions(true, PinState.HIGH);
     }
     
     public void turnOn(){
-        gpio.high();
+        //gpio.high();
+        setValue(false);
     }
     
     public void turnOff(){
-        gpio.low();
+        //gpio.low();
+        setValue(true);
     }
     
     public void setValue(boolean aValue){
         System.out.println("Turn led "+ (aValue ? "on." : "off."));
-        gpio.setState(aValue);
+        pin.setState(aValue);
     }
     
     public void close(){
         if (gpio != null){
-            gpio.shutdown();
+            //gpio.shutdown();
         }
     }
     

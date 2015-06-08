@@ -79,7 +79,8 @@ public class Button{
             iPin.removeAllListeners();
             //NB!! Removes everything! Every pin!
             if (gpio != null){
-                gpio.shutdown();  
+                //com.pi4j.io.gpio.exception.InvalidPinModeException: Invalid pin mode on pin [GPIO 0]; cannot setState() when pin mode is [input]
+                //gpio.shutdown();  
             }
         }
     }
