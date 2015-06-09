@@ -6,6 +6,7 @@
 package thermostatapplication;
 
 import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import static java.lang.Thread.sleep;
@@ -32,9 +33,6 @@ public class Thermostat implements GpioPinListenerDigital {
 
     public static boolean ON = true;
     public static boolean OFF = false;
-
-    private boolean bouncing = false;
-
     Timer timer;
 
     public Thermostat(int aModeButtonPinID, int aManualThermostatPinID, int aStatusLEDPinNumber, int aGreenLEDPinNumber, int aYellowLEDPinNumber, int aRedLEDPinNumber, int aHeaterRELAYPinNumber) {
@@ -48,9 +46,7 @@ public class Thermostat implements GpioPinListenerDigital {
             iModeButton.setInputListener(this);
             iController = new Controller(iStatusLED, iGreenLED, iYellowLED, iRedLED, iHeaterRelay);
             iManualTherostat = new Button(aManualThermostatPinID);
-            //iManualTherostat.getPin().setTrigger(GPIOPinConfig.TRIGGER_BOTH_EDGES);
             iManualTherostat.setInputListener(this);
-            //iSMSGateway.getInstance();
             iSMSGateway = new SMSGateway();
             iSMSGateway.initialize();
         } catch (Throwable ex) {
@@ -74,9 +70,6 @@ public class Thermostat implements GpioPinListenerDigital {
         }
     }
 
-    /*public void testSendSMS(){
-     iSMSGateway.sendText("+46700447531", "I hope this works");
-     }*/
     public void testSendSMS() {
         iSMSGateway.sendTextAndReadWithoutListenerTEST("This is anooother test");
     }
@@ -121,8 +114,8 @@ public class Thermostat implements GpioPinListenerDigital {
                         if (aDeleteReadMessages) {
                             //TODO delete all messages
                         }
-                        //execute only last command
-                        break;
+                        
+                        break; //execute only last command
                     } else {
                         System.out.println("SMS discarded: " + tSMS);
                     }
@@ -136,72 +129,27 @@ public class Thermostat implements GpioPinListenerDigital {
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         GpioPin tPin = event.getPin();
         if (tPin == iModeButton.getPin()) {
-            System.out.println("Thermostat: Mode Button pressed!");
+            if (PinState.HIGH.equals(event.getState())){
+                System.out.println("Thermostat: Mode Button pressed!");
+                iController.switchMode();
+                System.out.println("Thermostat: Switched to MODE " + iController.getState());
+            }
             
-            iController.switchMode();
-            System.out.println("Thermostat: Switched to MODE " + iController.getState());
+
+
         } else if (tPin == iManualTherostat.getPin()) {
-            System.out.println("Thermostat: Manual thermostat change!");
-            //TODO
-            /*if (iManualTherostat.getPin().getValue() == ON) {  // pushing down //+Vcc
-             System.out.println("Detected Manual Thermostat ON");
-             iController.activateManualThermostat();
-             } else {
-             System.out.println("Detected Manual Thermostat OFF");  //releasing  //GND
-             iController.deActivateManualThermostat();
-             }*/
-        }
-
-    }
-
-/////////////
-    /*
-    public void valueChanged(final PinEvent event) {
-        if (!bouncing) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    bouncing = true;
-                    GPIOPin tPin = event.getDevice();
-                    //Its the mode switcher button
-                    if (tPin == iModeButton.getPin()) {
-                        if (event.getValue() == ON) {  // pushing down
-                            try {
-                                iController.switchMode();
-                                System.out.println("Switch to MODE " + iController.getState());
-                                Thread.sleep(600);
-                            } catch (InterruptedException | IOException ex) {
-                                ex.printStackTrace();
-                            }
-                            bouncing = false;
-                        }
-                        //its the manual thermostat switch
-                    } else if (tPin == iManualTherostat.getPin()) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException ex) {
-                        }
-                        try {
-                            if (iManualTherostat.getPin().getValue() == ON) {  // pushing down //+Vcc
-                                System.out.println("Detected Manual Thermostat ON");
-                                iController.activateManualThermostat();
-                            } else {
-                                System.out.println("Detected Manual Thermostat OFF");  //releasing  //GND
-                                iController.deActivateManualThermostat();
-                            }
-                        } catch (IOException ex) {
-                        }
-                        bouncing = false;
-                    }
-                    bouncing = false;
-                }
-            }).start();
+            if (PinState.HIGH.equals(event.getState())){
+               System.out.println("Thermostat: Manual thermostat change ON"); 
+               iController.activateManualThermostat();
+            } else if (PinState.LOW.equals(event.getState())){
+               System.out.println("Thermostat: Manual thermostat change OFF"); 
+               iController.deActivateManualThermostat();
+            }
         } else {
-            System.out.println("Bouncing in Thermostat: Mode changer + Manual Thermostat!!");
+            System.out.println("Thermostat ERROR! Detected a non registered input change");
         }
+
     }
-    */
-///////////
 
     public String getStatus() {
         StringBuffer tResponse = new StringBuffer();

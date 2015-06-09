@@ -11,41 +11,22 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 
-/*import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jdk.dio.DeviceConfig;
-import jdk.dio.DeviceManager;
-import jdk.dio.gpio.GPIOPin;
-import jdk.dio.gpio.GPIOPinConfig;*/
-
-
 /**
  *
  * @author Ste
  */
 public class Led {
-    
-    //private GPIOPin iLED;
-    //private boolean iStopBlink = false;
-    //private boolean iInitialStatus = false;
-    
+
     private GpioController gpio = GpioFactory.getInstance();
     private GpioPinDigitalOutput iPin;
     
     public Led(int aPin){
-        //GPIOPinConfig tConfig = new GPIOPinConfig(DeviceConfig.DEFAULT, aPin, GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_PUSH_PULL, GPIOPinConfig.TRIGGER_BOTH_EDGES, iInitialStatus);
-        //iLED = (GPIOPin)DeviceManager.open(tConfig);
-        //iLED.setValue(iInitialStatus);
         iPin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, PinState.LOW);
         iPin.setShutdownOptions(true, PinState.LOW);
-        System.out.println("Initialized Led on pin "+aPin+". Prop: "+iPin.getProperties());
+        System.out.println("Initialized Led on pin "+aPin+".");
     }
     
     public Led(int aPin, boolean aInitialStatusHigh){
-        //GPIOPinConfig tConfig = new GPIOPinConfig(DeviceConfig.DEFAULT, aPin, GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_PUSH_PULL, GPIOPinConfig.TRIGGER_BOTH_EDGES, iInitialStatus);
-        //iLED = (GPIOPin)DeviceManager.open(tConfig);
-        //iLED.setValue(iInitialStatus);
         GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, getInitialStatus(aInitialStatusHigh));
         pin.setShutdownOptions(true, getInitialStatus(aInitialStatusHigh));
         System.out.println("Initialized Led on pin "+aPin+".");
@@ -62,50 +43,17 @@ public class Led {
     }
     
     public void setValue(boolean aValue){
-        System.out.println("Turn led "+ (aValue ? "on." : "off."));
+        System.out.println("Turn led "+iPin.getName()+ (aValue ? " on." : " off."));
         iPin.setState(aValue);
     }
-    
-//    public void getValue(){
-//        
-//    }
-    
-    //public void stopBlink(){
-    //    iStopBlink = true;
-    //}
-    
-/*    public void blinkPeriodAndTimesThenStayON (final int aPeriodInSec, final int aTimes) throws IOException{
-        //turnOff();
-        iStopBlink = false;
-        if (aPeriodInSec == 0 || aTimes == 0) return;
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                for (int i = aTimes * 2; i >= 0 && !iStopBlink; i--){
-                    try {
-                        setValue(!getValue());
-                        Thread.sleep(aPeriodInSec * 400);
-                    } catch (IOException | InterruptedException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-                //stopBlink();
-                try {
-                    if (!iStopBlink) turnOn();
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
-                }
-            }
-       }).start();
-    }*/
     
     public void close(){
         if (iPin != null){
             iPin.removeAllListeners();
             //NB!! Removes everything! Every pin!
-            //if (gpio != null){
-            //    gpio.shutdown();  
-            //}
+            if (gpio != null){
+                gpio.shutdown();  
+            }
         }
     }
     

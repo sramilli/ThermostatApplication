@@ -6,6 +6,7 @@
 
 package thermostatapplication;
 
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
@@ -35,9 +36,10 @@ public class SwitchOFF extends Button implements GpioPinListenerDigital{
 
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        //TODO
-        System.out.println("Switch OFF detected!!");
-        //iTerminateApp = true;
+        if (PinState.HIGH.equals(event.getState())){
+            System.out.println("Switch OFF detected!! ");
+            iTerminateApp = true;
+        }
     }
     
 }

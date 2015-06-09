@@ -22,8 +22,6 @@ public class SMS implements Comparable{
     private String iSender;
     private Date iDate;
     
-    
-    
     public SMS(){
         super();
     }

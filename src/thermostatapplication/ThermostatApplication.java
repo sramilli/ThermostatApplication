@@ -56,20 +56,20 @@ public class ThermostatApplication {
         Thermostat iThermostat = new Thermostat(MODE_BUTTON_27_PI4J_B_REV_2, MANUAL_THERMOSTAT_22_PI4J_B_REV_2, GREEN_LED_HEATER_STATUS_PI4J_B_REV_2, GREEN_LED_23_PI4J_B_REV_2, YELLOW_LED_25_PI4J_B_REV_2, RED_LED_24_PI4J_B_REV_2, HEATER_RELAY_7_PI4J_B_REV_2);
         //iThermostat.testSendSMS();
         //iThermostat.testLoopingAT();
-        //System.out.println("---> Reading all messages: "+iThermostat.testReadAllMessagesRaw());
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
         iThermostat.startPollingIncomingCommands(false, 60);
 
         //Holds the application running until it detects the button press
-        /*while (!iSwitchOFF.terminateApp()) {
-         whaitABit(5000);
-         }*/
-        // just live a while
-        for (int i = 0; i < 10; i++) {
-            System.out.println(iThermostat.getStatus());
+        while (!iSwitchOFF.terminateApp()) {
             whaitABit(5000);
         }
+
+        // just live a while and die for test purposes only
+        /*for (int i = 0; i < 10; i++) {
+         System.out.println(iThermostat.getStatus());
+         whaitABit(5000);
+         }*/
         System.out.println("Main Application: Prepare to turn Off the system!");
         System.out.println("Main Application: Turning off SwitchOff button");
         iSwitchOFF.close();
@@ -77,12 +77,12 @@ public class ThermostatApplication {
         iThermostat.stop();
         iThermostat = null;
         whaitABit(5000);
+        //final Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
 
     }
 
     private void whaitABit(int a) {
         try {
-            // wait 1 second before continuing
             Thread.sleep(a);
         } catch (InterruptedException ex) {
             ex.printStackTrace();

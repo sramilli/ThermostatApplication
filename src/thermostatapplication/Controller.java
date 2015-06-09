@@ -95,7 +95,7 @@ class Controller {
         }
     }
 
-    public void activateManualThermostat() throws IOException {
+    public void activateManualThermostat() {
         if (iState == 2) {
             System.out.println("Manual Thermostate: On");
             iHeaterStatus.turnOn();
@@ -103,7 +103,7 @@ class Controller {
         }
     }
 
-    public void deActivateManualThermostat() throws IOException {
+    public void deActivateManualThermostat() {
         if (iState == 2) {
             System.out.println("Manual Thermostat: Off");
             iHeaterStatus.turnOff();
