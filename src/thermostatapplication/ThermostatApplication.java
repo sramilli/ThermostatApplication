@@ -5,7 +5,10 @@
  */
 package thermostatapplication;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,7 +64,7 @@ public class ThermostatApplication {
         iThermostat.startPollingIncomingCommands(true, 60);
 
         //Holds the application running until it detects the button press
-        while (!iSwitchOFF.terminateApp()) {
+        while (!iSwitchOFF.shutdownPi()) {
             whaitABit(5000);
         }
 
@@ -77,7 +80,19 @@ public class ThermostatApplication {
         iThermostat.stop();
         iThermostat = null;
         whaitABit(5000);
-        //final Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
+        
+        
+        if (!iSwitchOFF.justTerminateApp()){
+            try {
+                System.out.println("Shutdown the Pi!");
+                final Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            System.out.println("Just exit the java application");
+        }
+        
 
     }
 
