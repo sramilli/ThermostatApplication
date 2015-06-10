@@ -103,24 +103,29 @@ public class Thermostat implements GpioPinListenerDigital {
                 List<SMS> tSMSs = iSMSGateway.getAllMessages();
                 Collections.sort(tSMSs);
                 Collections.reverse(tSMSs);
+                //print the list
                 System.out.println("List of all messages on the modem ordered by date:");
                 for (SMS tSMS : tSMSs) {
                     System.out.println(tSMS);
                 }
+                //check for valid commands
                 for (SMS tSMS : tSMSs) {
-                    if (tSMS.isDateValid() && tSMS.senderAuthorized()) {
-                        System.out.println("SMS Valid & Authorized: -------> " + tSMS);
-                        iController.executeCommand(tSMS);
-                        if (aDeleteReadMessages) {
-                            //TODO delete all messages
-                        }
-                        
+                    if (tSMS.isDateValid() && tSMS.senderAuthorized() && (CommandParser.parse(tSMS)).isValid()) {
+                        System.out.println("Date Valid & User Authorized & Command is valid. Executing: -------> " + tSMS);
+                        iController.executeCommand(CommandParser.parse(tSMS));
                         break; //execute only last command
                     } else {
                         System.out.println("SMS discarded: " + tSMS);
                     }
                 }
-                //TODO and then erase every SMS
+                if (aDeleteReadMessages) {
+                    //TODO delete all messages
+                    for (SMS tSMS : tSMSs) {
+                        System.out.println("Delete message "+tSMS);
+                        String tResp = iSMSGateway.deleteMsgAtCertainPosition(tSMS.getPosition());
+                        System.out.println(tResp);
+                    }
+                }
             }
         }, 0, aSeconds * 1000);
     }
@@ -129,21 +134,19 @@ public class Thermostat implements GpioPinListenerDigital {
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         GpioPin tPin = event.getPin();
         if (tPin == iModeButton.getPin()) {
-            if (PinState.HIGH.equals(event.getState())){
+            if (PinState.HIGH.equals(event.getState())) {
                 System.out.println("Thermostat: Mode Button pressed!");
                 iController.switchMode();
                 System.out.println("Thermostat: Switched to MODE " + iController.getState());
             }
-            
-
 
         } else if (tPin == iManualTherostat.getPin()) {
-            if (PinState.HIGH.equals(event.getState())){
-               System.out.println("Thermostat: Manual thermostat change ON"); 
-               iController.activateManualThermostat();
-            } else if (PinState.LOW.equals(event.getState())){
-               System.out.println("Thermostat: Manual thermostat change OFF"); 
-               iController.deActivateManualThermostat();
+            if (PinState.HIGH.equals(event.getState())) {
+                System.out.println("Thermostat: Manual thermostat change ON");
+                iController.activateManualThermostat();
+            } else if (PinState.LOW.equals(event.getState())) {
+                System.out.println("Thermostat: Manual thermostat change OFF");
+                iController.deActivateManualThermostat();
             }
         } else {
             System.out.println("Thermostat ERROR! Detected a non registered input change");

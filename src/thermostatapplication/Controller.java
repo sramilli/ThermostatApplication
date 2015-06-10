@@ -110,12 +110,12 @@ class Controller {
             iHeaterRelay.turnOff();
         }
     }
-
-    public void executeCommand(SMS tSMS) {
+    
+    public void executeCommand(Command aCmd) {
         //used via SMS
-        Interpreter it = Interpreter.getInstance();
-        Command tCmd = it.interprete(tSMS);
-        if (tCmd.equals(Command.ON)) {
+        if (aCmd == null) 
+            return;
+        if (aCmd.equals(Command.ON)) {
             if (iState != 1){
                 System.out.println("SMS received: On");
                 this.setMode(1);
@@ -123,7 +123,7 @@ class Controller {
                 System.out.println("SMS received: command not executed, already On");
             }
         }
-        else if (tCmd.equals(Command.MANUAL)) {
+        else if (aCmd.equals(Command.MANUAL)) {
             if (iState != 2){
                 System.out.println("SMS received: Manual");
                 this.setMode(2);
@@ -131,7 +131,7 @@ class Controller {
                 System.out.println("SMS received: command not executed, already on Manual");
             }
         }
-        else if (tCmd.equals(Command.OFF)) {
+        else if (aCmd.equals(Command.OFF)) {
             if (iState != 3){
                 System.out.println("SMS received: Off");
                 this.setMode(3);

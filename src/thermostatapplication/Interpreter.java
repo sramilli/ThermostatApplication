@@ -27,7 +27,7 @@ public class Interpreter {
         String tText = new String(aSMS.getText());
         //simple word commands
         //to cout words try str.split("\\w+").length
-        if (tText != null){
+        if (tText != null && !"".equals(tText)){
             tText = tText.trim();
             if (tText.equalsIgnoreCase(Command.ON.toString())) return Command.ON;
             else if (tText.equalsIgnoreCase(Command.OFF.toString())) return Command.OFF;

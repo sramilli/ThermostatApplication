@@ -15,6 +15,7 @@ public enum Command {
     ON("on"),
     OFF("off"),
     MANUAL("manual"),
+    //TODO not yet implemented!!!
     STATUS("status"),
     HELP("help"),
     REGISTER_NUMBER("register"),
@@ -29,5 +30,11 @@ public enum Command {
     Command(String aString) {
         iCommand = aString;
     }
-
+    
+    public boolean isValid(){
+        boolean valid = false;
+        if (this.equals(ON) || this.equals(MANUAL) || this.equals(OFF))
+            valid = true;
+        return valid;
+    }
 }

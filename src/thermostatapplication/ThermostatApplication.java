@@ -58,7 +58,7 @@ public class ThermostatApplication {
         //iThermostat.testLoopingAT();
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
-        iThermostat.startPollingIncomingCommands(false, 60);
+        iThermostat.startPollingIncomingCommands(true, 60);
 
         //Holds the application running until it detects the button press
         while (!iSwitchOFF.terminateApp()) {

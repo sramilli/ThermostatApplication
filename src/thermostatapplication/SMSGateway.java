@@ -83,8 +83,9 @@ public class SMSGateway {
         System.out.println("---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
         whaitABit(3000); //TODO tweeka
-        return readAnswer();
-
+        String msgs = readAnswer();
+        System.out.println("Raw data from GSM module:\n" + msgs);
+        return msgs;
     }
 
     /**
@@ -92,8 +93,10 @@ public class SMSGateway {
      *
      */
     public List<SMS> getAllMessages() {
-        List<SMS> tSMSs = new ArrayList<SMS>();
+        //read all messages
         StringTokenizer st = new StringTokenizer(readAllMessagesRaw(), "\r\n");
+        //parse messages
+        List<SMS> tSMSs = new ArrayList<SMS>();
         int i = 1;
         List<String> tRows = new ArrayList<String>();
 
@@ -131,6 +134,13 @@ public class SMSGateway {
     public String readMsgAtCertainPosition(int aPos) {
         System.out.println("---->Sending: AT+CMGR=" + aPos);
         serial.write("AT+CMGR=" + aPos + "\r");
+        whaitABit(3000); //TODO tweeka
+        return readAnswer();
+    }
+
+    public String deleteMsgAtCertainPosition(int aPos) {
+        System.out.println("---->Sending: AT+CMGD=" + aPos);
+        serial.write("AT+CMGD=" + aPos + "\r");
         whaitABit(3000); //TODO tweeka
         return readAnswer();
     }
