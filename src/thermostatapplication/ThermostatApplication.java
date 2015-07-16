@@ -5,7 +5,10 @@
  */
 package thermostatapplication;
 
+import de.pi3g.pi.oled.OLEDDisplay;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +42,7 @@ public class ThermostatApplication {
 
     private static boolean live = true;
     public static Date iRunningSince = new Date();
-
+    boolean deleteReadMessages = true;
     public static void main(String[] args) {
 
         ThermostatApplication iApp = new ThermostatApplication();
@@ -61,29 +64,66 @@ public class ThermostatApplication {
         //iThermostat.testLoopingAT();
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
-        iThermostat.startPollingIncomingCommands(true, 60);
+        iThermostat.startPollingIncomingCommands(deleteReadMessages, 60);
+        
+        ThermostatTermometer thermostatTermometer = new ThermostatTermometer();
+        thermostatTermometer.startMeasureTemperature();
+
+            
+            
+            
+            
+            /* TODO ONGOING OLED DISPLAY
+            
+            OLEDDisplay display = null;
+            try {
+            display = new OLEDDisplay();
+            display.drawString("ABCDE!", 0, 0, true);
+            display.drawString("ABCDE!", 1, 10, true);
+            display.drawString("ABCDE!", 2, 20, true);
+            display.drawString("ABCDE!", 15, 30, true);
+            display.drawStringCentered("Hello World!", 25, true);
+            display.update();
+            } catch (IOException ex) {
+            ex.printStackTrace();
+            }
+            ONGOING OLED DISPLAY */
+
+        
 
         //Holds the application running until it detects the button press
         while (!iSwitchOFF.shutdownPi()) {
-            whaitABit(5000);
+            waitABit(5000);
         }
 
         // just live a while and die for test purposes only
         /*for (int i = 0; i < 10; i++) {
          System.out.println(iThermostat.getStatus());
-         whaitABit(5000);
+         waitABit(5000);
          }*/
         System.out.println("Main Application: Prepare to turn Off the system!");
-        System.out.println("Main Application: Turning off SwitchOff button");
-        iSwitchOFF.close();
+
+
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
+        thermostatTermometer.stop();
+/* TODO ONGOING OLED DISPLAY
+        display.shutdown();
+ONGOING OLED DISPLAY */ 
+
+        waitABit(20000);
         iThermostat = null;
-        whaitABit(5000);
+        thermostatTermometer = null;
+
+
         
         
         if (!iSwitchOFF.justTerminateApp()){
             try {
+                System.out.println("Main Application: Turning off SwitchOff button");
+                iSwitchOFF.close();
+                waitABit(1000);
+                iSwitchOFF = null;
                 System.out.println("Shutdown the Pi!");
                 final Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
             } catch (IOException ex) {
@@ -91,12 +131,16 @@ public class ThermostatApplication {
             }
         } else {
             System.out.println("Just exit the java application");
+                System.out.println("Main Application: Turning off SwitchOff button");
+                iSwitchOFF.close();
+                waitABit(1000);
+                iSwitchOFF = null;
         }
-        
+        System.out.println("END");
 
     }
 
-    private void whaitABit(int a) {
+    private void waitABit(int a) {
         try {
             Thread.sleep(a);
         } catch (InterruptedException ex) {

@@ -37,7 +37,7 @@ public class SMSGateway {
         // create an instance of the serial communications class
         serial = SerialFactory.createInstance();
         serial.open(Serial.DEFAULT_COM_PORT, 9600);
-        whaitABit(10000);
+        waitABit(1000);
 
         // create and register the serial data listener
         /*serial.addListener(new SerialDataListener() {
@@ -82,7 +82,7 @@ public class SMSGateway {
          */
         System.out.println("---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
-        whaitABit(3000); //TODO tweeka
+        waitABit(1000); //TODO tweeka
         String msgs = readAnswer();
         System.out.println("Raw data from GSM module:\n" + msgs);
         return msgs;
@@ -134,14 +134,14 @@ public class SMSGateway {
     public String readMsgAtCertainPosition(int aPos) {
         System.out.println("---->Sending: AT+CMGR=" + aPos);
         serial.write("AT+CMGR=" + aPos + "\r");
-        whaitABit(3000); //TODO tweeka
+        waitABit(3000); //TODO tweeka
         return readAnswer();
     }
 
     public String deleteMsgAtCertainPosition(int aPos) {
         System.out.println("---->Sending: AT+CMGD=" + aPos);
         serial.write("AT+CMGD=" + aPos + "\r");
-        whaitABit(3000); //TODO tweeka
+        waitABit(3000); //TODO tweeka
         return readAnswer();
     }
 
@@ -161,7 +161,7 @@ public class SMSGateway {
         System.out.println("---->Sending: " + aString);
         serial.write(aString + ctrlZ);
         //this is needed because sending the sms takes time
-        whaitABit(4000);
+        waitABit(4000);
         readAnswerAndPrint();
     }
 
@@ -170,12 +170,12 @@ public class SMSGateway {
             System.out.println("----Sending: AT (" + i + "), " + new Date().toString());
             serial.write("AT\r");
             readAnswerAndPrint();
-            whaitABit(5000);
+            waitABit(5000);
         }
     }
 
     private void readAnswerAndPrint() {
-        whaitABit(1000);
+        waitABit(1000);
         StringBuffer reply = new StringBuffer();
         while (serial.availableBytes() > 0) {
             reply.append(serial.read());
@@ -189,7 +189,7 @@ public class SMSGateway {
     }
 
     private String readAnswer() {
-        whaitABit(1000);
+        waitABit(1000);
         StringBuffer tReply = new StringBuffer();
         while (serial.availableBytes() > 0) {
             tReply.append(serial.read());
@@ -198,7 +198,7 @@ public class SMSGateway {
         return tReply.toString();
     }
 
-    private void whaitABit(int a) {
+    private void waitABit(int a) {
         try {
             // wait 1 second before continuing
             Thread.sleep(a);

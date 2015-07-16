@@ -206,6 +206,7 @@ public class Thermostat implements GpioPinListenerDigital {
             }
             if (iSMSGateway != null) {
                 System.out.println("Thermostat: Turning off SMSGateway");
+                waitABit(3000);
                 iSMSGateway.stop();
                 iSMSGateway = null;
             }
@@ -213,6 +214,14 @@ public class Thermostat implements GpioPinListenerDigital {
                 iController = null;
             }
         } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void waitABit(int a) {
+        try {
+            Thread.sleep(a);
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
