@@ -66,11 +66,12 @@ public class ThermostatApplication {
         //iThermostat.testReadAllMessagesOneByOne();
         iThermostat.startPollingIncomingCommands(deleteReadMessages, 60);
         
-        ThermostatTermometer thermostatTermometer = new ThermostatTermometer();
+        TemperatureStore tTemperatureStore = new TemperatureStore();
+        ThermostatTermometer thermostatTermometer = new ThermostatTermometer("Thermostat", tTemperatureStore);
         thermostatTermometer.startMeasureTemperature();
+        
 
-            
-            
+    
             
             
             /* TODO ONGOING OLED DISPLAY
@@ -107,6 +108,11 @@ public class ThermostatApplication {
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
         thermostatTermometer.stop();
+        tTemperatureStore.stop();
+        //print all collected temperatures
+        for (TemperatureMeasure t: tTemperatureStore.getCollection()){
+            System.out.println(t);
+        }
 /* TODO ONGOING OLED DISPLAY
         display.shutdown();
 ONGOING OLED DISPLAY */ 
@@ -114,7 +120,7 @@ ONGOING OLED DISPLAY */
         waitABit(20000);
         iThermostat = null;
         thermostatTermometer = null;
-
+        tTemperatureStore = null;
 
         
         

@@ -7,6 +7,7 @@ package thermostatapplication;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -17,20 +18,20 @@ import java.util.TimerTask;
 public class ThermostatTermometerReaderTimerTask extends TimerTask {
                                //BMP180
     AdafruitBMP180 tempSensor;
-    final NumberFormat NF;
     float temp, read1, read2, read3;
     float averageMinuteTemp;
     int iteration;
     Date dateRead;
-    public static String NAME;
+    String name;
+    TemperatureStore storeHandler;
 
-    public ThermostatTermometerReaderTimerTask(String aName){
+    public ThermostatTermometerReaderTimerTask(String aName, TemperatureStore aStoreHandler){
         tempSensor = new AdafruitBMP180();
-        NF = new DecimalFormat("##00.00");
         temp = 0;
         averageMinuteTemp = 0;
         iteration = 0;
-        NAME = aName;
+        name = aName;
+        storeHandler = aStoreHandler;
     }
 
     @Override
@@ -40,13 +41,12 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        //System.out.println("RAW: "+ temp);
-        System.out.println("ThermostatTermometerReade " +(new Date())+": " + NF.format(temp) + " C");  
+        System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C");  
         
         switch (iteration){
             case 0:
                 //first read
-                dateRead = DateHelper.resetSecMills(new Date());
+                dateRead = Helper.resetSecMillsDate(new Date());
                 read1 = temp;
                 iteration++;
                 break;
@@ -62,13 +62,17 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
                     averageMinuteTemp = (read1 + read2 + read3) / 3;  
                 } else averageMinuteTemp = 0;
                 iteration = 0;
-                System.out.println("AverageMinuteTemperature " + dateRead + ": " + NF.format(averageMinuteTemp) );
-                notifyTemperatureHandler(ThermostatTermometerReaderTimerTask.NAME, dateRead.toString(), NF.format(averageMinuteTemp));
+                System.out.println("AverageMinuteTemperature " + Helper.getDateAsString(dateRead) + " " + Helper.getTempAsString(averageMinuteTemp) );
+                storeTemperature(name, dateRead, averageMinuteTemp);
         }
     }
 
-    private void notifyTemperatureHandler(String NAME, String aDate, String aTemp) {
-        //TODO
+    private void storeTemperature(String NAME, Date aDate, float aTemp) {
+        if (storeHandler.size() < 3000){
+            storeHandler.storeTemperature(new TemperatureMeasure(NAME, aDate, aTemp));
+        }else {
+            System.out.println("StoreSize ("+storeHandler.size()+") exceeded max size!! Not storing anymore");
+        }
     }
 
 }
