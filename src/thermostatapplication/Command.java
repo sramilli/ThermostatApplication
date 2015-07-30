@@ -31,9 +31,13 @@ public enum Command {
         iCommand = aString;
     }
     
+    public String toString(){
+        return iCommand;
+    }
+    
     public boolean isValid(){
         boolean valid = false;
-        if (this.equals(ON) || this.equals(MANUAL) || this.equals(OFF))
+        if (this.equals(ON) || this.equals(MANUAL) || this.equals(OFF) || this.equals(STATUS) || this.equals(HELP) || this.equals(REGISTER_NUMBER))
             valid = true;
         return valid;
     }

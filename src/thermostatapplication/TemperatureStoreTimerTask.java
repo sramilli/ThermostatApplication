@@ -65,12 +65,14 @@ class TemperatureStoreTimerTask extends TimerTask {
             iStoredTemperatures.clear();
         } catch (Throwable e){
             System.out.println("Failed to store Temps in the cloud. Stacktrace:");
+            iStoredTemperatures.clear();
             e.printStackTrace();
             System.out.println("End stacktrace.");
         } finally{
             if (client != null){
                 client.close();
             }
+            iStoredTemperatures.clear();
         }
     }
     

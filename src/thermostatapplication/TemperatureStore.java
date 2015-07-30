@@ -19,7 +19,7 @@ public class TemperatureStore {
     
     Collection<TemperatureMeasure> iTemperatures = new ArrayList<>();
     
-    Timer timer;
+    Timer timer = null;
     
     public TemperatureStore(){
         timer = new Timer();                                                                            

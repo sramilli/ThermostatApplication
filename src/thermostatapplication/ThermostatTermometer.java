@@ -18,7 +18,7 @@ import java.util.TimerTask;
  */
 public class ThermostatTermometer {
     
-    Timer timer;
+    Timer timer = null;
     String iName;
     TemperatureStore iStoreHandler;
     
@@ -29,10 +29,10 @@ public class ThermostatTermometer {
     }
     
     public void startMeasureTemperature(){
-        Date startMeasureDate = Helper.getNextWholeMinuteDate(new Date());
-        System.out.println("Start reading remperature at: " + Helper.getDateAsString(startMeasureDate));
-        //make three measurement per minute (every 20 sec)
-        timer.scheduleAtFixedRate(new ThermostatTermometerReaderTimerTask(iName, iStoreHandler), startMeasureDate, 20 * 1000);
+        Date startMeasureDate = Helper.getNextWholeMinuteDatePlusFiveSec(new Date());
+        System.out.println("Start reading temperature at: " + Helper.getDateAsString(startMeasureDate));
+        //make three measurement per minute (every 15 sec)
+        timer.scheduleAtFixedRate(new ThermostatTermometerReaderTimerTask(iName, iStoreHandler), startMeasureDate, 15 * 1000);
     }
     
     public void stop(){

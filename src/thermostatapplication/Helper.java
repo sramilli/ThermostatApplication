@@ -36,6 +36,16 @@ public class Helper {
         return cal.getTime();
     }
     
+    public static Date getNextWholeMinuteDatePlusFiveSec(Date aDate){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(aDate);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.MINUTE, 1);
+        cal.add(Calendar.SECOND, 5);
+        return cal.getTime();
+    }
+    
     public static String getDateAsString(Date aDate){
         //Fri Jul 17 22:41:00 CEST 2015
         return DF.format(aDate);

@@ -43,6 +43,11 @@ public class ThermostatApplication {
     private static boolean live = true;
     public static Date iRunningSince = new Date();
     boolean deleteReadMessages = true;
+    
+    boolean startReadingTemperatures = false;
+    TemperatureStore tTemperatureStore = null;
+    ThermostatTermometer thermostatTermometer = null;
+    
     public static void main(String[] args) {
 
         ThermostatApplication iApp = new ThermostatApplication();
@@ -54,7 +59,9 @@ public class ThermostatApplication {
     }
 
     public void startApp() {
-        //Starts the switchOFF button
+        PropertiesHandler prop = PropertiesHandler.getInstance();
+        startReadingTemperatures = new Boolean(prop.getProperty("measureTemps"));
+        
         SwitchOFF iSwitchOFF = new SwitchOFF(SHUTDOWN_BUTTON_17_PI4J_B_REV_2);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
 
@@ -64,16 +71,17 @@ public class ThermostatApplication {
         //iThermostat.testLoopingAT();
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
+        
+        /*
         iThermostat.startPollingIncomingCommands(deleteReadMessages, 60);
+        */
+       
+        if (startReadingTemperatures){
+            tTemperatureStore = new TemperatureStore();
+            thermostatTermometer = new ThermostatTermometer("Thermostat", tTemperatureStore);
+            thermostatTermometer.startMeasureTemperature();
+        }
         
-        TemperatureStore tTemperatureStore = new TemperatureStore();
-        ThermostatTermometer thermostatTermometer = new ThermostatTermometer("Thermostat", tTemperatureStore);
-        thermostatTermometer.startMeasureTemperature();
-        
-
-    
-            
-            
             /* TODO ONGOING OLED DISPLAY
             
             OLEDDisplay display = null;
@@ -90,39 +98,37 @@ public class ThermostatApplication {
             }
             ONGOING OLED DISPLAY */
 
-        
-
         //Holds the application running until it detects the button press
         while (!iSwitchOFF.shutdownPi()) {
             waitABit(5000);
         }
-
+        waitABit(3000);
         // just live a while and die for test purposes only
         /*for (int i = 0; i < 10; i++) {
          System.out.println(iThermostat.getStatus());
          waitABit(5000);
          }*/
         System.out.println("Main Application: Prepare to turn Off the system!");
-
-
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
+    if (startReadingTemperatures){
         thermostatTermometer.stop();
         tTemperatureStore.stop();
+    
         //print all collected temperatures
-        for (TemperatureMeasure t: tTemperatureStore.getCollection()){
+        /*for (TemperatureMeasure t: tTemperatureStore.getCollection()){
             System.out.println(t);
-        }
+        }*/
+    }
 /* TODO ONGOING OLED DISPLAY
         display.shutdown();
 ONGOING OLED DISPLAY */ 
 
-        waitABit(20000);
+        waitABit(10000);
         iThermostat = null;
         thermostatTermometer = null;
         tTemperatureStore = null;
-
-        
+        //waitABit(10000);
         
         if (!iSwitchOFF.justTerminateApp()){
             try {

@@ -3,26 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package thermostatapplication;
 
 /**
  *
  * @author Ste
  */
-public enum Status {
-    ON("On"),
-    MANUAL("Manual"),
-    OFF("Off");
+enum GSMCommand {
+    MESSAGE_ARRIVED("+CMTI:"),
+    AT("AT"),
+    READ_ALL_MESSAGES("AT+CMGL=\"ALL\""),
+    READ_MESSAGE(""),
+    DELETE_MESSAGE(""),
+    UNKNOW("unknown");
     
-    String iStatus;
+    String iCommand;
     
-    Status(String aStatus){
-        iStatus = aStatus;
+    GSMCommand(String aCommand){
+        iCommand = aCommand;
     }
     
     public String toString(){
-        return iStatus;
+        return iCommand;
     }
     
 }
+

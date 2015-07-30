@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 class Controller {
 
-    private int iState;  // 1,2,3.
+    private Status iStatus;  // on, off, manual
     private Led iHeaterStatus;
     private Relay iHeaterRelay;
     private Led iLedGreen;
@@ -24,7 +24,7 @@ class Controller {
     public static boolean OFF = false;
 
     public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Relay aRelay) {
-        iState = 3;
+        iStatus = Status.OFF;
         iHeaterStatus = aHeaterStatus;
         iHeaterRelay = aRelay;
         iLedGreen = aGreen;
@@ -33,37 +33,42 @@ class Controller {
         activateOutput();
     }
 
-    public int switchMode() {
+    public void switchMode() {
         //Controlled manually by pushing Mode button
-        if (iState >= 3) {
-            iState = 1;
-        } else {
-            iState++;
+        System.out.print("Switching mode manually: ");
+        switch (iStatus){
+            case ON:
+                iStatus = Status.MANUAL;
+                break;
+            case MANUAL:
+                iStatus = Status.OFF;
+                break;
+            case OFF:
+                iStatus = Status.ON;
         }
+        System.out.println(" Mode"+iStatus);
         activateOutput();
-        return iState;
     }
 
-    private int setMode(int aMode) {
+    private Status setMode(Status aMode) {
         //Used via SMS
-        if (1 > aMode || aMode > 3) {
+        if (aMode != Status.ON && aMode != Status.MANUAL && aMode != Status.OFF) {
             System.out.println("Controller: setMode error: "+aMode);
-            return 0;
+            return aMode;
         }
-        iState = aMode;
+        iStatus = aMode;
         activateOutput();
-        return iState;
+        return iStatus;
     }
 
-    public int getState() {
-        return iState;
+    public Status getState() {
+        return iStatus;
     }
 
     private void activateOutput() {
         try {
-            switch (iState) {
-                case 1:
-                    //ON
+            switch (iStatus) {
+                case ON:
                     System.out.println("Switching Thermostat to On");
                     iHeaterStatus.turnOn();
                     iHeaterRelay.turnOn();
@@ -71,7 +76,7 @@ class Controller {
                     iLedYellow.turnOff();
                     iLedRed.turnOff();
                     break;
-                case 2: //MANUAL
+                case MANUAL:
                     System.out.println("Switching Thermostat to Manual");
                     iHeaterStatus.turnOff();
                     iHeaterRelay.turnOff();
@@ -79,7 +84,7 @@ class Controller {
                     iLedYellow.turnOn();
                     iLedRed.turnOff();
                     break;
-                case 3: //OFF
+                case OFF:
                     System.out.println("Switching Thermostat to Off");
                     iHeaterStatus.turnOff();
                     iHeaterRelay.turnOff();
@@ -96,7 +101,7 @@ class Controller {
     }
 
     public void activateManualThermostat() {
-        if (iState == 2) {
+        if (Status.MANUAL.equals(iStatus)) {
             System.out.println("Manual Thermostate: On");
             iHeaterStatus.turnOn();
             iHeaterRelay.turnOn();
@@ -104,7 +109,7 @@ class Controller {
     }
 
     public void deActivateManualThermostat() {
-        if (iState == 2) {
+        if (Status.MANUAL.equals(iStatus)) {
             System.out.println("Manual Thermostat: Off");
             iHeaterStatus.turnOff();
             iHeaterRelay.turnOff();
@@ -116,25 +121,25 @@ class Controller {
         if (aCmd == null) 
             return;
         if (aCmd.equals(Command.ON)) {
-            if (iState != 1){
-                System.out.println("SMS received: On");
-                this.setMode(1);
+            if (!iStatus.equals(Status.ON)){
+                System.out.println("SMS received: Turn On Heater");
+                this.setMode(Status.ON);
             }else {
                 System.out.println("SMS received: command not executed, already On");
             }
         }
         else if (aCmd.equals(Command.MANUAL)) {
-            if (iState != 2){
-                System.out.println("SMS received: Manual");
-                this.setMode(2);
+            if (!iStatus.equals(Status.MANUAL)){
+                System.out.println("SMS received: Turn to Manual");
+                this.setMode(Status.MANUAL);
             }else {
                 System.out.println("SMS received: command not executed, already on Manual");
             }
         }
         else if (aCmd.equals(Command.OFF)) {
-            if (iState != 3){
+            if (!iStatus.equals(Status.OFF)){
                 System.out.println("SMS received: Off");
-                this.setMode(3);
+                this.setMode(Status.OFF);
             }else {
                 System.out.println("SMS received: command not executed, already Off");
             }
