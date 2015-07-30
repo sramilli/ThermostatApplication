@@ -5,7 +5,7 @@
  */
 package thermostatapplication;
 
-import de.pi3g.pi.oled.OLEDDisplay;
+//import de.pi3g.pi.oled.OLEDDisplay;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
