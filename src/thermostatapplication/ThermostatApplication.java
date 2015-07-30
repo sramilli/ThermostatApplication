@@ -6,6 +6,7 @@
 package thermostatapplication;
 
 //import de.pi3g.pi.oled.OLEDDisplay;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -59,8 +60,15 @@ public class ThermostatApplication {
     }
 
     public void startApp() {
-        PropertiesHandler prop = PropertiesHandler.getInstance();
-        startReadingTemperatures = new Boolean(prop.getProperty("measureTemps"));
+        try{
+            PropertiesHandler prop = PropertiesHandler.getInstance();
+            startReadingTemperatures = new Boolean(prop.getProperty("measureTemps"));
+            System.out.println("Read Prop file correctly");
+        } catch (Throwable ex){
+            System.out.println("ERROR READING PROP FILE!!!");
+            ex.printStackTrace();
+        }
+
         
         SwitchOFF iSwitchOFF = new SwitchOFF(SHUTDOWN_BUTTON_17_PI4J_B_REV_2);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
