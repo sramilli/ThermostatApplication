@@ -41,23 +41,29 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C");  
+         
         
         switch (iteration){
             case 0:
                 //first read
                 dateRead = Helper.resetSecMillsDate(new Date());
                 read1 = temp;
+                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
                 iteration++;
                 break;
             case 1:
                 //second read
                 read2 = temp;
+                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
                 iteration++;
                 break;
             case 2:
                 //third read
                 read3 = temp;
+                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
+                iteration++;
+                break;
+            case 3:
                 if (read1 != 0 || read2 != 0 || read3 != 0){
                     averageMinuteTemp = (read1 + read2 + read3) / 3;  
                 } else averageMinuteTemp = 0;
