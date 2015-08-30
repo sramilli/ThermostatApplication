@@ -63,7 +63,7 @@ public class ThermostatApplication {
         try{
             PropertiesHandler prop = PropertiesHandler.getInstance();
             startReadingTemperatures = new Boolean(prop.getProperty("measureTemps"));
-            System.out.println("Read Prop file correctly");
+            System.out.println("Read Prop measureTemps correctly");
         } catch (Throwable ex){
             System.out.println("ERROR READING PROP FILE!!!");
             ex.printStackTrace();
@@ -162,8 +162,11 @@ ONGOING OLED DISPLAY */
 
     private void waitABit(int a) {
         try {
+            System.out.println("waitABit entering sleep");
             Thread.sleep(a);
+            System.out.println("waitABit awakening");
         } catch (InterruptedException ex) {
+            System.out.println("waitABit InterruptedException!");
             ex.printStackTrace();
         }
     }
