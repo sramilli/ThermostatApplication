@@ -47,10 +47,10 @@ public class SMSGateway {
             ex.printStackTrace();
         }
         iSerialDataListener = aSerialDataListener;
-        System.out.println(" ... connect using settings: 9600, N, 8, 1.");
+        System.out.println(" ... connect using settings: "+GSM_BAUD_RATE+", N, 8, 1.");
         // create an instance of the serial communications class
         serial = SerialFactory.createInstance();
-        serial.open(Serial.DEFAULT_COM_PORT, 9600);
+        serial.open(Serial.DEFAULT_COM_PORT, GSM_BAUD_RATE);
         waitABit(3000);
         
         sendATCommand();
