@@ -162,9 +162,7 @@ ONGOING OLED DISPLAY */
 
     private void waitABit(int a) {
         try {
-            System.out.println("waitABit entering sleep");
             Thread.sleep(a);
-            System.out.println("waitABit awakening");
         } catch (InterruptedException ex) {
             System.out.println("waitABit InterruptedException!");
             ex.printStackTrace();
