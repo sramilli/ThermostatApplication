@@ -48,19 +48,19 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
                 //first read
                 dateRead = Helper.resetSecMillsDate(new Date());
                 read1 = temp;
-                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
+                System.out.println("ThermostatTermometerReader measure 1" +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
                 iteration++;
                 break;
             case 1:
                 //second read
                 read2 = temp;
-                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
+                System.out.println("ThermostatTermometerReade measure 2" +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
                 iteration++;
                 break;
             case 2:
                 //third read
                 read3 = temp;
-                System.out.println("ThermostatTermometerReade " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
+                System.out.println("ThermostatTermometerReade measure 3" +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
                 iteration++;
                 break;
             case 3:
