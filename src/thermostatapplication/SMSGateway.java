@@ -139,7 +139,7 @@ public class SMSGateway {
         readAnswerAndPrint();
 
         System.out.println("---->Sending: AT+CMGS=\""+aNumberRecipient+"\"");
-        serial.write("AT+CMGS=\"+46700447531\"\r");
+        serial.write("AT+CMGS=\""+aNumberRecipient+"\"\r");
         readAnswerAndPrint();
 
         System.out.println("---->Sending: " + aMessage);

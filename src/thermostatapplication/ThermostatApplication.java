@@ -48,6 +48,7 @@ public class ThermostatApplication {
     boolean startReadingTemperatures = false;
     TemperatureStore tTemperatureStore = null;
     ThermostatTermometer thermostatTermometer = null;
+    String THERMOSTAT_LOCATION;
     
     public static void main(String[] args) {
 
@@ -63,6 +64,7 @@ public class ThermostatApplication {
         try{
             PropertiesHandler prop = PropertiesHandler.getInstance();
             startReadingTemperatures = new Boolean(prop.getProperty("measureTemps"));
+            THERMOSTAT_LOCATION = prop.getProperty("thermostatlocation");
             System.out.println("Read Prop measureTemps correctly");
         } catch (Throwable ex){
             System.out.println("ERROR READING PROP FILE!!!");
@@ -86,7 +88,7 @@ public class ThermostatApplication {
        
         if (startReadingTemperatures){
             tTemperatureStore = new TemperatureStore();
-            thermostatTermometer = new ThermostatTermometer("Thermostat", tTemperatureStore);
+            thermostatTermometer = new ThermostatTermometer("Thermostat"+THERMOSTAT_LOCATION, tTemperatureStore);
             thermostatTermometer.startMeasureTemperature();
         }
         
