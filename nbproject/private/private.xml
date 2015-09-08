@@ -3,19 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/ThermostatTermometer.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Interpreter.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/CommandParser.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Thermostat.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/SMSGateway.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/AdafruitBMP180.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/TemperatureStoreTimerTask.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Helper.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/ThermostatApplication.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/TemperatureMeasure.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/SMS.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/ThermostatTermometerReaderTimerTask.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/SwitchOFF.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Controller.java</file>
-            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/de/pi3g/pi/oled/OLEDDisplay.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Command.java</file>
         </group>
     </open-files>
 </project-private>

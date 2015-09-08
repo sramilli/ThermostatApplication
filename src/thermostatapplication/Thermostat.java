@@ -12,7 +12,12 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialDataListener;
 import static java.lang.Thread.sleep;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -150,22 +155,52 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
             iSMSGateway.printAllMessages(tSMSs);
             //check for valid commands
             for (SMS tSMS : tSMSs) {
-                Command tCommand = CommandParser.parse(tSMS);
-                if (tSMS.isDateValid() && tSMS.senderAuthorized() && (tCommand).isValid()) {
+                CommandType tCommand = CommandParser.parse(tSMS);
+                if (tSMS.isDateValid() && tSMS.senderAuthorized() && (tCommand).isActive()) {
                     System.out.println("Date Valid & User Authorized & Command is valid. Executing: -------> " + tSMS);
-                    if (Command.ON.equals(tCommand) || Command.OFF.equals(tCommand) || Command.MANUAL.equals(tCommand)){
+                    if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
                         iController.executeCommand(tCommand);
-                    } else if (Command.STATUS.equals(tCommand)){
+                    } else if (CommandType.STATUS.equals(tCommand)){
                         iSMSGateway.sendStatusToUser(tSMS.getSender(), this.getStatus());
-                    } else if (Command.HELP.equals(tCommand)){
+                    } else if (CommandType.HELP.equals(tCommand)){
                         iSMSGateway.sendHelpMessageToUser(tSMS.getSender());
-                    } else if (Command.REGISTER_NUMBER.equals(tCommand)){
+                    } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
                         String[] tSplittedStringt = tSMS.getText().split(" ");
                         if (tSplittedStringt.length >= 2){
                             System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
                             AuthorizedUsers.addAuthorizedUser(tSplittedStringt[1]);
                         }else {
                             System.out.println("REGISTER_NUMBER command not formatted correctly");
+                        }
+                    } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
+                        //iController.executeCommand(tCommand);
+                        String[] tSplittedStringt = tSMS.getText().split(" ");
+                        if (tSplittedStringt.length == 2){
+                            String timeInterval = tSplittedStringt[1];
+                            //6:00-8:30
+                            String[] tSplittedTime = timeInterval.split("-");
+                            if (tSplittedTime.length == 2){
+                                try {
+                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
+                                    Date startDate = formatter.parse(tSplittedTime[0]);
+                                    Date stopDate = formatter.parse(tSplittedTime[1]);
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(startDate);
+                                    int hourStart = cal.get(Calendar.HOUR);
+                                    int minuteStart = cal.get(Calendar.MINUTE);
+                                    cal.setTime(stopDate);
+                                    int hourStop = cal.get(Calendar.HOUR);
+                                    int minuteStop = cal.get(Calendar.MINUTE);
+                                    System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
+                                } catch (ParseException ex) {
+                                    //Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);
+                                    ex.printStackTrace();
+                                }
+                            }else{
+                                System.out.println("Program daily bad format!");
+                            }
+                        }else {
+                            System.out.println("Program daily bad format!");
                         }
                         
                     }

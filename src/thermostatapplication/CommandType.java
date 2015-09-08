@@ -9,25 +9,25 @@ package thermostatapplication;
  *
  * @author Ste
  */
-public enum Command {
+public enum CommandType {
 
     //one word
     ON("on"),
     OFF("off"),
     MANUAL("manual"),
-    //TODO not yet implemented!!!
     STATUS("status"),
     HELP("help"),
     REGISTER_NUMBER("register"),
+    PROGRAM_DAILY("programDaily"),
     //multiple word
-    PROGRAM_HOUR("program"),
-    PROGRAM_WEEK("program"),
+    //TODO
+    PROGRAM_WEEK("programWeekly"),
     PROGRAM_OFF("program"),
     NOT_VALID("notValid");
 
     String iCommand;
 
-    Command(String aString) {
+    CommandType(String aString) {
         iCommand = aString;
     }
     
@@ -35,9 +35,15 @@ public enum Command {
         return iCommand;
     }
     
-    public boolean isValid(){
+    public boolean isActive(){
         boolean valid = false;
-        if (this.equals(ON) || this.equals(MANUAL) || this.equals(OFF) || this.equals(STATUS) || this.equals(HELP) || this.equals(REGISTER_NUMBER))
+        if (this.equals(ON) || 
+            this.equals(MANUAL) || 
+            this.equals(OFF) || 
+            this.equals(STATUS) || 
+            this.equals(HELP) || 
+            this.equals(REGISTER_NUMBER) ||
+            this.equals(PROGRAM_DAILY))
             valid = true;
         return valid;
     }

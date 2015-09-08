@@ -6,6 +6,14 @@
 
 package thermostatapplication;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 
 /**
@@ -25,25 +33,26 @@ public class Interpreter {
         private static final Interpreter INSTANCE = new Interpreter();
     }
     
-    public Command interprete(SMS aSMS){
+    public CommandType interprete(SMS aSMS){
         String tText = new String(aSMS.getText());
         String tTemp;
         //simple word commands
         //to cout words try str.split("\\w+").length
         if (tText == null || "".equals(tText)){
             System.out.println("Interpreter: Command = null");
-            return Command.NOT_VALID;
+            return CommandType.NOT_VALID;
         }
         tText = tText.trim();
-        if (tText.equalsIgnoreCase(Command.ON.toString())) return Command.ON;
-        else if (tText.equalsIgnoreCase(Command.OFF.toString())) return Command.OFF;
-        else if (tText.equalsIgnoreCase(Command.MANUAL.toString())) return Command.MANUAL;
-        else if (tText.equalsIgnoreCase(Command.STATUS.toString())) return Command.STATUS;
-        else if (tText.equalsIgnoreCase(Command.HELP.toString())) return Command.HELP;
-        else if (tText.length() >= 8 && (tTemp = tText.substring(0, 8)).equalsIgnoreCase(Command.REGISTER_NUMBER.toString())) return Command.REGISTER_NUMBER;
+        if (tText.equalsIgnoreCase(CommandType.ON.toString())) return CommandType.ON;
+        else if (tText.equalsIgnoreCase(CommandType.OFF.toString())) return CommandType.OFF;
+        else if (tText.equalsIgnoreCase(CommandType.MANUAL.toString())) return CommandType.MANUAL;
+        else if (tText.equalsIgnoreCase(CommandType.STATUS.toString())) return CommandType.STATUS;
+        else if (tText.equalsIgnoreCase(CommandType.HELP.toString())) return CommandType.HELP;
+        else if (tText.length() >= 8 && (tTemp = tText.substring(0, 8)).equalsIgnoreCase(CommandType.REGISTER_NUMBER.toString())) return CommandType.REGISTER_NUMBER;
+        else if (tText.length() >= 12 && (tTemp = tText.substring(0, 12)).equalsIgnoreCase(CommandType.PROGRAM_DAILY.toString())) return CommandType.PROGRAM_DAILY;
         else {
             System.out.println("Interpreter: Command not supported: "+tText);
-            return Command.NOT_VALID;
+            return CommandType.NOT_VALID;
         }
       
 

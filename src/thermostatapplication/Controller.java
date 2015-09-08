@@ -116,11 +116,11 @@ class Controller {
         }
     }
     
-    public void executeCommand(Command aCmd) {
+    public void executeCommand(CommandType aCmd) {
         //used via SMS
         if (aCmd == null) 
             return;
-        if (aCmd.equals(Command.ON)) {
+        if (aCmd.equals(CommandType.ON)) {
             if (!iStatus.equals(Status.ON)){
                 System.out.println("SMS received: Turn On Heater");
                 this.setMode(Status.ON);
@@ -128,7 +128,7 @@ class Controller {
                 System.out.println("SMS received: command not executed, already On");
             }
         }
-        else if (aCmd.equals(Command.MANUAL)) {
+        else if (aCmd.equals(CommandType.MANUAL)) {
             if (!iStatus.equals(Status.MANUAL)){
                 System.out.println("SMS received: Turn to Manual");
                 this.setMode(Status.MANUAL);
@@ -136,7 +136,7 @@ class Controller {
                 System.out.println("SMS received: command not executed, already on Manual");
             }
         }
-        else if (aCmd.equals(Command.OFF)) {
+        else if (aCmd.equals(CommandType.OFF)) {
             if (!iStatus.equals(Status.OFF)){
                 System.out.println("SMS received: Off");
                 this.setMode(Status.OFF);

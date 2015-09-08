@@ -11,9 +11,9 @@ package thermostatapplication;
  */
 public class CommandParser {
 
-    public static Command parse(SMS aSMS) {
+    public static CommandType parse(SMS aSMS) {
         Interpreter it = Interpreter.getInstance();
-        Command tCmd = it.interprete(aSMS);
+        CommandType tCmd = it.interprete(aSMS);
         return tCmd;
     }
 
