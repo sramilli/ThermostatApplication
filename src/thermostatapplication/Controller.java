@@ -154,16 +154,19 @@ class Controller {
                 String[] tSplittedTime = timeInterval.split("-");
                 if (tSplittedTime.length == 2){
                     try {
-                        DateFormat formatter = new SimpleDateFormat("hh:mm");
+                        DateFormat formatter = new SimpleDateFormat("HH:mm");
                         Date startDate = formatter.parse(tSplittedTime[0]);
                         Date stopDate = formatter.parse(tSplittedTime[1]);
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(startDate);
-                        int hourStart = cal.get(Calendar.HOUR);
-                        int minuteStart = cal.get(Calendar.MINUTE);
-                        cal.setTime(stopDate);
-                        int hourStop = cal.get(Calendar.HOUR);
-                        int minuteStop = cal.get(Calendar.MINUTE);
+                        Calendar calStart = Calendar.getInstance();
+                        calStart.setTime(startDate);
+                        System.out.println("Start: "+calStart);
+                        int hourStart = calStart.get(Calendar.HOUR_OF_DAY);
+                        int minuteStart = calStart.get(Calendar.MINUTE);
+                        Calendar calStop = Calendar.getInstance();
+                        calStop.setTime(stopDate);
+                        System.out.println("Stop: "+calStop);
+                        int hourStop = calStop.get(Calendar.HOUR_OF_DAY);
+                        int minuteStop = calStop.get(Calendar.MINUTE);
                         System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
                         
                     } catch (ParseException ex) {
@@ -177,6 +180,8 @@ class Controller {
                 System.out.println("Program daily bad format!");
             }
         }
+        
+        
         else{
             System.out.println("Controller: Command via SMS not supported! ");
         }
