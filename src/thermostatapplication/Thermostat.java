@@ -157,9 +157,9 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
             for (SMS tSMS : tSMSs) {
                 CommandType tCommand = CommandParser.parse(tSMS);
                 if (tSMS.isDateValid() && tSMS.senderAuthorized() && (tCommand).isActive()) {
-                    System.out.println("Date Valid & User Authorized & Command is valid. Executing: -------> " + tSMS);
+                    System.out.println("Date Valid & User Authorized & Command is active. Executing: -------> " + tSMS);
                     if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
-                        iController.executeCommand(tCommand);
+                        iController.executeCommand(tCommand, null);
                     } else if (CommandType.STATUS.equals(tCommand)){
                         iSMSGateway.sendStatusToUser(tSMS.getSender(), this.getStatus());
                     } else if (CommandType.HELP.equals(tCommand)){
@@ -173,38 +173,8 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
                             System.out.println("REGISTER_NUMBER command not formatted correctly");
                         }
                     } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
-                        //iController.executeCommand(tCommand);
-                        String[] tSplittedStringt = tSMS.getText().split(" ");
-                        if (tSplittedStringt.length == 2){
-                            String timeInterval = tSplittedStringt[1];
-                            //6:00-8:30
-                            String[] tSplittedTime = timeInterval.split("-");
-                            if (tSplittedTime.length == 2){
-                                try {
-                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
-                                    Date startDate = formatter.parse(tSplittedTime[0]);
-                                    Date stopDate = formatter.parse(tSplittedTime[1]);
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(startDate);
-                                    int hourStart = cal.get(Calendar.HOUR);
-                                    int minuteStart = cal.get(Calendar.MINUTE);
-                                    cal.setTime(stopDate);
-                                    int hourStop = cal.get(Calendar.HOUR);
-                                    int minuteStop = cal.get(Calendar.MINUTE);
-                                    System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
-                                } catch (ParseException ex) {
-                                    //Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);
-                                    ex.printStackTrace();
-                                }
-                            }else{
-                                System.out.println("Program daily bad format!");
-                            }
-                        }else {
-                            System.out.println("Program daily bad format!");
-                        }
-                        
+                       iController.executeCommand(tCommand, tSMS.getText());
                     }
-                    
                     break; //execute only last command
                 } else {
                     System.out.println("SMS discarded: " + tSMS);

@@ -6,6 +6,11 @@
 package thermostatapplication;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -116,7 +121,7 @@ class Controller {
         }
     }
     
-    public void executeCommand(CommandType aCmd) {
+    public void executeCommand(CommandType aCmd, String aText) {
         //used via SMS
         if (aCmd == null) 
             return;
@@ -127,21 +132,49 @@ class Controller {
             }else {
                 System.out.println("SMS received: command not executed, already On");
             }
-        }
-        else if (aCmd.equals(CommandType.MANUAL)) {
+        } else if (aCmd.equals(CommandType.MANUAL)) {
             if (!iStatus.equals(Status.MANUAL)){
                 System.out.println("SMS received: Turn to Manual");
                 this.setMode(Status.MANUAL);
             }else {
                 System.out.println("SMS received: command not executed, already on Manual");
             }
-        }
-        else if (aCmd.equals(CommandType.OFF)) {
+        } else if (aCmd.equals(CommandType.OFF)) {
             if (!iStatus.equals(Status.OFF)){
                 System.out.println("SMS received: Off");
                 this.setMode(Status.OFF);
             }else {
                 System.out.println("SMS received: command not executed, already Off");
+            }
+        } else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
+            String[] tSplittedStringt = aText.split(" ");
+            if (tSplittedStringt.length == 2){
+                String timeInterval = tSplittedStringt[1];
+                //ex. 6:00-8:30
+                String[] tSplittedTime = timeInterval.split("-");
+                if (tSplittedTime.length == 2){
+                    try {
+                        DateFormat formatter = new SimpleDateFormat("hh:mm");
+                        Date startDate = formatter.parse(tSplittedTime[0]);
+                        Date stopDate = formatter.parse(tSplittedTime[1]);
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(startDate);
+                        int hourStart = cal.get(Calendar.HOUR);
+                        int minuteStart = cal.get(Calendar.MINUTE);
+                        cal.setTime(stopDate);
+                        int hourStop = cal.get(Calendar.HOUR);
+                        int minuteStop = cal.get(Calendar.MINUTE);
+                        System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
+                        
+                    } catch (ParseException ex) {
+                        //Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);
+                        ex.printStackTrace();
+                    }
+                }else{
+                    System.out.println("Program daily bad format!");
+                }
+            }else {
+                System.out.println("Program daily bad format!");
             }
         }
         else{
