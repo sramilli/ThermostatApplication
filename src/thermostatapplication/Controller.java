@@ -159,12 +159,12 @@ class Controller {
                         Date stopDate = formatter.parse(tSplittedTime[1]);
                         Calendar calStart = Calendar.getInstance();
                         calStart.setTime(startDate);
-                        System.out.println("Start: "+calStart);
+                        System.out.println("Start: "+calStart.toString());
                         int hourStart = calStart.get(Calendar.HOUR_OF_DAY);
                         int minuteStart = calStart.get(Calendar.MINUTE);
                         Calendar calStop = Calendar.getInstance();
                         calStop.setTime(stopDate);
-                        System.out.println("Stop: "+calStop);
+                        System.out.println("Stop: "+calStop.toString());
                         int hourStop = calStop.get(Calendar.HOUR_OF_DAY);
                         int minuteStop = calStop.get(Calendar.MINUTE);
                         System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
