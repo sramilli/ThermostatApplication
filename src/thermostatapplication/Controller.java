@@ -162,23 +162,30 @@ class Controller {
                     try {Calendar tNow = Helper.getThisInstant();
                         DateFormat formatter = new SimpleDateFormat("HH:mm");
                         Date startDate = formatter.parse(tSplittedTime[0]);
+                        System.out.println("Start date: "+startDate);
                         startDate.setTime(startDate.getTime()+Helper.getBeginningOfDay().getTimeInMillis());
+                        System.out.println("Start date: "+startDate);
                         Date stopDate = formatter.parse(tSplittedTime[1]);
+                        System.out.println("Stop date: "+stopDate);
                         stopDate.setTime(stopDate.getTime()+Helper.getBeginningOfDay().getTimeInMillis());
-                        Calendar start = Calendar.getInstance();
-                        start.setTime(startDate);
-                            System.out.println("Start: "+start.getTime());
-                            int hourStart = start.get(Calendar.HOUR_OF_DAY);
-                            int minuteStart = start.get(Calendar.MINUTE);
-                        Calendar stop = Calendar.getInstance();
-                        stop.setTime(stopDate);
-                            System.out.println("Stop: "+stop.getTime());
-                            int hourStop = stop.get(Calendar.HOUR_OF_DAY);
-                            int minuteStop = stop.get(Calendar.MINUTE);
-                        System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
+                        System.out.println("Stop date: "+stopDate);
+                        System.out.println("Beginning of day: "+new Date(Helper.getBeginningOfDay().getTimeInMillis()));
+                        System.out.println("The first day of PC: "+new Date(Helper.getOneDay()));
+                        //Calendar start = Calendar.getInstance();
+                        //start.setTime(startDate);
+                            //System.out.println("Start: "+start.getTime());
+                            //int hourStart = start.get(Calendar.HOUR_OF_DAY);
+                            //int minuteStart = start.get(Calendar.MINUTE);
+                        //Calendar stop = Calendar.getInstance();
+                        //stop.setTime(stopDate);
+                            //System.out.println("Stop: "+stop.getTime());
+                            //int hourStop = stop.get(Calendar.HOUR_OF_DAY);
+                            //int minuteStop = stop.get(Calendar.MINUTE);
+                        //System.out.println("Ready to schedule for: "+hourStart+":"+minuteStart+" - "+hourStop+":"+minuteStop);
+                        System.out.println("Start date: "+startDate);
+                        System.out.println("Stop date: "+stopDate);
                         
-                        
-                        if (tNow.before(start)){
+                        if (tNow.before(startDate)){
                             //schedule ON from today
                         } else {
                             //schedule ON from tomorrow
@@ -187,7 +194,7 @@ class Controller {
                         System.out.println("Scheduling daily Ignition from: "+startDate);
                         iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON), startDate, 24 * 60 * 60 * 1000);
                         
-                        if (tNow.before(stop)){
+                        if (tNow.before(stopDate)){
                             //schedule OFF from today
                         } else {
                             //schedule OFF from tomorrow

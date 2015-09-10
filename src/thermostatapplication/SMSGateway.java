@@ -126,7 +126,7 @@ public class SMSGateway {
     
     public void sendHelpMessageToUser(String aRecipient) {
         System.out.println("Sendind Help message to ["+aRecipient+"] ");
-        sendTextMessageToUser(aRecipient, "Examples: 1. on 2. off 3. manual 4. status 5. help 6. register +391234512345");
+        sendTextMessageToUser(aRecipient, "Examples: 1) on 2) off 3) manual 4) status 5) help 6) register +391234512345 7) ProgramDaily 6:15-7:45");
     }
     
     public void sendTextMessageToUser(String aNumberRecipient, String aMessage) {
