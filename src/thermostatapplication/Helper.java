@@ -74,9 +74,7 @@ public class Helper {
     }
     
     public static long getOneDay(){
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 1);
-        return cal.getTimeInMillis();
+        return 24 * 60 * 60 * 1000;
     }
     
     public static Calendar getCalendar(Date aDate){
