@@ -200,7 +200,7 @@ class Controller {
                             //schedule OFF from tomorrow
                             stopDate.setTime(stopDate.getTime()+Helper.getOneDay());
                         }
-                        System.out.println("Scheduling daily shutdown from: "+startDate);
+                        System.out.println("Scheduling daily shutdown from: "+stopDate);
                         iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF), stopDate, 24 * 60 * 60 * 1000);
                         
                     } catch (ParseException ex) {
