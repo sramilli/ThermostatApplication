@@ -271,6 +271,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
                 iSMSGateway = null;
             }
             if (iController != null) {
+                iController.close();
                 iController = null;
             }
         } catch (Throwable ex) {

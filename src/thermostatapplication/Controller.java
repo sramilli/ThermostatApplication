@@ -215,4 +215,9 @@ class Controller {
 
     }
 
+    public void close(){
+        if (iTimer != null){
+            iTimer.cancel();
+        }
+    }
 }
