@@ -46,6 +46,45 @@ public class Helper {
         return cal.getTime();
     }
     
+    public static Calendar getBeginningOfDay(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        return cal;
+    }
+    
+    public static Calendar getBeginningOfTomorrow(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        return cal;
+    }
+    
+    public static Calendar getThisInstant(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        return cal;
+    }
+    
+    public static long getOneDay(){
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTimeInMillis();
+    }
+    
+    public static Calendar getCalendar(Date aDate){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(aDate);
+        return cal;
+    }
+    
     public static String getDateAsString(Date aDate){
         //Fri Jul 17 22:41:00 CEST 2015
         return DF.format(aDate);
