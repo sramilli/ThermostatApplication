@@ -159,8 +159,8 @@ class Controller {
                 //ex. 6:00-8:30
                 String[] tSplittedTime = timeInterval.split("-");
                 if (tSplittedTime.length == 2){
-                    try {Calendar tNow = Helper.getThisInstant();
-                        System.out.println("Current date and time: "+new Date(tNow.getTimeInMillis()));
+                    try {Date tNow = Helper.getThisInstant();
+                        System.out.println("Current date and time: "+tNow);
                         DateFormat formatter = new SimpleDateFormat("HH:mm");
                         Date startDate = formatter.parse(tSplittedTime[0]);
                         System.out.println("Start date: "+startDate);

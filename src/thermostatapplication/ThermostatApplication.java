@@ -70,6 +70,8 @@ public class ThermostatApplication {
             System.out.println("ERROR READING PROP FILE!!!");
             ex.printStackTrace();
         }
+        
+        System.out.println("Starting Thermostatapplication at: "+new Date());
 
         
         SwitchOFF iSwitchOFF = new SwitchOFF(SHUTDOWN_BUTTON_17_PI4J_B_REV_2);

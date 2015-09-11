@@ -67,10 +67,8 @@ public class Helper {
         return cal;
     }
     
-    public static Calendar getThisInstant(){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        return cal;
+    public static Date getThisInstant(){
+        return new Date();
     }
     
     public static long getOneDay(){
