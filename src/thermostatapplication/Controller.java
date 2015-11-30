@@ -32,8 +32,7 @@ class Controller {
     public static boolean OFF = false;
 
     public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Relay aRelay) {
-        //initializing state
-        iControllerState = ControllerStateFactory.createControllerState(this, State.OFF);
+
         //iState = State.OFF;
         iHeaterStatusLed = aHeaterStatus;
         iHeaterRelay = aRelay;
@@ -42,6 +41,8 @@ class Controller {
         iLedRed = aRed;
         iTimer = new Timer(true);
         //activateOutput();
+        //initializing state
+        iControllerState = ControllerStateFactory.createControllerState(this, State.OFF);
     }
     
     public void setControllerState(ControllerState aControllerState){
