@@ -18,9 +18,10 @@ import java.util.Timer;
  * @author Ste
  */
 class Controller {
-
-    private Status iStatus;  // on, off, manual
-    private Led iHeaterStatus;
+    
+    private ControllerState iControllerState;
+    //private State iState;  // on, off, manual
+    private Led iHeaterStatusLed;
     private Relay iHeaterRelay;
     private Led iLedGreen;
     private Led iLedYellow;
@@ -31,54 +32,94 @@ class Controller {
     public static boolean OFF = false;
 
     public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Relay aRelay) {
-        iStatus = Status.OFF;
-        iHeaterStatus = aHeaterStatus;
+        //initializing state
+        iControllerState = ControllerStateFactory.createControllerState(this, State.OFF);
+        //iState = State.OFF;
+        iHeaterStatusLed = aHeaterStatus;
         iHeaterRelay = aRelay;
         iLedGreen = aGreen;
         iLedYellow = aYellow;
         iLedRed = aRed;
         iTimer = new Timer(true);
-        activateOutput();
+        //activateOutput();
     }
-
+    
+    public void setControllerState(ControllerState aControllerState){
+        iControllerState = aControllerState;
+    }
+    
+    public ControllerState getControllerState(){
+        return iControllerState;
+    }
+    
+    public void turnOn(){
+        iControllerState.turnON();
+    }
+    
+    public void turnOff(){
+        iControllerState.turnOFF();
+    }
+    
+    public void setToManual(){
+        iControllerState.setToManual();
+    }
+    
     public void switchMode() {
         //Controlled manually by pushing Mode button
         System.out.print("Switching mode manually: ");
-        switch (iStatus){
+        /*switch (iState){
             case ON:
-                iStatus = Status.MANUAL;
+                iState = State.MANUAL;
                 break;
             case MANUAL:
-                iStatus = Status.OFF;
+                iState = State.OFF;
                 break;
             case OFF:
-                iStatus = Status.ON;
+                iState = State.ON;
         }
-        System.out.println(" Mode"+iStatus);
-        activateOutput();
+        System.out.println(" Mode"+iState);
+        */
+        //TODO delete the above!!!!!!!!!!!!
+        iControllerState.switchState();
+        
+        //activateOutput();
     }
 
-    private Status setMode(Status aMode) {
+    private State setMode(State aMode) {
         //Used via SMS
-        if (aMode != Status.ON && aMode != Status.MANUAL && aMode != Status.OFF) {
+        if (aMode != State.ON && aMode != State.MANUAL && aMode != State.OFF) {
             System.out.println("Controller: setMode error: "+aMode);
             return aMode;
         }
-        iStatus = aMode;
-        activateOutput();
-        return iStatus;
+        //iState = aMode;
+        
+        //TODO delete the line above!!!!!!!!!!!1
+        switch (aMode){
+            case ON:
+                this.turnOn();
+                break;
+            case OFF:
+                this.turnOff();
+                break;
+            case MANUAL:
+                this.setToManual();
+        }
+        
+        //activateOutput();
+        return this.getControllerState().getState();
     }
 
-    public Status getState() {
-        return iStatus;
-    }
+    /*public State getState() {
+        return iState;
+    }*/
 
-    private void activateOutput() {
+    /*private void activateOutput() {
         try {
-            switch (iStatus) {
+            switch (iState) {
                 case ON:
+                    //TODO finish this. write it in each class
                     System.out.println("Switching Thermostat to On");
-                    iHeaterStatus.turnOn();
+                    iHeaterStatusLed.turnOn();
                     iHeaterRelay.turnOn();
                     iLedGreen.turnOn();
                     iLedYellow.turnOff();
@@ -86,7 +127,7 @@ class Controller {
                     break;
                 case MANUAL:
                     System.out.println("Switching Thermostat to Manual");
-                    iHeaterStatus.turnOff();
+                    iHeaterStatusLed.turnOff();
                     iHeaterRelay.turnOff();
                     iLedGreen.turnOff();
                     iLedYellow.turnOn();
@@ -94,7 +135,7 @@ class Controller {
                     break;
                 case OFF:
                     System.out.println("Switching Thermostat to Off");
-                    iHeaterStatus.turnOff();
+                    iHeaterStatusLed.turnOff();
                     iHeaterRelay.turnOff();
                     iLedGreen.turnOff();
                     iLedYellow.turnOff();
@@ -106,22 +147,26 @@ class Controller {
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
+    
+    //TODO fortsätt härifrån med refactoring
 
     public void activateManualThermostat() {
-        if (Status.MANUAL.equals(iStatus)) {
+        /*if (State.MANUAL.equals(iState)) {
             System.out.println("Manual Thermostate: On");
-            iHeaterStatus.turnOn();
+            iHeaterStatusLed.turnOn();
             iHeaterRelay.turnOn();
-        }
+        }*/
+        iControllerState.activateManualThermostat();
     }
 
     public void deActivateManualThermostat() {
-        if (Status.MANUAL.equals(iStatus)) {
+        /*if (State.MANUAL.equals(iState)) {
             System.out.println("Manual Thermostat: Off");
-            iHeaterStatus.turnOff();
+            iHeaterStatusLed.turnOff();
             iHeaterRelay.turnOff();
-        }
+        }*/
+        iControllerState.deActivateManualThermostat();
     }
     
     public void executeCommand(CommandType aCmd, String aText) {
@@ -129,26 +174,29 @@ class Controller {
         if (aCmd == null) 
             return;
         if (aCmd.equals(CommandType.ON)) {
-            if (!iStatus.equals(Status.ON)){
+            /*if (!iState.equals(State.ON)){
                 System.out.println("SMS received: Turn On Heater");
-                this.setMode(Status.ON);
+                this.setMode(State.ON);
             }else {
                 System.out.println("SMS received: command not executed, already On");
-            }
+            }*/
+            this.turnOn();
         } else if (aCmd.equals(CommandType.MANUAL)) {
-            if (!iStatus.equals(Status.MANUAL)){
+            /*if (!iState.equals(State.MANUAL)){
                 System.out.println("SMS received: Turn to Manual");
-                this.setMode(Status.MANUAL);
+                this.setMode(State.MANUAL);
             }else {
                 System.out.println("SMS received: command not executed, already on Manual");
-            }
+            }*/
+            this.setToManual();
         } else if (aCmd.equals(CommandType.OFF)) {
-            if (!iStatus.equals(Status.OFF)){
+            /*if (!iState.equals(State.OFF)){
                 System.out.println("SMS received: Off");
-                this.setMode(Status.OFF);
+                this.setMode(State.OFF);
             }else {
                 System.out.println("SMS received: command not executed, already Off");
-            }
+            }*/
+            this.turnOff();
         } else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //clear old program
             //iTimer.cancel(); // TODO
@@ -223,6 +271,46 @@ class Controller {
 
     }
 
+    public Led getHeaterStatusLed() {
+        return iHeaterStatusLed;
+    }
+
+    public void setHeaterStatusLed(Led aHeaterStatusLed) {
+        this.iHeaterStatusLed = aHeaterStatusLed;
+    }
+
+    public Relay getHeaterRelay() {
+        return iHeaterRelay;
+    }
+
+    public void setHeaterRelay(Relay aHeaterRelay) {
+        this.iHeaterRelay = aHeaterRelay;
+    }
+
+    public Led getLedGreen() {
+        return iLedGreen;
+    }
+
+    public void setLedGreen(Led aLedGreen) {
+        this.iLedGreen = aLedGreen;
+    }
+
+    public Led getLedYellow() {
+        return iLedYellow;
+    }
+
+    public void setLedYellow(Led aLedYellow) {
+        this.iLedYellow = aLedYellow;
+    }
+
+    public Led getLedRed() {
+        return iLedRed;
+    }
+
+    public void setLedRed(Led aLedRed) {
+        this.iLedRed = aLedRed;
+    }
+    
     public void close(){
         if (iTimer != null){
             iTimer.cancel();

@@ -197,7 +197,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
             if (PinState.HIGH.equals(event.getState())) {
                 System.out.println("Thermostat: Mode Button pressed!");
                 iController.switchMode();
-                System.out.println("Thermostat: Switched to MODE " + iController.getState());
+                System.out.println("Thermostat: Switched to MODE " + iController.getControllerState().getState());
             }
 
         } else if (tPin == iManualTherostat.getPin()) {
@@ -217,7 +217,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     public String getStatus() {
         StringBuffer tResponse = new StringBuffer();
         tResponse.append("Running since: " + ThermostatApplication.iRunningSince + "\n");
-        tResponse.append("State: " + iController.getState() + "\n");
+        tResponse.append("State: " + iController.getControllerState().getState() + "\n");
         return tResponse.toString();
     }
 

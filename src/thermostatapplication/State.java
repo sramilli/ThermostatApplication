@@ -10,14 +10,14 @@ package thermostatapplication;
  *
  * @author Ste
  */
-public enum Status {
+public enum State {
     ON("On"),
     MANUAL("Manual"),
     OFF("Off");
     
     String iStatus;
     
-    Status(String aStatus){
+    State(String aStatus){
         iStatus = aStatus;
     }
     
