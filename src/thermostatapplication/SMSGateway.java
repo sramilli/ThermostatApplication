@@ -27,7 +27,7 @@ public class SMSGateway {
     static final private char ctrlZ = (char) 26;
     static final private char ctrlD = (char) 4;
     SerialDataListener iSerialDataListener = null;
-    static int GSM_BAUD_RATE = 9600;
+
 
     public SMSGateway getInstance() {
         if (aSMSGateway == null) {
@@ -38,19 +38,12 @@ public class SMSGateway {
     }
 
     public void initialize(SerialDataListener aSerialDataListener) {
-        try{
-            PropertiesHandler prop = PropertiesHandler.getInstance();
-            GSM_BAUD_RATE = new Integer(prop.getProperty("gsmBaudRate"));
-            System.out.println("Read Prop gsmBaudRate correctly");
-        } catch (Throwable ex){
-            System.out.println("ERROR READING PROP FILE for gsmBaudRate, using default 9600!!!");
-            ex.printStackTrace();
-        }
+
         iSerialDataListener = aSerialDataListener;
-        System.out.println(" ... connect using settings: "+GSM_BAUD_RATE+", N, 8, 1.");
+        System.out.println(" ... connect using settings: "+ThermostatProperties.GSM_BAUD_RATE+", N, 8, 1.");
         // create an instance of the serial communications class
         serial = SerialFactory.createInstance();
-        serial.open(Serial.DEFAULT_COM_PORT, GSM_BAUD_RATE);
+        serial.open(Serial.DEFAULT_COM_PORT, ThermostatProperties.GSM_BAUD_RATE);
         waitABit(3000);
         
         sendATCommand();

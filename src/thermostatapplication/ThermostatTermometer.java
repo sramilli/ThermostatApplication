@@ -20,24 +20,28 @@ public class ThermostatTermometer {
     
     Timer timer = null;
     String iName;
-    TemperatureStore iStoreHandler;
+    TemperatureStore iTemperatureStoreHandler;
     
-    public ThermostatTermometer(String aName, TemperatureStore aStoreHandler){
+    public ThermostatTermometer(String aName){
                 timer = new Timer();
                 iName = aName;
-                iStoreHandler = aStoreHandler;
+                iTemperatureStoreHandler = new TemperatureStore();
     }
     
     public void startMeasureTemperature(){
         Date startMeasureDate = Helper.getNextWholeMinuteDatePlusFiveSec(new Date());
         System.out.println("Start reading temperature at: " + Helper.getDateAsString(startMeasureDate));
         //make three measurement per minute (every 15 sec)
-        timer.scheduleAtFixedRate(new ThermostatTermometerReaderTimerTask(iName, iStoreHandler), startMeasureDate, 15 * 1000);
+        timer.scheduleAtFixedRate(new ThermostatTermometerReaderTimerTask(iName, iTemperatureStoreHandler), startMeasureDate, 15 * 1000);
     }
     
     public void stop(){
         if (timer != null){
             timer.cancel();
+        }
+        if (iTemperatureStoreHandler != null){
+            iTemperatureStoreHandler.stop();
+            iTemperatureStoreHandler = null;
         }
     }
 
