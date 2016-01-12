@@ -33,7 +33,7 @@ public class ThermostatApplication {
         System.out.println("Starting Thermostatapplication at: "+new Date());
         SwitchOFF iSwitchOFF = new SwitchOFF(ThermostatProperties.SHUTDOWN_BUTTON);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
-        Thermostat iThermostat = new Thermostat(ThermostatProperties.MODE_BUTTON, ThermostatProperties.MANUAL_THERMOSTAT_INPUT, ThermostatProperties.GREEN_HEATER_STATUS_LED, ThermostatProperties.GREEN_STATE_LED, ThermostatProperties.YELLOW_STATE_LED, ThermostatProperties.RED_STATE_LED, ThermostatProperties.HEATER_RELAY);
+        Thermostat iThermostat = new Thermostat(ThermostatProperties.MODE_BUTTON, ThermostatProperties.MANUAL_THERMOSTAT_INPUT, ThermostatProperties.GREEN_HEATER_STATUS_LED, ThermostatProperties.GREEN_STATE_LED, ThermostatProperties.YELLOW_STATE_LED, ThermostatProperties.RED_STATE_LED, ThermostatProperties.BLUE_PROGRAM_LED, ThermostatProperties.HEATER_RELAY);
         //iThermostat.testSendSMS();
         //iThermostat.testLoopingAT();
         //iThermostat.testReadAllMessages();

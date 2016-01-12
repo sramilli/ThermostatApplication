@@ -27,6 +27,7 @@ public class ThermostatProperties {
     public static int GREEN_STATE_LED = 4;          //23_PI4J_B_REV_2
     public static int YELLOW_STATE_LED = 6;         //25_PI4J_B_REV_2
     public static int RED_STATE_LED = 5;            //24_PI4J_B_REV_2
+    public static int BLUE_PROGRAM_LED = 7;
     public static int MODE_BUTTON = 2;              //27_PI4J_B_REV_2
     public static int SHUTDOWN_BUTTON = 0;          //17_PI4J_B_REV_2
     public static int MANUAL_THERMOSTAT_INPUT = 3;  //22_PI4J_B_REV_2
@@ -47,6 +48,7 @@ public class ThermostatProperties {
             GREEN_STATE_LED = new Integer(prop.getProperty("GREEN_STATE_LED"));
             YELLOW_STATE_LED = new Integer(prop.getProperty("YELLOW_STATE_LED"));
             RED_STATE_LED = new Integer(prop.getProperty("RED_STATE_LED"));
+            //TODO BLUE_PROGRAM_LED !!!
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));

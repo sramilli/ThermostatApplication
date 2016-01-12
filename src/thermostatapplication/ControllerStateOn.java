@@ -50,8 +50,8 @@ class ControllerStateOn implements ControllerState {
 
     @Override
     public void switchState() {
-        System.out.println("Switching state to OFF");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.OFF));
+        System.out.println("Switching state to manual");
+        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.MANUAL));
     }
     
     @Override
@@ -69,4 +69,13 @@ class ControllerStateOn implements ControllerState {
         return State.ON;
     }
     
+    @Override
+    public void turnONConditionally() {
+        turnON();
+    }
+
+    @Override
+    public void turnOFFConditionally() {
+        turnOFF();
+    }
 }

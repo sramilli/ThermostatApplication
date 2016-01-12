@@ -52,8 +52,8 @@ class ControllerStateManual implements ControllerState {
     
     @Override
     public void switchState() {
-        System.out.println("Switching state to ON");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.ON));
+        System.out.println("Switching state to OFF");
+        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.OFF));
     }
     
     @Override
@@ -73,6 +73,16 @@ class ControllerStateManual implements ControllerState {
     @Override
     public State getState() {
         return State.MANUAL;
+    }
+
+    @Override
+    public void turnONConditionally() {
+        System.out.println("Doing nothing, turnONConditionally received while in manual mode");
+    }
+
+    @Override
+    public void turnOFFConditionally() {
+        System.out.println("Doing nothing, turnOFFConditionally received while in manual mode");
     }
     
 }

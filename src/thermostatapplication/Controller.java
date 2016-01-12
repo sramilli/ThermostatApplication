@@ -26,12 +26,13 @@ class Controller {
     private Led iLedGreen;
     private Led iLedYellow;
     private Led iLedRed;
+    private Led iBlue;
     private Timer iTimer;
 
     public static boolean ON = true;
     public static boolean OFF = false;
 
-    public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Relay aRelay) {
+    public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Led aBlue, Relay aRelay) {
 
         //iState = State.OFF;
         iHeaterStatusLed = aHeaterStatus;
@@ -39,6 +40,7 @@ class Controller {
         iLedGreen = aGreen;
         iLedYellow = aYellow;
         iLedRed = aRed;
+        iBlue = aBlue;
         iTimer = new Timer(true);
         //activateOutput();
         //initializing state
@@ -59,6 +61,14 @@ class Controller {
     
     public void turnOff(){
         iControllerState.turnOFF();
+    }
+    
+    public void turnOnConditionally(){
+        iControllerState.turnONConditionally();
+    }
+    
+    public void turnOffConditionally(){
+        iControllerState.turnOFFConditionally();
     }
     
     public void setToManual(){
@@ -182,6 +192,8 @@ class Controller {
                 System.out.println("SMS received: command not executed, already On");
             }*/
             this.turnOn();
+        } else if (aCmd.equals(CommandType.ON_CONDITIONAL)) {
+            this.turnOnConditionally();
         } else if (aCmd.equals(CommandType.MANUAL)) {
             /*if (!iState.equals(State.MANUAL)){
                 System.out.println("SMS received: Turn to Manual");
@@ -197,11 +209,12 @@ class Controller {
             }else {
                 System.out.println("SMS received: command not executed, already Off");
             }*/
+            this.turnOffConditionally();
+        } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOff();
-        } else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
-            //clear old program
-            //iTimer.cancel(); // TODO
-            
+        }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
+            //reset the timer (if no valid parameter is specified it will just clear it)
+            iTimer = new Timer(true);
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
                 String timeInterval = tSplittedStringt[1];
@@ -242,7 +255,7 @@ class Controller {
                             startDate.setTime(startDate.getTime()+Helper.getOneDay());
                         }
                         System.out.println("Scheduling daily Ignition from: "+startDate);
-                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON), startDate, 24 * 60 * 60 * 1000);
+                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL), startDate, 24 * 60 * 60 * 1000);
                         
                         if (tNow.before(stopDate)){
                             //schedule OFF from today
@@ -251,7 +264,7 @@ class Controller {
                             stopDate.setTime(stopDate.getTime()+Helper.getOneDay());
                         }
                         System.out.println("Scheduling daily shutdown from: "+stopDate);
-                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF), stopDate, 24 * 60 * 60 * 1000);
+                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL), stopDate, 24 * 60 * 60 * 1000);
                         
                     } catch (ParseException ex) {
                         //Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);

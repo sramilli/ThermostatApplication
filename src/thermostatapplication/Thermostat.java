@@ -33,6 +33,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     private Led iGreenLED;
     private Led iYellowLED;
     private Led iRedLED;
+    private Led iBlueLED;
     private Button iModeButton;
     private Button iManualTherostat;
     private Controller iController;
@@ -42,16 +43,17 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     public static boolean OFF = false;
     Timer timer;
 
-    public Thermostat(int aModeButtonPinID, int aManualThermostatPinID, int aStatusLEDPinNumber, int aGreenLEDPinNumber, int aYellowLEDPinNumber, int aRedLEDPinNumber, int aHeaterRELAYPinNumber) {
+    public Thermostat(int aModeButtonPinID, int aManualThermostatPinID, int aStatusLEDPinNumber, int aGreenLEDPinNumber, int aYellowLEDPinNumber, int aRedLEDPinNumber, int aBlueLEDPinNumber, int aHeaterRELAYPinNumber) {
         try {
             iStatusLED = new Led(aStatusLEDPinNumber);
             iGreenLED = new Led(aGreenLEDPinNumber);
             iYellowLED = new Led(aYellowLEDPinNumber);
             iRedLED = new Led(aRedLEDPinNumber);
+            iBlueLED = new Led(aBlueLEDPinNumber);
             iHeaterRelay = new Relay(aHeaterRELAYPinNumber);
             iModeButton = new Button(aModeButtonPinID);
             iModeButton.setInputListener(this);
-            iController = new Controller(iStatusLED, iGreenLED, iYellowLED, iRedLED, iHeaterRelay);
+            iController = new Controller(iStatusLED, iGreenLED, iYellowLED, iRedLED, iBlueLED, iHeaterRelay);
             iManualTherostat = new Button(aManualThermostatPinID);
             iManualTherostat.setInputListener(this);
             iSMSGateway = new SMSGateway();

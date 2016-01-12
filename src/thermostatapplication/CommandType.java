@@ -13,7 +13,9 @@ public enum CommandType {
 
     //one word
     ON("on"),
+    ON_CONDITIONAL("onConditional"),
     OFF("off"),
+    OFF_CONDITIONAL("offConditional"),
     MANUAL("manual"),
     STATUS("status"),
     HELP("help"),
