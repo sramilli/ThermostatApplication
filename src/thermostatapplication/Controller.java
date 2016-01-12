@@ -237,7 +237,7 @@ class Controller {
                             //schedule ON from tomorrow
                             startDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
-                        System.out.println("Scheduling daily Ignition from: "+startDateParse);
+                        Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
                         iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL), startDateParse.getTime(), 24 * 60 * 60 * 1000);
                         
                         if (tNow.before(stopDateParse)){
@@ -246,7 +246,7 @@ class Controller {
                             //schedule OFF from tomorrow
                             stopDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
-                        System.out.println("Scheduling daily shutdown from: "+stopDateParse);
+                        Helper.printCal("Scheduling daily shutdown from: ", stopDateParse);
                         iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL), stopDateParse.getTime(), 24 * 60 * 60 * 1000);
                         
                         this.getLedBlue().turnOn();
