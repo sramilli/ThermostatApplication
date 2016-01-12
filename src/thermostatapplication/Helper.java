@@ -5,8 +5,10 @@
  */
 package thermostatapplication;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,8 +69,10 @@ public class Helper {
         return cal;
     }
     
-    public static Date getThisInstant(){
-        return new Date();
+    public static Calendar getThisInstant(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        return cal;
     }
     
     public static long getOneDay(){
@@ -88,6 +92,25 @@ public class Helper {
     
     public static String getTempAsString(float aTemp){
         return NF.format(aTemp);
+    }
+    
+    public static void printCal(String aString, Calendar aCal){
+        DateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+        System.out.println(aString+" : "+sdf.format(aCal.getTime()));
+}
+    
+    public static Calendar parseTime(String aTime) throws ParseException{
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        Date date = formatter.parse(aTime);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        
+        Calendar beguinningOfDay = getBeginningOfDay();
+        cal.set(Calendar.YEAR, beguinningOfDay.get(Calendar.YEAR));
+        cal.set(Calendar.MONTH, beguinningOfDay.get(Calendar.MONTH));
+        cal.set(Calendar.DAY_OF_MONTH, beguinningOfDay.get(Calendar.DAY_OF_MONTH));
+        
+        return cal;
     }
     
 }
