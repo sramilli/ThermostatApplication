@@ -26,7 +26,7 @@ class Controller {
     private Led iLedGreen;
     private Led iLedYellow;
     private Led iLedRed;
-    private Led iBlue;
+    private Led iLedBlue;
     private Timer iTimer;
 
     public static boolean ON = true;
@@ -40,7 +40,7 @@ class Controller {
         iLedGreen = aGreen;
         iLedYellow = aYellow;
         iLedRed = aRed;
-        iBlue = aBlue;
+        iLedBlue = aBlue;
         iTimer = new Timer(true);
         //activateOutput();
         //initializing state
@@ -215,6 +215,7 @@ class Controller {
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
             iTimer = new Timer(true);
+            this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
                 String timeInterval = tSplittedStringt[1];
@@ -266,6 +267,8 @@ class Controller {
                         System.out.println("Scheduling daily shutdown from: "+stopDate);
                         iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL), stopDate, 24 * 60 * 60 * 1000);
                         
+                        this.getLedBlue().turnOn();
+                        
                     } catch (ParseException ex) {
                         //Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace();
@@ -303,6 +306,10 @@ class Controller {
 
     public Led getLedGreen() {
         return iLedGreen;
+    }
+    
+    public Led getLedBlue() {
+        return iLedBlue;
     }
 
     public void setLedGreen(Led aLedGreen) {
