@@ -209,9 +209,9 @@ class Controller {
             }else {
                 System.out.println("SMS received: command not executed, already Off");
             }*/
-            this.turnOffConditionally();
-        } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOff();
+        } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
+            this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
             iTimer = new Timer(true);
