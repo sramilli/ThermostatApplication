@@ -66,7 +66,7 @@ class Controller {
         Calendar tLastStart = Calendar.getInstance();
         tLastStart.setTimeInMillis(iStartTask.scheduledExecutionTime());
         Calendar tLastStop = Calendar.getInstance();
-        tLastStart.setTimeInMillis(iStopTask.scheduledExecutionTime());
+        tLastStop.setTimeInMillis(iStopTask.scheduledExecutionTime());
         return sdf.format(tLastStart.getTime()) + "-" + sdf.format(tLastStop.getTime());
     }
     
