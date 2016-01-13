@@ -60,7 +60,7 @@ class Controller {
         return iControllerState;
     }
     
-    public String getProgramHours(){
+    public String getProgramTimes(){
         if (iStartTask == null) return "not active";
         DateFormat sdf = new SimpleDateFormat("HH:mm");
         Calendar tLastStart = Calendar.getInstance();
@@ -230,6 +230,8 @@ class Controller {
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
             iTimer = new Timer(true);
+            iStartTask = null;
+            iStopTask = null;
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
