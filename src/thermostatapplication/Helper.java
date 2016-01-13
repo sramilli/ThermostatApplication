@@ -97,7 +97,12 @@ public class Helper {
     public static void printCal(String aString, Calendar aCal){
         DateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
         System.out.println(aString+" : "+sdf.format(aCal.getTime()));
-}
+    }
+    
+    public static String calToString(Calendar aCal){
+        DateFormat sdf = new SimpleDateFormat("dd MMM HH:mm");
+        return sdf.format(aCal.getTime());
+    }
     
     public static Calendar parseTime(String aTime) throws ParseException{
         DateFormat formatter = new SimpleDateFormat("HH:mm");

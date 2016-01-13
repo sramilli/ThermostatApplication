@@ -7,6 +7,7 @@ package thermostatapplication;
 
 //import de.pi3g.pi.oled.OLEDDisplay;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -16,7 +17,7 @@ import java.util.Date;
  */
 public class ThermostatApplication {
 
-    public static Date iRunningSince = new Date();
+    public static Calendar iRunningSince = Calendar.getInstance();
     ThermostatTermometer thermostatTermometer = null;
     
     public ThermostatApplication() {

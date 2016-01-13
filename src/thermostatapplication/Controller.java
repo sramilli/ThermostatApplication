@@ -28,9 +28,14 @@ class Controller {
     private Led iLedRed;
     private Led iLedBlue;
     private Timer iTimer;
+    
+    ThermostatIgnitionShutdownTimerTask iStartTask;
+    ThermostatIgnitionShutdownTimerTask iStopTask;
 
     public static boolean ON = true;
     public static boolean OFF = false;
+    
+    public static long REPEAT_DAILY = 24 * 60 * 60 * 1000;
 
     public Controller(Led aHeaterStatus, Led aGreen, Led aYellow, Led aRed, Led aBlue, Relay aRelay) {
 
@@ -53,6 +58,16 @@ class Controller {
     
     public ControllerState getControllerState(){
         return iControllerState;
+    }
+    
+    public String getProgramHours(){
+        if (iStartTask == null) return "not active";
+        DateFormat sdf = new SimpleDateFormat("HH:mm");
+        Calendar tLastStart = Calendar.getInstance();
+        tLastStart.setTimeInMillis(iStartTask.scheduledExecutionTime());
+        Calendar tLastStop = Calendar.getInstance();
+        tLastStart.setTimeInMillis(iStopTask.scheduledExecutionTime());
+        return sdf.format(tLastStart) + "-" + sdf.format(tLastStop);
     }
     
     public void turnOn(){
@@ -238,7 +253,8 @@ class Controller {
                             startDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
-                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL), startDateParse.getTime(), 24 * 60 * 60 * 1000);
+                        iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+                        iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
                         
                         if (tNow.before(stopDateParse)){
                             //schedule OFF from today
@@ -247,7 +263,8 @@ class Controller {
                             stopDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         Helper.printCal("Scheduling daily shutdown from: ", stopDateParse);
-                        iTimer.scheduleAtFixedRate(new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL), stopDateParse.getTime(), 24 * 60 * 60 * 1000);
+                        iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
+                        iTimer.scheduleAtFixedRate(iStopTask, stopDateParse.getTime(), REPEAT_DAILY);
                         
                         this.getLedBlue().turnOn();
                         
