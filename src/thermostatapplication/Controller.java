@@ -67,7 +67,7 @@ class Controller {
         tLastStart.setTimeInMillis(iStartTask.scheduledExecutionTime());
         Calendar tLastStop = Calendar.getInstance();
         tLastStart.setTimeInMillis(iStopTask.scheduledExecutionTime());
-        return sdf.format(tLastStart) + "-" + sdf.format(tLastStop);
+        return sdf.format(tLastStart.getTime()) + "-" + sdf.format(tLastStop.getTime());
     }
     
     public void turnOn(){
