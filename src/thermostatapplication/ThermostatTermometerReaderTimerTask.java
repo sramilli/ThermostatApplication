@@ -81,7 +81,7 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
         //TODO UGLY!!!  dont do it like this!
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateRead);
-        ThermostatApplication.lastTemperatureRead = averageMinuteTemp + " degrees. " + Helper.calToString(cal);
+        ThermostatApplication.lastTemperatureRead = Helper.getTempAsString(averageMinuteTemp) + " C " + Helper.calToString(cal);
     }
 
     private void storeTemperature(String NAME, Date aDate, float aTemp) {
