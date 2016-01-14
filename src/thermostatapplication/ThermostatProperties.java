@@ -32,7 +32,8 @@ public class ThermostatProperties {
     public static int SHUTDOWN_BUTTON = 0;          //17_PI4J_B_REV_2
     public static int MANUAL_THERMOSTAT_INPUT = 3;  //22_PI4J_B_REV_2
 
-    public static boolean START_READING_TEMPERATURES = false;
+    public static boolean START_READING_TEMPERATURES = true;
+    public static boolean STORE_TEMPERATURES = false;
     public static String THERMOSTAT_LOCATION = "";
     public static boolean SOFT_SHUTDOWN_ENABLED = false;
     public static int GSM_BAUD_RATE = 9600;
@@ -40,7 +41,8 @@ public class ThermostatProperties {
     static {
         try{
             PropertiesHandler prop = PropertiesHandler.getInstance();
-            START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
+            //TODO change this to true (on mine and Dad) and reenable the reading
+            //START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
             THERMOSTAT_LOCATION = prop.getProperty("THERMOSTAT_LOCATION");
             GSM_BAUD_RATE = new Integer(prop.getProperty("gsmBaudRate"));
             GREEN_HEATER_STATUS_LED = new Integer(prop.getProperty("GREEN_HEATER_STATUS_LED"));
@@ -48,7 +50,9 @@ public class ThermostatProperties {
             GREEN_STATE_LED = new Integer(prop.getProperty("GREEN_STATE_LED"));
             YELLOW_STATE_LED = new Integer(prop.getProperty("YELLOW_STATE_LED"));
             RED_STATE_LED = new Integer(prop.getProperty("RED_STATE_LED"));
-            //TODO BLUE_PROGRAM_LED !!!
+            //TODO 
+            //BLUE_PROGRAM_LED
+            //STORE_TEMPERATURES = false
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));

@@ -69,8 +69,15 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
                 } else averageMinuteTemp = 0;
                 iteration = 0;
                 System.out.println("AverageMinuteTemperature " + Helper.getDateAsString(dateRead) + " " + Helper.getTempAsString(averageMinuteTemp) );
-                storeTemperature(name, dateRead, averageMinuteTemp);
+                if (ThermostatProperties.STORE_TEMPERATURES){
+                    storeTemperature(name, dateRead, averageMinuteTemp);
+                }
         }
+    }
+    
+    public void updateLastTemperatureRead(){
+        //TODO UGLY!!!  dont do it like this!
+        ThermostatApplication.lastTemperatureRead = averageMinuteTemp + " degrees. " + dateRead;
     }
 
     private void storeTemperature(String NAME, Date aDate, float aTemp) {

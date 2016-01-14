@@ -221,6 +221,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
         tResponse.append("Running since: " + Helper.calToString(ThermostatApplication.iRunningSince) + "\n");
         tResponse.append("State: " + iController.getControllerState().getState() + "\n");
         tResponse.append("ProgramDaily: " + iController.getProgramTimes() + "\n");
+        tResponse.append("Last Temp read: " + ThermostatApplication.lastTemperatureRead);
         return tResponse.toString();
     }
 
