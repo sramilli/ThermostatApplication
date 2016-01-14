@@ -8,6 +8,7 @@ package thermostatapplication;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -78,7 +79,9 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
     
     public void updateLastTemperatureRead(){
         //TODO UGLY!!!  dont do it like this!
-        ThermostatApplication.lastTemperatureRead = averageMinuteTemp + " degrees. " + dateRead;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateRead);
+        ThermostatApplication.lastTemperatureRead = averageMinuteTemp + " degrees. " + Helper.calToString(cal);
     }
 
     private void storeTemperature(String NAME, Date aDate, float aTemp) {
