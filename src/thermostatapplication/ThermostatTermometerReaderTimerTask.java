@@ -72,6 +72,7 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
                 if (ThermostatProperties.STORE_TEMPERATURES){
                     storeTemperature(name, dateRead, averageMinuteTemp);
                 }
+            updateLastTemperatureRead();
         }
     }
     
