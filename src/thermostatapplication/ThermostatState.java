@@ -4,7 +4,7 @@ package thermostatapplication;
  * States: ON, OFF, MANUAL
  */
 
-public interface ControllerState {
+public interface ThermostatState {
     
     void turnON();
     void turnONConditionally();

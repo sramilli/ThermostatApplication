@@ -9,12 +9,12 @@ package thermostatapplication;
  *
  * @author Ste
  */
-class ControllerStateOff implements ControllerState {
+class ThermostatStateOff implements ThermostatState {
     
-    Controller iController;
+    Thermostat iThermostat;
 
-    public ControllerStateOff(Controller aController) {
-        iController = aController;
+    public ThermostatStateOff(Thermostat aThermostatInstance) {
+        iThermostat = aThermostatInstance;
         /*
             System.out.println("Switching Thermostat to Off");
             iHeaterStatusLed.turnOff();
@@ -24,18 +24,18 @@ class ControllerStateOff implements ControllerState {
             iLedRed.turnOn();
         */
         System.out.println("Switching Thermostat to Off");
-        iController.getHeaterStatusLed().turnOff();
-        iController.getHeaterRelay().turnOff();
-        iController.getLedGreen().turnOff();
-        iController.getLedYellow().turnOff();
-        iController.getLedRed().turnOn();
+        iThermostat.getHeaterStatusLed().turnOff();
+        iThermostat.getHeaterRelay().turnOff();
+        iThermostat.getLedGreen().turnOff();
+        iThermostat.getLedYellow().turnOff();
+        iThermostat.getLedRed().turnOn();
         
     }
 
     @Override
     public void turnON() {
         System.out.println("Turning on");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.ON));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.ON));
     }
 
     @Override
@@ -46,13 +46,13 @@ class ControllerStateOff implements ControllerState {
     @Override
     public void setToManual() {
         System.out.println("Setting to manual");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.MANUAL));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.MANUAL));
     }
     
     @Override
     public void switchState() {
         System.out.println("Switching state to ON");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.ON));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.ON));
     }
 
     @Override

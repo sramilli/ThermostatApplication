@@ -24,15 +24,15 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
     int iteration;
     Date dateRead;
     String name;
-    TemperatureStore storeHandler;
+    TemperatureReader iTemperatureReader;
 
-    public ThermostatTermometerReaderTimerTask(String aName, TemperatureStore aStoreHandler){
+    public ThermostatTermometerReaderTimerTask(String aName, TemperatureReader aTemperatureReader){
         tempSensor = new AdafruitBMP180();
         temp = 0;
         averageMinuteTemp = 0;
         iteration = 0;
         name = aName;
-        storeHandler = aStoreHandler;
+        iTemperatureReader = aTemperatureReader;
     }
 
     @Override
@@ -85,10 +85,10 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
     }
 
     private void storeTemperature(String NAME, Date aDate, float aTemp) {
-        if (storeHandler.size() < 3000){
-            storeHandler.storeTemperature(new TemperatureMeasure(NAME, aDate, aTemp));
+        if (iTemperatureReader.size() < 3000){
+            iTemperatureReader.storeTemperature(new TemperatureMeasure(NAME, aDate, aTemp));
         }else {
-            System.out.println("StoreSize ("+storeHandler.size()+") exceeded max size!! Not storing anymore");
+            System.out.println("StoreSize ("+iTemperatureReader.size()+") exceeded max size!! Not storing anymore");
         }
     }
 

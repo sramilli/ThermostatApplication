@@ -9,17 +9,17 @@ package thermostatapplication;
  *
  * @author Ste
  */
-public class ControllerStateFactory {
+public class ThermostatStateFactory {
     
-    public static ControllerState createControllerState(Controller aController, State aState){
+    public static ThermostatState createThermostatState(Thermostat aThermostatInstance, State aState){
         
         switch (aState){
             case ON: 
-                return new ControllerStateOn(aController);
+                return new ThermostatStateOn(aThermostatInstance);
             case OFF:
-                return new ControllerStateOff(aController);
+                return new ThermostatStateOff(aThermostatInstance);
             case MANUAL:
-                return new ControllerStateManual(aController);
+                return new ThermostatStateManual(aThermostatInstance);
             default:
                 return null;
         }

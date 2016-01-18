@@ -9,12 +9,12 @@ package thermostatapplication;
  *
  * @author Ste
  */
-class ControllerStateManual implements ControllerState {
+class ThermostatStateManual implements ThermostatState {
     
-    Controller iController;
+    Thermostat iThermostat;
 
-    public ControllerStateManual(Controller aController) {
-        iController = aController;
+    public ThermostatStateManual(Thermostat aThermostatInstance) {
+        iThermostat = aThermostatInstance;
         /*
             System.out.println("Switching Thermostat to Manual");
             iHeaterStatusLed.turnOff();
@@ -25,24 +25,24 @@ class ControllerStateManual implements ControllerState {
         */
         System.out.println("Switching Thermostat to Manual");
         //TODO . Correct the initial status
-        iController.getHeaterStatusLed().turnOff();
-        iController.getHeaterRelay().turnOff();
+        iThermostat.getHeaterStatusLed().turnOff();
+        iThermostat.getHeaterRelay().turnOff();
         
-        iController.getLedGreen().turnOff();
-        iController.getLedYellow().turnOn();
-        iController.getLedRed().turnOff();
+        iThermostat.getLedGreen().turnOff();
+        iThermostat.getLedYellow().turnOn();
+        iThermostat.getLedRed().turnOff();
     }
 
     @Override
     public void turnON() {
         System.out.println("Turning on");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.ON));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.ON));
     }
 
     @Override
     public void turnOFF() {
         System.out.println("Turning off");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.OFF));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.OFF));
     }
 
     @Override
@@ -53,21 +53,21 @@ class ControllerStateManual implements ControllerState {
     @Override
     public void switchState() {
         System.out.println("Switching state to OFF");
-        iController.setControllerState(ControllerStateFactory.createControllerState(iController, State.OFF));
+        iThermostat.setThermostatState(ThermostatStateFactory.createThermostatState(iThermostat, State.OFF));
     }
     
     @Override
     public void activateManualThermostat() {
         System.out.println("Switching on manual thermostat");
-        iController.getHeaterStatusLed().turnOn();
-        iController.getHeaterRelay().turnOn();
+        iThermostat.getHeaterStatusLed().turnOn();
+        iThermostat.getHeaterRelay().turnOn();
     }
 
     @Override
     public void deActivateManualThermostat() {
         System.out.println("Switching off manual thermostat");
-        iController.getHeaterStatusLed().turnOff();
-        iController.getHeaterRelay().turnOff();
+        iThermostat.getHeaterStatusLed().turnOff();
+        iThermostat.getHeaterRelay().turnOff();
     }
 
     @Override

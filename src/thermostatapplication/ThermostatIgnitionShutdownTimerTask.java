@@ -14,17 +14,17 @@ import java.util.TimerTask;
  */
 public class ThermostatIgnitionShutdownTimerTask extends TimerTask{
     
-    Controller iController;
+    Thermostat iThermostat;
     CommandType iCommandType;
     
-    public ThermostatIgnitionShutdownTimerTask(Controller aController, CommandType aCommandType){
-        iController = aController;
+    public ThermostatIgnitionShutdownTimerTask(Thermostat aThermostat, CommandType aCommandType){
+        iThermostat = aThermostat;
         iCommandType = aCommandType;
     }
 
     @Override
     public void run() {
-        iController.executeCommand(iCommandType, null);
+        iThermostat.executeCommand(iCommandType, null);
     }
     
 }

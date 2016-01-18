@@ -19,7 +19,7 @@ public class ThermostatApplication {
 
     public static Calendar iRunningSince = Calendar.getInstance();
     public static String lastTemperatureRead = "";
-    ThermostatTermometer thermostatTermometer = null;
+    TemperatureReader iTemperatureReader = null;
     
     public ThermostatApplication() {
         super();
@@ -35,15 +35,15 @@ public class ThermostatApplication {
         System.out.println("Starting Thermostatapplication at: "+new Date());
         SwitchOFF iSwitchOFF = new SwitchOFF(ThermostatProperties.SHUTDOWN_BUTTON);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
-        Thermostat iThermostat = new Thermostat(ThermostatProperties.MODE_BUTTON, ThermostatProperties.MANUAL_THERMOSTAT_INPUT, ThermostatProperties.GREEN_HEATER_STATUS_LED, ThermostatProperties.GREEN_STATE_LED, ThermostatProperties.YELLOW_STATE_LED, ThermostatProperties.RED_STATE_LED, ThermostatProperties.BLUE_PROGRAM_LED, ThermostatProperties.HEATER_RELAY);
+        Thermostat iThermostat = new Thermostat();
         //iThermostat.testSendSMS();
         //iThermostat.testLoopingAT();
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
        
         if (ThermostatProperties.START_READING_TEMPERATURES){
-            thermostatTermometer = new ThermostatTermometer("Thermostat"+ThermostatProperties.THERMOSTAT_LOCATION);
-            thermostatTermometer.startMeasureTemperature();
+            iTemperatureReader = new TemperatureReader("Thermostat"+ThermostatProperties.THERMOSTAT_LOCATION);
+            iTemperatureReader.startReadingTemperatures();
         }
         
             /* TODO ONGOING OLED DISPLAY
@@ -70,8 +70,8 @@ public class ThermostatApplication {
         System.out.println("Main Application: Prepare to turn Off the system!");
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
-        if (ThermostatProperties.START_READING_TEMPERATURES){
-            thermostatTermometer.stop();
+        if (iTemperatureReader != null){
+            iTemperatureReader.stop();
         }
         /* TODO ONGOING OLED DISPLAY
         display.shutdown();
@@ -79,7 +79,7 @@ public class ThermostatApplication {
 
         waitABit(10000);
         iThermostat = null;
-        thermostatTermometer = null;
+        iTemperatureReader = null;
         
         if (iSwitchOFF.justTerminateApp() && ThermostatProperties.SOFT_SHUTDOWN_ENABLED){
             System.out.println("Just exit the java application");
