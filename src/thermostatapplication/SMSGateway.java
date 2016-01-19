@@ -20,21 +20,26 @@ import java.util.StringTokenizer;
  *
  * @author Ste
  */
-public class SMSGateway {
+public class SMSGateway implements SerialDataListener{
 
-    SMSGateway aSMSGateway;
+    private static SMSGateway iInstance = null;
+    private static MessageHandler iMessageHandler = null;
+    
     Serial serial;
+    SerialDataListener iSerialDataListener = null;
+    
     static final private char ctrlZ = (char) 26;
     static final private char ctrlD = (char) 4;
-    SerialDataListener iSerialDataListener = null;
 
+    private SMSGateway(){
+    }
 
-    public SMSGateway getInstance() {
-        if (aSMSGateway == null) {
-            aSMSGateway = new SMSGateway();
-            //aSMSGateway.initialize();
+    public static synchronized SMSGateway getInstance(MessageHandler aMessageHandler) {
+        if (iInstance == null) {
+            iInstance = new SMSGateway();
         }
-        return aSMSGateway;
+        iMessageHandler = aMessageHandler;
+        return iInstance;
     }
 
     public void initialize(SerialDataListener aSerialDataListener) {
@@ -68,10 +73,37 @@ public class SMSGateway {
         }
         serial.addListener(iSerialDataListener);
     }
-
-    public void sendText(String aString) {
-    }
     
+    ////////////
+    // listener from Thermostat
+    ////////////
+    
+        @Override
+     public void dataReceived(SerialDataEvent event) {
+         // print out the data received to the console
+         //http://www.developershome.com/sms/resultCodes3.asp
+         System.out.println("Incoming event arrived from the GSM module!");
+         String response = event.getData();
+         this.removeListener(this);
+         //String response = iSMSGateway.readAnswer();
+         System.out.println("");
+         if (GSMDataInterpreter.getCommand(response).equals(GSMCommand.MESSAGE_ARRIVED)){
+            System.out.println("A new message has arrived!");
+            System.out.print("AAAAASMSGateway-dataReceived: ---->"+response+"<----");
+            waitABit(3000);
+            List<SMS> tSMSs = getAllMessages();
+            printAllMessages(tSMSs);
+            
+            iMessageHandler.processReceivedSMSS(tSMSs);
+            
+            //delete all messages
+            this.deleteAllMessages(tSMSs);
+         }
+         this.addListener(this);
+     }
+
+
+
     //
     //Collection utility
     //
@@ -119,7 +151,13 @@ public class SMSGateway {
     
     public void sendHelpMessageToUser(String aRecipient) {
         System.out.println("Sendind Help message to ["+aRecipient+"] ");
-        sendTextMessageToUser(aRecipient, "Examples: 1) on 2) off 3) manual 4) status 5) help 6) register +391234512345 7) ProgramDaily 6:15-7:45");
+        sendTextMessageToUser(aRecipient, "Examples: 1) on\n"
+                + "2) off\n"
+                + "3) manual\n"
+                + "4) status\n"
+                + "5) help\n"
+                + "6) register +391234512345\n"
+                + "7) ProgramDaily 6:15-7:45");
     }
     
     public void sendTextMessageToUser(String aNumberRecipient, String aMessage) {

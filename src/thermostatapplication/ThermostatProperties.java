@@ -36,6 +36,7 @@ public class ThermostatProperties {
     public static boolean STORE_TEMPERATURES = false;
     public static String THERMOSTAT_LOCATION = "";
     public static boolean SOFT_SHUTDOWN_ENABLED = false;
+    public static boolean PREFER_EMAIL_REPLIES_IF_AVAILABLE = true;
     public static int GSM_BAUD_RATE = 9600;
     
     static {
@@ -53,6 +54,7 @@ public class ThermostatProperties {
             //TODO 
             //BLUE_PROGRAM_LED
             //STORE_TEMPERATURES = false
+            //PREFER_EMAIL_REPLIES_IF_AVAILABLE
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));

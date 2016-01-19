@@ -23,7 +23,7 @@ import static java.lang.Thread.sleep;
  *
  * @author Ste
  */
-public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
+public class Thermostat implements GpioPinListenerDigital {
 
     private ThermostatState iThermostatState;
         
@@ -36,7 +36,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     private Button iModeButton;
     private Button iManualTherostat;
     
-    private SMSGateway iSMSGateway;
+    private MessageHandler iMessageHandler;
 
     private Timer iTimer;
     
@@ -46,6 +46,15 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     public static long REPEAT_DAILY = 24 * 60 * 60 * 1000;
     public static boolean ON = true;
     public static boolean OFF = false;
+    
+    public final static String HELP_TEXT_USAGE = 
+                "Examples: 1) on\n"
+                + "2) off\n"
+                + "3) manual\n"
+                + "4) status\n"
+                + "5) help\n"
+                + "6) register +391234512345\n"
+                + "7) ProgramDaily 6:15-7:45";
 
     public Thermostat() {
         try {
@@ -60,8 +69,8 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
             iManualTherostat = new Button(ThermostatProperties.MANUAL_THERMOSTAT_INPUT);
             iManualTherostat.setInputListener(this);
             
-            iSMSGateway = new SMSGateway();
-            iSMSGateway.initialize(this);
+            iMessageHandler = new MessageHandler(this);
+            //iSMSGateway.initialize(this);
             
             iTimer = new Timer(true);
             
@@ -72,53 +81,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
         }
     }
     
-    @Override
-     public void dataReceived(SerialDataEvent event) {
-         // print out the data received to the console
-         //http://www.developershome.com/sms/resultCodes3.asp
-         System.out.println("Incoming event arrived from the GSM module!");
-         String response = event.getData();
-         iSMSGateway.removeListener(this);
-         //String response = iSMSGateway.readAnswer();
-         System.out.println("");
-         if (GSMDataInterpreter.getCommand(response).equals(GSMCommand.MESSAGE_ARRIVED)){
-            System.out.println("A new message has arrived!");
-            System.out.print("AAAAAThermostat-dataReceived: ---->"+response+"<----");
-            waitABit(3000);
-            List<SMS> tSMSs = iSMSGateway.getAllMessages();
-            iSMSGateway.printAllMessages(tSMSs);
-            //check for valid commands
-            for (SMS tSMS : tSMSs) {
-                CommandType tCommand = CommandParser.parse(tSMS);
-                if (tSMS.isDateValid() && tSMS.senderAuthorized() && (tCommand).isActive()) {
-                    System.out.println("Date Valid & User Authorized & Command is active. Executing: -------> " + tSMS);
-                    if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
-                        this.executeCommand(tCommand, null);
-                    } else if (CommandType.STATUS.equals(tCommand)){
-                        iSMSGateway.sendStatusToUser(tSMS.getSender(), this.getStatus());
-                    } else if (CommandType.HELP.equals(tCommand)){
-                        iSMSGateway.sendHelpMessageToUser(tSMS.getSender());
-                    } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
-                        String[] tSplittedStringt = tSMS.getText().split(" ");
-                        if (tSplittedStringt.length >= 2){
-                            System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
-                            AuthorizedUsers.addAuthorizedUser(tSplittedStringt[1]);
-                        }else {
-                            System.out.println("REGISTER_NUMBER command not formatted correctly");
-                        }
-                    } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
-                       this.executeCommand(tCommand, tSMS.getText());
-                    }
-                    break; //execute only last command
-                } else {
-                    System.out.println("SMS discarded: " + tSMS);
-                }
-            }
-            //delete all messages
-            iSMSGateway.deleteAllMessages(tSMSs);
-         }
-         iSMSGateway.addListener(this);
-     }
+
 
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
@@ -229,6 +192,34 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
     public void deActivateManualThermostat() {
         iThermostatState.deActivateManualThermostat();
     }
+    
+    public void processReceivedCommand(CommandType tCommand, SMS aSMS){
+                if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
+                    executeCommand(tCommand, null);
+                } else if (CommandType.STATUS.equals(tCommand)){
+                    //TODO change to user instead of aSMS
+                    //TODO
+                    iMessageHandler.sendMessage(new Message(aSMS.getSender(), null, this.getStatus()));
+                } else if (CommandType.HELP.equals(tCommand)){
+                    iMessageHandler.sendMessage(new Message(aSMS.getSender(), null, HELP_TEXT_USAGE));
+                } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
+                    //TODO !!!!!!!!!!!!!!1
+                    //FINISH REFACTOR!!!!!!!!1
+                    //
+                    String[] tSplittedStringt = aSMS.getText().split(" ");
+                    if (tSplittedStringt.length >= 2){
+                        System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
+                        AuthorizedUsers.addAuthorizedUser(tSplittedStringt[1]);
+                    }else {
+                        System.out.println("REGISTER_NUMBER command not formatted correctly");
+                    }
+                } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
+                    executeCommand(tCommand, aSMS.getText());
+                }
+    }
+    
+            //TODO TODO TODO 
+            //anything to refactor in processReceivedCommand and executeCommand???
     
     public void executeCommand(CommandType aCmd, String aText) {
         //used via SMS
@@ -391,12 +382,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
                 iManualTherostat.close();
                 iManualTherostat = null;
             }
-            if (iSMSGateway != null) {
-                System.out.println("Thermostat: Turning off SMSGateway");
-                waitABit(3000);
-                iSMSGateway.stop();
-                iSMSGateway = null;
-            }
+
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -411,11 +397,7 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
         }
     }
     
-    ///////////
-    // TEST
-    ///////////
-    
-    
+     
     public void testRelay() {
         for (int i = 1; i < 8; i++) {
             try {
@@ -430,65 +412,4 @@ public class Thermostat implements GpioPinListenerDigital, SerialDataListener {
             }
         }
     }
-
-    public void testSendSMS() {
-        iSMSGateway.sendTextMessageToUser("+46700447531", "This is anooother test");
-    }
-
-    public void testLoopingAT() {
-        iSMSGateway.testLoopingAT();
-    }
-
-    public String testReadAllMessagesRaw() {
-        return iSMSGateway.readAllMessagesRaw();
-    }
-
-    public void testReadAllMessages() {
-        for (SMS tSMS : iSMSGateway.getAllMessages()) {
-            System.out.println(tSMS);
-        }
-    }
-
-    public void testReadAllMessagesOneByOne() {
-        for (SMS tSMS : iSMSGateway.getAllMessages()) {
-            System.out.println(iSMSGateway.readMsgAtCertainPosition(tSMS.getPosition()));
-        }
-    }
-
-    /*   Keep if i want to eliminate the listener
-    public void startPollingIncomingCommands(boolean aDeleteReadMessages, int aSeconds) {
-        timer = new Timer();
-        //every 30 seconds
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                List<SMS> tSMSs = iSMSGateway.getAllMessages();
-                Collections.sort(tSMSs);
-                Collections.reverse(tSMSs);
-                //print the list
-                System.out.println("List of all messages on the modem ordered by date:");
-                for (SMS tSMS : tSMSs) {
-                    System.out.println(tSMS);
-                }
-                //check for valid commands
-                for (SMS tSMS : tSMSs) {
-                    if (tSMS.isDateValid() && tSMS.senderAuthorized() && (CommandParser.parse(tSMS)).isValid()) {
-                        System.out.println("Date Valid & User Authorized & Command is valid. Executing: -------> " + tSMS);
-                        iController.executeCommand(CommandParser.parse(tSMS));
-                        break; //execute only last command
-                    } else {
-                        System.out.println("SMS discarded: " + tSMS);
-                    }
-                }
-                if (aDeleteReadMessages) {
-                    //TODO delete all messages
-                    for (SMS tSMS : tSMSs) {
-                        System.out.println("Delete message "+tSMS);
-                        String tResp = iSMSGateway.deleteMsgAtCertainPosition(tSMS.getPosition());
-                        System.out.println(tResp);
-                    }
-                }
-            }
-        }, 0, aSeconds * 1000);
-    }*/
 }
