@@ -28,7 +28,12 @@ public class MessageHandler {
             System.out.println("MessageController sendMessage doing nothing. Message null");
             return;
         }
-        if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && aMessage.hasValidEmailAddr()){
+        User tUser = AuthorizedUsers.getUser(aMessage.getMobNr());
+        if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && tUser != null && tUser.hasValidEmail() && ThermostatProperties.A != null && ThermostatProperties.B != null){
+            //TODO refactor user (key as number, and other field mobnr). refactor message (no email in it. no MobNr in it). 
+            //refactor when receiving a message (find immediatelly the user) // rename AuthorizedUsers to Users and store data somewhere else
+            System.out.println(" "+"1"+ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE +"2"+ (tUser != null) +"3"+ (tUser.hasValidEmail()) +"4"+ (ThermostatProperties.A != null) +"5"+ (ThermostatProperties.B != null));
+            aMessage.setEmailAddr(tUser.getEmail());
             sendEmailMessage(aMessage);
         } else if (aMessage.hasValidMobNr()){
             sendSMSMessage(aMessage);
@@ -38,7 +43,7 @@ public class MessageHandler {
     public void processReceivedSMSS(List<SMS> aSMSs){
         for (SMS tSMS : aSMSs) {
             CommandType tCommand = CommandParser.parse(tSMS);
-            if (tSMS.isDateValid() && tSMS.senderAuthorized() && tCommand != null && tCommand.isActive()) {
+            if (tSMS.isDateValid() && AuthorizedUsers.isAuthorized(tSMS.getSender()) && tCommand != null && tCommand.isActive()) {
                 System.out.println("Date Valid & User Authorized & Command is active. Executing: -------> " + tSMS);
                 iThermostat.processReceivedCommand(tCommand, tSMS);
                 break; //execute only last command
@@ -49,8 +54,11 @@ public class MessageHandler {
     } 
 
     private void sendEmailMessage(Message aMessage) {
-        //TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO //TODO //TODO //TODO //TODO
+        //TO IMPLEMENT!!!!
+        System.out.println("EEEEEEEEEMMMMMMMMMMAAAAAAAIIIIIIILLLLLLLL!!!!!");
+        System.out.println(aMessage.iBody);
+        System.out.println("EEEEEEEEEMMMMMMMMMMAAAAAAAIIIIIIILLLLLLLL     ENNNNNDDD!!!!!");
         
     }
 

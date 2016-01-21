@@ -211,6 +211,7 @@ public class Thermostat implements GpioPinListenerDigital {
                     String[] tSplittedStringt = aSMS.getText().split(" ");
                     if (tSplittedStringt.length >= 2){
                         System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
+                        //TODO complete with name and email
                         AuthorizedUsers.addAuthorizedUser(tSplittedStringt[1]);
                     }else {
                         System.out.println("REGISTER_NUMBER command not formatted correctly");

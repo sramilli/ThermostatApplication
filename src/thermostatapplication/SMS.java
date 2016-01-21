@@ -129,7 +129,7 @@ public class SMS implements Comparable{
         return iDate.compareTo(tDateObj);
     }
 
-    boolean senderAuthorized() {
+    /*boolean senderAuthorized() {
         if (iSender == null || iSender.equals("")){
             System.out.println("Sender unauthorized: missing!");
             return false;
@@ -139,7 +139,7 @@ public class SMS implements Comparable{
         }
         System.out.println("Sender unauthorized! "+iSender);
         return false;
-    }
+    }*/
 
     boolean isDateValid() {
         if (iSender == null || iSender.equals("") || iDate == null || iDate.equals("") || iText == null || iText.equals("")) return false;
