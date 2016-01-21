@@ -18,7 +18,6 @@ import java.util.Date;
 public class ThermostatApplication {
 
     public static Calendar iRunningSince = Calendar.getInstance();
-    public static String lastTemperatureRead = "";
     TemperatureReader iTemperatureReader = null;
     
     public ThermostatApplication() {

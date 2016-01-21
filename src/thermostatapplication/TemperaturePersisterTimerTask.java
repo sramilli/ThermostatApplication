@@ -20,15 +20,19 @@ import org.bson.Document;
  *
  * @author Ste
  */
-class TemperatureStoreTimerTask extends TimerTask {
+class TemperaturePersisterTimerTask extends TimerTask {
+    //TODO concurrency problems!!!!
+    //continue refactoring
     
-    Collection<TemperatureMeasure> iTemperatures = null;
     Collection<TemperatureMeasure> iStoredTemperatures = null;
+    Collection<TemperatureMeasure> iPersistedTemperatures = null;
+    
+    TemperatureStore iTemperatureStore;
 
-    public TemperatureStoreTimerTask(Collection<TemperatureMeasure> aTemperatures) {
-        iTemperatures = aTemperatures;
+    public TemperaturePersisterTimerTask(TemperatureStore aTemperatureStore) {
+        iTemperatureStore = aTemperatureStore;
         //need to use a new list to freeze it
-        iStoredTemperatures = new ArrayList<TemperatureMeasure>();
+        iPersistedTemperatures = new ArrayList<TemperatureMeasure>();
     }
 
     @Override
@@ -37,19 +41,19 @@ class TemperatureStoreTimerTask extends TimerTask {
     }
     
     public void persistDataOnMongolab(){
-        if (iTemperatures.isEmpty()) return;
-        System.out.println("Prepairing to store "+iTemperatures.size()+" Temps in the cloud");
+        if (iStoredTemperatures.isEmpty()) return;
+        System.out.println("Prepairing to store "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
         MongoClient client = null;
         List<Document> documents = new ArrayList<Document>();
         
-        for (TemperatureMeasure tTemp: iTemperatures){
+        for (TemperatureMeasure tTemp: iStoredTemperatures){
             Document doc = new Document();
             doc.put("Name", tTemp.getName());
             doc.put("Date", Helper.getDateAsString(tTemp.getDate()));
             doc.put("Temp", Helper.getTempAsString(tTemp.getTemp()));
             documents.add(doc);
-            iStoredTemperatures.add(tTemp);
+            iPersistedTemperatures.add(tTemp);
         }
 
         try{
@@ -59,20 +63,20 @@ class TemperatureStoreTimerTask extends TimerTask {
             mongoCollection = database.getCollection("dailytemps");
             mongoCollection.insertMany(documents);
             //eliminate stored Temps from the collection
-            iTemperatures.removeAll(iStoredTemperatures);
+            iStoredTemperatures.removeAll(iPersistedTemperatures);
             client.close();
-            System.out.println("Temperatures inserted: "+iStoredTemperatures.size()+". Exiting");
-            iStoredTemperatures.clear();
+            System.out.println("Temperatures inserted: "+iPersistedTemperatures.size()+". Exiting");
+            iPersistedTemperatures.clear();
         } catch (Throwable e){
             System.out.println("Failed to store Temps in the cloud. Stacktrace:");
-            iStoredTemperatures.clear();
+            iPersistedTemperatures.clear();
             e.printStackTrace();
             System.out.println("End stacktrace.");
         } finally{
             if (client != null){
                 client.close();
             }
-            iStoredTemperatures.clear();
+            iPersistedTemperatures.clear();
         }
     }
     

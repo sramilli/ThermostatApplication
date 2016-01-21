@@ -16,7 +16,7 @@ import java.util.TimerTask;
  *
  * @author Ste
  */
-public class ThermostatTermometerReaderTimerTask extends TimerTask {
+public class TemperatureReaderTimerTask extends TimerTask {
                                //BMP180
     AdafruitBMP180 tempSensor;
     float temp, read1, read2, read3;
@@ -24,15 +24,16 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
     int iteration;
     Date dateRead;
     String name;
-    TemperatureReader iTemperatureReader;
+    TemperatureStore iTemperatureStore;
 
-    public ThermostatTermometerReaderTimerTask(String aName, TemperatureReader aTemperatureReader){
+    public TemperatureReaderTimerTask(String aName, TemperatureStore aTemperatureStore){
+        System.out.println("TemperatureReaderTimerTask INSTANTIATED!!!");
         tempSensor = new AdafruitBMP180();
         temp = 0;
         averageMinuteTemp = 0;
         iteration = 0;
         name = aName;
-        iTemperatureReader = aTemperatureReader;
+        iTemperatureStore = aTemperatureStore;
     }
 
     @Override
@@ -43,7 +44,6 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
             ex.printStackTrace();
         }
          
-        
         switch (iteration){
             case 0:
                 //first read
@@ -69,26 +69,28 @@ public class ThermostatTermometerReaderTimerTask extends TimerTask {
                     averageMinuteTemp = (read1 + read2 + read3) / 3;  
                 } else averageMinuteTemp = 0;
                 iteration = 0;
+                
                 System.out.println("AverageMinuteTemperature " + Helper.getDateAsString(dateRead) + " " + Helper.getTempAsString(averageMinuteTemp) );
-                if (ThermostatProperties.STORE_TEMPERATURES){
-                    storeTemperature(name, dateRead, averageMinuteTemp);
+                iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(name, dateRead, averageMinuteTemp));
+                if (ThermostatProperties.PERSIST_TEMPERATURES){
+                    storeTemperature(new TemperatureMeasure(name, dateRead, averageMinuteTemp));
                 }
-            updateLastTemperatureRead();
         }
     }
     
-    public void updateLastTemperatureRead(){
+    /*public void updateLastTemperatureRead(TemperatureMeasure aTemperatureMeasure){
         //TODO UGLY!!!  dont do it like this!
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateRead);
-        ThermostatApplication.lastTemperatureRead = Helper.getTempAsString(averageMinuteTemp) + " C " + Helper.calToString(cal);
-    }
+        //Calendar cal = Calendar.getInstance();
+        //cal.setTime(dateRead);
+        iTemperatureStore.setLastTemperatureRead(aTemperatureMeasure);
+        //ThermostatApplication.lastTemperatureRead = Helper.getTempAsString(averageMinuteTemp) + " C " + Helper.calToString(cal);
+    }*/
 
-    private void storeTemperature(String NAME, Date aDate, float aTemp) {
-        if (iTemperatureReader.size() < 3000){
-            iTemperatureReader.storeTemperature(new TemperatureMeasure(NAME, aDate, aTemp));
+    private void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
+        if (iTemperatureStore.size() < 3000){
+            iTemperatureStore.storeTemperature(aTemperatureMeasure);
         }else {
-            System.out.println("StoreSize ("+iTemperatureReader.size()+") exceeded max size!! Not storing anymore");
+            System.out.println("StoreSize ("+iTemperatureStore.size()+") exceeded max size!! Not storing anymore");
         }
     }
 

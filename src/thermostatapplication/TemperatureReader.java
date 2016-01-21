@@ -21,19 +21,19 @@ import java.util.List;
  * @author Ste
  */
 public class TemperatureReader {
-    
-    Collection<TemperatureMeasure> iTemperatures;
+
     Timer timerRead = null;
-    Timer timer = null;
+    Timer timerPersister = null;
     String iName;
+    TemperatureStore tTemperatureStore;
     
     public static long EVERY_15_SECONDS = 15 * 1000;
     public static long EVERY_3_MINUTES = 3 * 60 * 1000;
     
     public TemperatureReader(String aName){
-        iTemperatures = new ArrayList<>();
         timerRead = new Timer();
         iName = aName;
+        tTemperatureStore = new TemperatureStore();
     }
     
     public void startReadingTemperatures(){
@@ -41,37 +41,25 @@ public class TemperatureReader {
         System.out.println("Start reading temperature at: " + Helper.getDateAsString(startMeasureDate));
         
         //make three measurement per minute (every 15 sec)
-        timerRead.scheduleAtFixedRate(new ThermostatTermometerReaderTimerTask(iName, this), startMeasureDate, EVERY_15_SECONDS);
+        timerRead.scheduleAtFixedRate(new TemperatureReaderTimerTask(iName, tTemperatureStore), startMeasureDate, EVERY_15_SECONDS);
                 
-        if (ThermostatProperties.STORE_TEMPERATURES){
-            timer = new Timer();                                                                            
-            timer.scheduleAtFixedRate(new TemperatureStoreTimerTask(this.getCollection()), Helper.getNextWholeMinuteDate(new Date()), EVERY_3_MINUTES);
+        if (ThermostatProperties.PERSIST_TEMPERATURES){
+            timerPersister = new Timer();                                                                            
+            timerPersister.scheduleAtFixedRate(new TemperaturePersisterTimerTask(tTemperatureStore), Helper.getNextWholeMinuteDate(new Date()), EVERY_3_MINUTES);
         }
-    }
-    
-    public int size(){
-        if (iTemperatures != null){
-            return iTemperatures.size();
-        }
-        return 9999;
-    }
-    
-    void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
-        iTemperatures.add(aTemperatureMeasure);
-        System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
-    }
-
-    Collection<TemperatureMeasure> getCollection() {
-        return iTemperatures;
     }
     
     public void stop(){
         if (timerRead != null){
             timerRead.cancel();
         }
-        if (timer != null){
-            timer.cancel();
+        if (timerPersister != null){
+            timerPersister.cancel();
         }
+        if (tTemperatureStore != null){
+            tTemperatureStore.cancel();
+        }
+        
     }
 
 }

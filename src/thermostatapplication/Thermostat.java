@@ -48,13 +48,14 @@ public class Thermostat implements GpioPinListenerDigital {
     public static boolean OFF = false;
     
     public final static String HELP_TEXT_USAGE = 
-                "Examples: 1) on\n"
-                + "2) off\n"
-                + "3) manual\n"
-                + "4) status\n"
-                + "5) help\n"
-                + "6) register +391234512345\n"
-                + "7) ProgramDaily 6:15-7:45";
+                "Examples:\r"
+                + "1) on\r"
+                + "2) off\r"
+                + "3) manual\r"
+                + "4) status\r"
+                + "5) help\r"
+                + "6) register +391234512345\r"
+                + "7) ProgramDaily 6:15-7:45\r";
 
     public Thermostat() {
         try {
@@ -108,11 +109,12 @@ public class Thermostat implements GpioPinListenerDigital {
     }
 
     public String getStatus() {
+        
         StringBuffer tResponse = new StringBuffer();
         tResponse.append("Running since: " + Helper.calToString(ThermostatApplication.iRunningSince) + "\n");
         tResponse.append("State: " + this.getThermostatState().getState() + "\n");
         tResponse.append("ProgramDaily: " + this.getProgramTimes() + "\n");
-        tResponse.append("Last Temp read: " + ThermostatApplication.lastTemperatureRead);
+        tResponse.append("Last Temp read: " + TemperatureStore.LastTemperatureReadString);
         return tResponse.toString();
     }
 

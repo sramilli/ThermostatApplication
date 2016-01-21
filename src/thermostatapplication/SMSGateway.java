@@ -151,7 +151,9 @@ public class SMSGateway implements SerialDataListener{
     
     public void sendHelpMessageToUser(String aRecipient) {
         System.out.println("Sendind Help message to ["+aRecipient+"] ");
-        sendTextMessageToUser(aRecipient, "Examples: 1) on\n"
+        sendTextMessageToUser(aRecipient, 
+                "Examples:\n"
+                + "1) on\n"
                 + "2) off\n"
                 + "3) manual\n"
                 + "4) status\n"
