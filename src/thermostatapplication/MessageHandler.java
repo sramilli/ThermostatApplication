@@ -15,28 +15,26 @@ import java.util.List;
 public class MessageHandler {
     
     private SMSGateway iSMSGateway;
+    private EmailGateway iEmailGateway;
     private Thermostat iThermostat;
     
     public MessageHandler(Thermostat aThermostat){
         iSMSGateway = SMSGateway.getInstance(this);
         iSMSGateway.initialize();
+        iEmailGateway = EmailGateway.getInstance();
         iThermostat = aThermostat;
         //TODO as singleton
     }
     
     public void sendMessage(Message aMessage){
-        if (aMessage == null){
-            System.out.println("MessageController sendMessage doing nothing. Message null");
+        if (aMessage == null || (aMessage.getUser() == null)){
+            System.out.println("MessageController sendMessage doing nothing. Message invalid");
             return;
         }
-        User tUser = AuthorizedUsers.getUser(aMessage.getMobNr());
+        User tUser = aMessage.getUser();
         if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && tUser != null && tUser.hasValidEmail() && ThermostatProperties.A != null && ThermostatProperties.B != null){
-            //TODO refactor user (key as number, and other field mobnr). refactor message (no email in it. no MobNr in it). 
-            //refactor when receiving a message (find immediatelly the user) // rename AuthorizedUsers to Users and store data somewhere else
-            System.out.println(" "+"1"+ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE +"2"+ (tUser != null) +"3"+ (tUser.hasValidEmail()) +"4"+ (ThermostatProperties.A != null) +"5"+ (ThermostatProperties.B != null));
-            aMessage.setEmailAddr(tUser.getEmail());
             sendEmailMessage(aMessage);
-        } else if (aMessage.hasValidMobNr()){
+        } else if (tUser.hasValidMobileNr()){
             sendSMSMessage(aMessage);
         }
     }
@@ -44,9 +42,10 @@ public class MessageHandler {
     public void processReceivedSMSS(List<SMS> aSMSs){
         for (SMS tSMS : aSMSs) {
             CommandType tCommand = CommandParser.parse(tSMS);
-            if (tSMS.isDateValid() && AuthorizedUsers.isAuthorized(tSMS.getSender()) && tCommand != null && tCommand.isActive()) {
+            User tUser = Users.getUser(tSMS.getSender());
+            if (tSMS.isDateValid() && Users.isAuthorized(tUser) && tCommand != null && tCommand.isActive()) {
                 System.out.println("Date Valid & User Authorized & Command is active. Executing: -------> " + tSMS);
-                iThermostat.processReceivedCommand(tCommand, tSMS);
+                iThermostat.processReceivedCommand(tCommand, tUser, tSMS);
                 break; //execute only last command
             } else {
                 System.out.println("SMS discarded: " + tSMS);
@@ -55,16 +54,12 @@ public class MessageHandler {
     } 
 
     private void sendEmailMessage(Message aMessage) {
-        //TODO //TODO //TODO //TODO //TODO
-        //TO IMPLEMENT!!!!
-        System.out.println("EEEEEEEEEMMMMMMMMMMAAAAAAAIIIIIIILLLLLLLL!!!!!");
-        System.out.println(aMessage.iBody);
-        System.out.println("EEEEEEEEEMMMMMMMMMMAAAAAAAIIIIIIILLLLLLLL     ENNNNNDDD!!!!!");
+        iEmailGateway.sendTextMessageToUser(aMessage.getUser().getEmail(), aMessage.getBody());
         
     }
 
     private void sendSMSMessage(Message aMessage) {
-        iSMSGateway.sendTextMessageToUser(aMessage.getMobNr(), aMessage.getBody());
+        iSMSGateway.sendTextMessageToUser(aMessage.getUser().getMobileNr(), aMessage.getBody());
     }
     
     

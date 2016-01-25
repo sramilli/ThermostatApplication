@@ -195,15 +195,15 @@ public class Thermostat implements GpioPinListenerDigital {
         iThermostatState.deActivateManualThermostat();
     }
     
-    public void processReceivedCommand(CommandType tCommand, SMS aSMS){
+    public void processReceivedCommand(CommandType tCommand, User aUser, SMS aSMS){
                 if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
                     executeCommand(tCommand, null);
                 } else if (CommandType.STATUS.equals(tCommand)){
                     //TODO change to user instead of aSMS
                     //TODO
-                    iMessageHandler.sendMessage(new Message(aSMS.getSender(), null, this.getStatus()));
+                    iMessageHandler.sendMessage(new Message(aUser, this.getStatus()));
                 } else if (CommandType.HELP.equals(tCommand)){
-                    iMessageHandler.sendMessage(new Message(aSMS.getSender(), null, HELP_TEXT_USAGE));
+                    iMessageHandler.sendMessage(new Message(aUser, HELP_TEXT_USAGE));
                 } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
                     //TODO !!!!!!!!!!!!!!1
                     //FINISH REFACTOR!!!!!!!!1
@@ -212,7 +212,7 @@ public class Thermostat implements GpioPinListenerDigital {
                     if (tSplittedStringt.length >= 2){
                         System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
                         //TODO complete with name and email
-                        AuthorizedUsers.addAuthorizedUser(tSplittedStringt[1]);
+                        Users.addAuthorizedUser(tSplittedStringt[1]);
                     }else {
                         System.out.println("REGISTER_NUMBER command not formatted correctly");
                     }

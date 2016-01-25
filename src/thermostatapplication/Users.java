@@ -12,43 +12,43 @@ import java.util.List;
  *
  * @author Ste
  */
-public class AuthorizedUsers {
+public class Users {
 
     public static List<User> tUsers;
 
     static{
         tUsers = new ArrayList<User>();
-        tUsers.add(new User("Stefan1", "+46700447531", "stefan.ramilli@gmail.com"));
-        tUsers.add(new User("Stefan2", "+393496191740", "stefan.ramilli@gmail.com"));
-        tUsers.add(new User("Ezio", "+393471768654", "ezio.ramilli@gmail.com"));
+        tUsers.add(new User("+46700447531", "Stefan", "+46700447531", "stefan.ramilli@gmail.com"));
+        tUsers.add(new User("+393496191740", "Stefan", "+393496191740", "stefan.ramilli@gmail.com"));
+        tUsers.add(new User("+393471768654", "Ezio", "+393471768654", "ezio.ramilli@gmail.com"));
     }
 
-    public static List<User> getAllUsers() {
+    public static List<User> getUsers() {
         return tUsers;
     }
     
     public static void addAuthorizedUser(String aMobileNr){
         //TODO to complete
         System.out.println("Authorizing number ["+aMobileNr+"] ");
-        tUsers.add(new User("", aMobileNr, ""));
+        tUsers.add(new User(aMobileNr, "", aMobileNr, ""));
     }
     
-    public static boolean isAuthorized(String aMobileNr){
-        if (getUser(aMobileNr) == null) return false;
+    public static boolean isAuthorized(User aUser){
+        if (getUser(aUser.getID()) == null) return false;
         return true;
     }
     
-    public static User getUser(String aMobileNr){
-        if (aMobileNr == null || "".equals(aMobileNr)){
+    public static User getUser(String aID){
+        if (aID == null || "".equals(aID)){
             System.out.println("User not found: invalid parameter!");
             return null;
         }
         for (User u: tUsers){
-            if (aMobileNr.equals(u.getMobileNr())){
-                return new User(u.getName(), u.getMobileNr(), u.getEmail());
+            if (aID.equals(u.getID())){
+                return new User(u.getID(), u.getName(), u.getMobileNr(), u.getEmail());
             }
         }
         return null;
     }
-
+    
 }

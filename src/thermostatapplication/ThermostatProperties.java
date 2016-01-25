@@ -41,6 +41,7 @@ public class ThermostatProperties {
     public static boolean PREFER_EMAIL_REPLIES_IF_AVAILABLE = true;
     public static String A = null;
     public static String B = null;
+    public static String C = null;
     public static int GSM_BAUD_RATE = 9600;
     
     static {
@@ -62,6 +63,7 @@ public class ThermostatProperties {
             //PERSIST_TEMPERATURES
             A = prop.getProperty("A");  //not backwords compatible safe
             B = prop.getProperty("B");  //not backwords compatible safe
+            C = prop.getProperty("C");  //not backwords compatible safe
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));

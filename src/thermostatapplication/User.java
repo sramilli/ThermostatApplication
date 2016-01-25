@@ -11,16 +11,22 @@ package thermostatapplication;
  */
 public class User {
     
+    private String iID;
     private String iName;
     private String iMobileNr;
     private String iEmail;
     
-    public User(String aName, String aMobileNr, String aEmail){
+    public User(String aID, String aName, String aMobileNr, String aEmail){
+        iID = aID;
         iName = aName;
         iMobileNr = aMobileNr;
         iEmail = aEmail;
     }
 
+    public String getID() {
+        return iID;
+    }
+    
     public String getName() {
         return iName;
     }
@@ -44,4 +50,5 @@ public class User {
         if (iEmail == null || "".equals(iEmail)) return false;
         return true;
     }
+    
 }

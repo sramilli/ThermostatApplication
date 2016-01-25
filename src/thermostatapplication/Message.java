@@ -11,48 +11,28 @@ package thermostatapplication;
  */
 public class Message {
     
-    String iMobNr;
-    String iEmailAddr;
+    User iUser;
     String iBody;
 
-    public Message(String aMobNr, String aEmailAddr, String aBody){
-        iMobNr = aMobNr;
-        iEmailAddr = aEmailAddr;
+    public Message(User aUser, String aBody){
+        iUser = aUser;
         iBody = aBody;
     }
 
-    public String getMobNr() {
-        return iMobNr;
+    public User getUser() {
+        return iUser;
     }
 
-    public void setMobNr(String aMobNr) {
-        this.iMobNr = aMobNr;
+    public void setUser(User aUser) {
+        this.iUser = aUser;
     }
-
-    public String getEmailAddr() {
-        return iEmailAddr;
-    }
-
-    public void setEmailAddr(String aEmailAddr) {
-        this.iEmailAddr = aEmailAddr;
-    }
-
+    
     public String getBody() {
         return iBody;
     }
 
     public void setBody(String aBody) {
         this.iBody = aBody;
-    }
-    
-    public boolean hasValidEmailAddr(){
-        if (iEmailAddr != null && !"".equals(iEmailAddr)) return true;
-        return false;
-    }
-
-    boolean hasValidMobNr() {
-        if (iMobNr != null && !"".equals(iMobNr)) return true;
-        return false;
     }
     
 }
