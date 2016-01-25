@@ -75,7 +75,7 @@ class EmailGateway {
             msg.setSubject("Status response");
             //msg.setText(msgBody);
             System.out.println("SENDING EMAIL: "+aBody);
-            System.out.println("SENDING EMAIL (modified): "+aBody.replaceAll("\n", "<br>"));
+            //System.out.println("SENDING EMAIL (modified): "+aBody.replaceAll("\n", "<br>"));
             msg.setContent(aBody, "text/html");
             //Transport.send(msg);
             
