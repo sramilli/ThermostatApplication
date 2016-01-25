@@ -73,8 +73,8 @@ class EmailGateway {
             //msg.setFrom(new InternetAddress(ThermostatProperties.C, "Raspberry"));
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(aEmail));
             msg.setSubject("Status response");
-            //msg.setText(msgBody);
-            msg.setContent(aBody, "text/html");
+            msg.setText(aBody);
+            //msg.setContent(aBody, "text/html");
             //Transport.send(msg);
             
             Transport transport = session.getTransport("smtp");
