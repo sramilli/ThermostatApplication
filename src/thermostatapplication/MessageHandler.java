@@ -19,6 +19,7 @@ public class MessageHandler {
     
     public MessageHandler(Thermostat aThermostat){
         iSMSGateway = SMSGateway.getInstance(this);
+        iSMSGateway.initialize();
         iThermostat = aThermostat;
         //TODO as singleton
     }

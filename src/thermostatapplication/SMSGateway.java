@@ -42,9 +42,9 @@ public class SMSGateway implements SerialDataListener{
         return iInstance;
     }
 
-    public void initialize(SerialDataListener aSerialDataListener) {
+    public void initialize() {
 
-        iSerialDataListener = aSerialDataListener;
+        iSerialDataListener = this;
         System.out.println(" ... connect using settings: "+ThermostatProperties.GSM_BAUD_RATE+", N, 8, 1.");
         // create an instance of the serial communications class
         serial = SerialFactory.createInstance();
