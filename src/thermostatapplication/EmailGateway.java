@@ -5,13 +5,17 @@
  */
 package thermostatapplication;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -35,6 +39,7 @@ class EmailGateway {
 
     void sendTextMessageToUser(String aEmail, String aBody) {
 
+        //1) setup Mail Server Properties
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -42,14 +47,14 @@ class EmailGateway {
         props.put("mail.smtp.port", "587");
         
         
-        Session session = Session.getInstance(props,
+        /*Session session = Session.getInstance(props,
           new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(ThermostatProperties.A, ThermostatProperties.B);
                 }
-          });
+          });*/
         
-        try {
+        /*try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(ThermostatProperties.B));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(aEmail));
@@ -59,7 +64,30 @@ class EmailGateway {
             System.out.println("EMAIL sent");
         } catch (MessagingException e) {
                 throw new RuntimeException(e);
+        }*/
+        
+        //2) get Mail Session
+        Session session = Session.getDefaultInstance(props, null);
+        try {
+            Message msg = new MimeMessage(session);
+            //msg.setFrom(new InternetAddress(ThermostatProperties.C, "Raspberry"));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(aEmail));
+            msg.setSubject("Status response");
+            //msg.setText(msgBody);
+            msg.setContent(aBody, "text/html");
+            //Transport.send(msg);
+            
+            Transport transport = session.getTransport("smtp");
+            transport.connect("smtp.gmail.com", ThermostatProperties.A, ThermostatProperties.B);
+            transport.sendMessage(msg, msg.getAllRecipients());
+            transport.close();
+
+        } catch (AddressException e) {
+            throw new RuntimeException(e);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
+
     }
     
 }
