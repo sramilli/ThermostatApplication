@@ -21,22 +21,22 @@ import java.util.TimerTask;
  * @author Ste
  */
 public class TemperatureReaderTimerTask extends TimerTask {
-                               //BMP180
+
     AdafruitBMP180 tempSensor;
     float temp, read1, read2, read3;
     float averageMinuteTemp;
     int iteration;
     Date dateRead;
-    String name;
+    String iLocation;
     TemperatureStore iTemperatureStore;
 
-    public TemperatureReaderTimerTask(String aName, TemperatureStore aTemperatureStore){
+    public TemperatureReaderTimerTask(String aLocation, TemperatureStore aTemperatureStore){
         System.out.println("TemperatureReaderTimerTask INSTANTIATED!!!");
         tempSensor = new AdafruitBMP180();
         temp = 0;
         averageMinuteTemp = 0;
         iteration = 0;
-        name = aName;
+        iLocation = aLocation;
         iTemperatureStore = aTemperatureStore;
     }
 
@@ -75,9 +75,9 @@ public class TemperatureReaderTimerTask extends TimerTask {
                 iteration = 0;
                 
                 System.out.println("AverageMinuteTemperature " + Helper.getDateAsString(dateRead) + " " + Helper.getTempAsString(averageMinuteTemp) );
-                iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(name, dateRead, averageMinuteTemp));
+                iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, dateRead, averageMinuteTemp));
                 if (ThermostatProperties.PERSIST_TEMPERATURES){
-                    storeTemperature(new TemperatureMeasure(name, dateRead, averageMinuteTemp));
+                    storeTemperature(new TemperatureMeasure(iLocation, dateRead, averageMinuteTemp));
                 }
         }
     }

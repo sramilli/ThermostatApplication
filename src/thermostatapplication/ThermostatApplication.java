@@ -33,7 +33,7 @@ public class ThermostatApplication {
         Thermostat iThermostat = new Thermostat();
 
         if (ThermostatProperties.START_READING_TEMPERATURES){
-            iTemperatureReader = new TemperatureReader("Thermostat"+ThermostatProperties.THERMOSTAT_LOCATION);
+            iTemperatureReader = new TemperatureReader("Thermometer_"+ThermostatProperties.THERMOSTAT_LOCATION);
             iTemperatureReader.startReadingTemperatures();
         }
         

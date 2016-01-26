@@ -16,6 +16,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.util.List;
 import org.bson.Document;
+import thermostatapplication.properties.ThermostatProperties;
 //http://mongodb.github.io/mongo-java-driver/3.0/driver/getting-started/quick-tour/
 
 /**
@@ -43,6 +44,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
     }
     
     public void persistDataOnMongolab(){
+        iStoredTemperatures = iTemperatureStore.getTemperatures();
         if (iStoredTemperatures.isEmpty()) return;
         System.out.println("Prepairing to store "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
@@ -51,7 +53,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
         
         for (TemperatureMeasure tTemp: iStoredTemperatures){
             Document doc = new Document();
-            doc.put("Name", tTemp.getName());
+            doc.put("Location", tTemp.getLocation());
             doc.put("Date", Helper.getDateAsString(tTemp.getDate()));
             doc.put("Temp", Helper.getTempAsString(tTemp.getTemp()));
             documents.add(doc);
@@ -59,7 +61,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
         }
 
         try{
-            MongoClientURI uri  = new MongoClientURI("mongodb://heaterusr:heater66@ds047602.mongolab.com:47602/heaterdb"); 
+            MongoClientURI uri  = new MongoClientURI(ThermostatProperties.ML_URL); 
             client = new MongoClient(uri);
             MongoDatabase database = (MongoDatabase) client.getDatabase(uri.getDatabase());
             mongoCollection = database.getCollection("dailytemps");

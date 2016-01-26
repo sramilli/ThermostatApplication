@@ -13,26 +13,26 @@ import java.util.Date;
  * @author Ste
  */
 public class TemperatureMeasure {
-    String iName;
+    String iLocation;
     Date iDate;
     float iTemp;
 
-    public TemperatureMeasure(String aName, Date aDate, float aTemp) {
-        iName = aName;
+    public TemperatureMeasure(String aLocation, Date aDate, float aTemp) {
+        iLocation = aLocation;
         iDate = aDate;
         iTemp = aTemp;
     }
     
     public String toString(){
-        return "Name: "+getName()+" Date: "+Helper.getDateAsString(getDate())+" Temp: "+Helper.getTempAsString(getTemp());
+        return "Location: "+getLocation()+" Date: "+Helper.getDateAsString(getDate())+" Temp: "+Helper.getTempAsString(getTemp());
     }
 
-    public String getName() {
-        return iName;
+    public String getLocation() {
+        return iLocation;
     }
 
-    public void setName(String aName) {
-        this.iName = aName;
+    public void setLocation(String aLocation) {
+        this.iLocation = aLocation;
     }
 
     public Date getDate() {

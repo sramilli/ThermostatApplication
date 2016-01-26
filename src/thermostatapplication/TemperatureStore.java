@@ -60,7 +60,7 @@ public class TemperatureStore {
     public String getLastTemperatureReadInString() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(iLastTemperatureMeasure.getDate());
-        return Helper.getTempAsString(iLastTemperatureMeasure.getTemp()) + " C " + Helper.calToString(cal);
+        return Helper.getTempAsString(iLastTemperatureMeasure.getTemp()) + " C (" + Helper.calToString(cal)+")";
     }
     
 }

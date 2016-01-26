@@ -42,6 +42,7 @@ public class ThermostatProperties {
     public static String A = null;
     public static String B = null;
     public static String C = null;
+    public static String ML_URL = null;
     public static int GSM_BAUD_RATE = 9600;
     public static String USER_1 = null;
     public static String USER_2 = null;
@@ -70,6 +71,7 @@ public class ThermostatProperties {
             A = prop.getProperty("A");  //not backwords compatible safe
             B = prop.getProperty("B");  //not backwords compatible safe
             C = prop.getProperty("C");  //not backwords compatible safe
+            ML_URL = prop.getProperty("ML_URL");  //not backwords compatible safe
             USER_1 = prop.getProperty("USER_1");
             USER_2 = prop.getProperty("USER_2");
             USER_3 = prop.getProperty("USER_3");
