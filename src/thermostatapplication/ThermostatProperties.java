@@ -50,8 +50,8 @@ public class ThermostatProperties {
     static {
         try{
             PropertiesHandler prop = PropertiesHandler.getInstance();
-            //TODO change this to true (on mine and Dad) and reenable the reading
-            //START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
+            START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
+            SOFT_SHUTDOWN_ENABLED = new Boolean(prop.getProperty("SOFT_SHUTDOWN_ENABLED"));
             THERMOSTAT_LOCATION = prop.getProperty("THERMOSTAT_LOCATION");
             GSM_BAUD_RATE = new Integer(prop.getProperty("gsmBaudRate"));
             GREEN_HEATER_STATUS_LED = new Integer(prop.getProperty("GREEN_HEATER_STATUS_LED"));
@@ -59,17 +59,17 @@ public class ThermostatProperties {
             GREEN_STATE_LED = new Integer(prop.getProperty("GREEN_STATE_LED"));
             YELLOW_STATE_LED = new Integer(prop.getProperty("YELLOW_STATE_LED"));
             RED_STATE_LED = new Integer(prop.getProperty("RED_STATE_LED"));
-            //TODO 
-            //BLUE_PROGRAM_LED
-            //STORE_TEMPERATURES = false
-            //PREFER_EMAIL_REPLIES_IF_AVAILABLE
-            //PERSIST_TEMPERATURES
-            A = prop.getProperty("A");  //not backwords compatible safe
-            B = prop.getProperty("B");  //not backwords compatible safe
-            C = prop.getProperty("C");  //not backwords compatible safe
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));
+            //TODO
+            BLUE_PROGRAM_LED = new Integer(prop.getProperty("BLUE_PROGRAM_LED"));
+            PREFER_EMAIL_REPLIES_IF_AVAILABLE = new Boolean(prop.getProperty("PREFER_EMAIL_REPLIES_IF_AVAILABLE"));
+            STORE_TEMPERATURES = new Boolean(prop.getProperty("STORE_TEMPERATURES"));
+            PERSIST_TEMPERATURES = new Boolean(prop.getProperty("PERSIST_TEMPERATURES"));
+            A = prop.getProperty("A");  //not backwords compatible safe
+            B = prop.getProperty("B");  //not backwords compatible safe
+            C = prop.getProperty("C");  //not backwords compatible safe
             USER_1 = prop.getProperty("USER_1");
             USER_2 = prop.getProperty("USER_2");
             USER_3 = prop.getProperty("USER_3");
