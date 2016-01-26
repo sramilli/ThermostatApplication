@@ -32,8 +32,19 @@ public class MessageHandler {
             return;
         }
         User tUser = aMessage.getUser();
-        if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && tUser != null && tUser.hasValidEmail() && ThermostatProperties.A != null && ThermostatProperties.B != null){
-            sendEmailMessage(aMessage);
+        if (tUser == null) {
+            System.out.println("USER == null!");
+            return;
+        }
+        if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && tUser.hasValidEmail() && ThermostatProperties.A != null && ThermostatProperties.B != null){
+            try {
+                sendEmailMessage(aMessage);
+            } catch (RuntimeException e){
+                System.out.println("Sending Email failed, trying to send sms instead");
+                if (tUser.hasValidMobileNr()){
+                    sendSMSMessage(aMessage);
+                }
+            }
         } else if (tUser.hasValidMobileNr()){
             sendSMSMessage(aMessage);
         }
@@ -54,7 +65,7 @@ public class MessageHandler {
     } 
 
     private void sendEmailMessage(Message aMessage) {
-        iEmailGateway.sendTextMessageToUser(aMessage.getUser().getEmail(), aMessage.getBody());
+        iEmailGateway.sendEmail(aMessage.getUser().getEmail(), aMessage.getBody());
         
     }
 

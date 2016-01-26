@@ -43,6 +43,9 @@ public class ThermostatProperties {
     public static String B = null;
     public static String C = null;
     public static int GSM_BAUD_RATE = 9600;
+    public static String USER_1 = null;
+    public static String USER_2 = null;
+    public static String USER_3 = null;
     
     static {
         try{
@@ -67,6 +70,9 @@ public class ThermostatProperties {
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));
+            USER_1 = prop.getProperty("USER_1");
+            USER_2 = prop.getProperty("USER_2");
+            USER_3 = prop.getProperty("USER_3");
 
             System.out.println("Read Prop measureTemps correctly");
         } catch (Throwable ex){

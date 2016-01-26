@@ -18,9 +18,12 @@ public class Users {
 
     static{
         tUsers = new ArrayList<User>();
-        tUsers.add(new User("+46700447531", "Stefan", "+46700447531", "stefan.ramilli@gmail.com"));
-        tUsers.add(new User("+393496191740", "Stefan", "+393496191740", "stefan.ramilli@gmail.com"));
-        tUsers.add(new User("+393471768654", "Ezio", "+393471768654", "ezio.ramilli@gmail.com"));
+        String[] usr1 = ThermostatProperties.USER_1.split(",");
+        String[] usr2 = ThermostatProperties.USER_2.split(",");
+        String[] usr3 = ThermostatProperties.USER_3.split(",");
+        tUsers.add(new User(usr1[1], usr1[0], usr1[1], usr1[2]));
+        tUsers.add(new User(usr2[1], usr2[0], usr2[1], usr2[2]));
+        tUsers.add(new User(usr3[1], usr3[0], usr3[1], usr3[2]));
     }
 
     public static List<User> getUsers() {

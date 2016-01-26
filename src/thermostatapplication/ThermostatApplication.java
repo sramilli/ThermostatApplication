@@ -40,6 +40,7 @@ public class ThermostatApplication {
         //iThermostat.testReadAllMessages();
         //iThermostat.testReadAllMessagesOneByOne();
        
+        System.out.println("ThermostatProperties.START_READING_TEMPERATURES 1: "+ThermostatProperties.START_READING_TEMPERATURES);
         if (ThermostatProperties.START_READING_TEMPERATURES){
             iTemperatureReader = new TemperatureReader("Thermostat"+ThermostatProperties.THERMOSTAT_LOCATION);
             iTemperatureReader.startReadingTemperatures();
@@ -65,7 +66,7 @@ public class ThermostatApplication {
             waitABit(5000);
         }
         waitABit(3000);
-
+        System.out.println("ThermostatProperties.START_READING_TEMPERATURES 2: "+ThermostatProperties.START_READING_TEMPERATURES);
         System.out.println("Main Application: Prepare to turn Off the system!");
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
