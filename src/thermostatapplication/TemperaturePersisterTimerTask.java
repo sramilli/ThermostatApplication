@@ -36,6 +36,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
         iTemperatureStore = aTemperatureStore;
         //need to use a new list to freeze it
         iPersistedTemperatures = new ArrayList<TemperatureMeasure>();
+        System.out.println("TemperaturePersisterTimerTask instantiated!!!");
     }
 
     @Override

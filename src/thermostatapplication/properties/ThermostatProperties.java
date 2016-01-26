@@ -36,7 +36,7 @@ public class ThermostatProperties {
     public static boolean STORE_TEMPERATURES = false;
     //TODO  To replace with following
     public static boolean PERSIST_TEMPERATURES = false;
-    public static String THERMOSTAT_LOCATION = "";
+    public static String THERMOMETER_LOCATION = "";
     public static boolean SOFT_SHUTDOWN_ENABLED = false;
     public static boolean PREFER_EMAIL_REPLIES_IF_AVAILABLE = true;
     public static String A = null;
@@ -53,7 +53,7 @@ public class ThermostatProperties {
             PropertiesHandler prop = PropertiesHandler.getInstance();
             START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
             SOFT_SHUTDOWN_ENABLED = new Boolean(prop.getProperty("SOFT_SHUTDOWN_ENABLED"));
-            THERMOSTAT_LOCATION = prop.getProperty("THERMOSTAT_LOCATION");
+            THERMOMETER_LOCATION = prop.getProperty("THERMOMETER_LOCATION");
             GSM_BAUD_RATE = new Integer(prop.getProperty("gsmBaudRate"));
             GREEN_HEATER_STATUS_LED = new Integer(prop.getProperty("GREEN_HEATER_STATUS_LED"));
             HEATER_RELAY = new Integer(prop.getProperty("HEATER_RELAY"));
