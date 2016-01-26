@@ -5,6 +5,9 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.helper.Interpreter;
+import thermostatapplication.entity.SMS;
+
 /**
  *
  * @author Ste

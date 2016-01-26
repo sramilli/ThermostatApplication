@@ -3,6 +3,7 @@
 */
 package thermostatapplication;
 
+import thermostatapplication.properties.ThermostatProperties;
 import java.util.Properties;
 
 import javax.mail.Message;

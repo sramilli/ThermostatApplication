@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-package thermostatapplication;
+package thermostatapplication.devices;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
+import thermostatapplication.helper.Pi4jHelper;
 
 /**
  *

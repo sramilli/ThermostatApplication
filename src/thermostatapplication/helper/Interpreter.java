@@ -4,17 +4,10 @@
  * and open the template in the editor.
  */
 
-package thermostatapplication;
+package thermostatapplication.helper;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
+import thermostatapplication.CommandType;
+import thermostatapplication.entity.SMS;
 
 /**
  *

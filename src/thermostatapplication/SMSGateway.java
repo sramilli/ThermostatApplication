@@ -5,10 +5,14 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.entity.SMS;
+import thermostatapplication.properties.ThermostatProperties;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialDataListener;
 import com.pi4j.io.serial.SerialFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -146,12 +150,12 @@ public class SMSGateway implements SerialDataListener{
     //
     public void sendStatusToUser(String aRecipient, String aMessage) {
         System.out.println("Sending Status message ["+aMessage+"] to recipient ["+aRecipient+"] ");
-        sendTextMessageToUser(aRecipient, aMessage);
+        sendSMS(aRecipient, aMessage);
     }
     
     public void sendHelpMessageToUser(String aRecipient) {
         System.out.println("Sendind Help message to ["+aRecipient+"] ");
-        sendTextMessageToUser(aRecipient, 
+        sendSMS(aRecipient, 
                 "Examples:\n"
                 + "1) on\n"
                 + "2) off\n"
@@ -162,7 +166,7 @@ public class SMSGateway implements SerialDataListener{
                 + "7) ProgramDaily 6:15-7:45");
     }
     
-    public void sendTextMessageToUser(String aNumberRecipient, String aMessage) {
+    public void sendSMS(String aNumberRecipient, String aMessage) {
         System.out.println("---->Sending: AT");
         serial.write("AT\r");
         readAnswerAndPrint();
@@ -292,8 +296,7 @@ public class SMSGateway implements SerialDataListener{
             }
             headClean = true;
             if (s.startsWith("+CMGL")) {
-                tSMS = new SMS();
-                tSMS.parseHeaderAndSetData(s);
+                tSMS = parseHeaderAndSetData(s);
                 continue;
             } else {
                 tSMS.setText(tSMS.getText() + s);
@@ -305,6 +308,69 @@ public class SMSGateway implements SerialDataListener{
         Collections.sort(tSMSs);
         Collections.reverse(tSMSs);
         return tSMSs;
+    }
+    
+    public SMS parseHeaderAndSetData(String s) {
+       /*
+        * +CMGL: 4,"REC READ","+46700447531","","15/05/02,18:01:34+08"
+        * Set: Position, Date, Sender
+        */
+        StringTokenizer st = new StringTokenizer(s, ",");
+            SMS tSMS = new SMS();
+            
+            int tPosition;
+            String tSender;
+            Date tDate;
+            
+            String tToken = st.nextToken();
+            tPosition = parsePosition(tToken);
+            tToken = st.nextToken();
+            //iStatus = parseStatus();
+            tToken = st.nextToken();
+            tSender = parseSender(tToken);
+            tToken = st.nextToken();
+            //blank
+            tToken = st.nextToken();
+            tToken = tToken+" "+st.nextToken();
+            tDate = parseDate(tToken);
+            
+            tSMS.setPosition(tPosition);
+            tSMS.setSender(tSender);
+            tSMS.setDate(tDate);
+            
+            return tSMS;
+    }
+        
+    private int parsePosition(String aPosition){
+        int tPos = 0;
+        //System.out.println("ParsePosition: "+aPosition);
+        tPos = Integer.parseInt(aPosition.substring(aPosition.length()-2).trim());
+        //System.out.println("Parsed position: "+tPos);
+        return tPos;
+    }
+    
+    private String parseSender(String aSender){
+        String tSender = "";
+        //System.out.println("ParseSender: "+aSender);
+        tSender = aSender.replaceAll("\"", "").trim();
+        //System.out.println("Parsed Sender: "+tSender);
+        return tSender;
+    }
+
+    private Date parseDate(String aDate){
+        //"15/05/26 22:59:28+08"
+        Date tDate = new Date();
+        //System.out.println("ParseDate: "+aDate);
+        aDate = aDate.replaceAll("\"", "");
+        aDate = aDate.substring(0,14);
+        SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm");
+        try {
+            tDate = formatter.parse(aDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        //System.out.println("Parsed date: "+tDate);
+        return tDate;
     }
     
     //

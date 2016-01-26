@@ -5,6 +5,11 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.entity.SMS;
+import thermostatapplication.properties.ThermostatProperties;
+import thermostatapplication.entity.Users;
+import thermostatapplication.entity.User;
+import thermostatapplication.entity.Message;
 import static java.lang.Thread.sleep;
 import java.util.List;
 
@@ -70,7 +75,7 @@ public class MessageHandler {
     }
 
     private void sendSMSMessage(Message aMessage) {
-        iSMSGateway.sendTextMessageToUser(aMessage.getUser().getMobileNr(), aMessage.getBody());
+        iSMSGateway.sendSMS(aMessage.getUser().getMobileNr(), aMessage.getBody());
     }
     
     
@@ -78,10 +83,16 @@ public class MessageHandler {
     
     public void stop(){
         if (iSMSGateway != null) {
-            System.out.println("Thermostat: Turning off SMSGateway");
+            System.out.println("MessageHandler: Turning off SMSGateway");
             waitABit(3000);
             iSMSGateway.stop();
             iSMSGateway = null;
+        }
+        if (iEmailGateway != null){
+            iEmailGateway = null;
+        }
+        if (iThermostat != null){
+            iThermostat = null;
         }
     }
     
@@ -98,7 +109,7 @@ public class MessageHandler {
     ///////////
     
     public void testSendSMS() {
-        iSMSGateway.sendTextMessageToUser("+46700447531", "This is anooother test");
+        iSMSGateway.sendSMS("+46700447531", "This is anooother test");
     }
 
     public void testLoopingAT() {

@@ -5,6 +5,8 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.entity.TemperatureMeasure;
+import thermostatapplication.helper.Helper;
 import java.util.TimerTask;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package thermostatapplication;
+package thermostatapplication.entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,57 +71,6 @@ public class SMS implements Comparable{
         return "[SMS]: " + iPosition + " [Sender]: " + iSender + " [Date]: " + sdf.format(iDate) + " [Text]: " + iText;
     }
 
-    void parseHeaderAndSetData(String s) {
-       /*
-        * +CMGL: 4,"REC READ","+46700447531","","15/05/02,18:01:34+08"
-        * Set: Position, Date, Sender
-        */
-        StringTokenizer st = new StringTokenizer(s, ",");
-            String tToken = st.nextToken();
-            iPosition = parsePosition(tToken);
-            tToken = st.nextToken();
-            //iStatus = parseStatus();
-            tToken = st.nextToken();
-            iSender = parseSender(tToken);
-            tToken = st.nextToken();
-            //blank
-            tToken = st.nextToken();
-            tToken = tToken+" "+st.nextToken();
-            iDate = parseDate(tToken);
-    }
-    
-    private int parsePosition(String aPosition){
-        int tPos = 0;
-        //System.out.println("ParsePosition: "+aPosition);
-        tPos = Integer.parseInt(aPosition.substring(aPosition.length()-2).trim());
-        //System.out.println("Parsed position: "+tPos);
-        return tPos;
-    }
-    
-    private String parseSender(String aSender){
-        String tSender = "";
-        //System.out.println("ParseSender: "+aSender);
-        tSender = aSender.replaceAll("\"", "").trim();
-        //System.out.println("Parsed Sender: "+tSender);
-        return tSender;
-    }
-
-    private Date parseDate(String aDate){
-        //"15/05/26 22:59:28+08"
-        Date tDate = new Date();
-        //System.out.println("ParseDate: "+aDate);
-        aDate = aDate.replaceAll("\"", "");
-        aDate = aDate.substring(0,14);
-        SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm");
-        try {
-            tDate = formatter.parse(aDate);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        //System.out.println("Parsed date: "+tDate);
-        return tDate;
-    }
-
     @Override
     public int compareTo(Object o) {
         if (o instanceof SMS) return 0;
@@ -141,7 +90,7 @@ public class SMS implements Comparable{
         return false;
     }*/
 
-    boolean isDateValid() {
+    public boolean isDateValid() {
         if (iSender == null || iSender.equals("") || iDate == null || iDate.equals("") || iText == null || iText.equals("")) return false;
         Date now = new Date();
         Date beginInterval = new Date(now.getTime()-  3 * 60 * 60 * 1000);

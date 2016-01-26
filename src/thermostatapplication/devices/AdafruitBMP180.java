@@ -1,4 +1,4 @@
-package thermostatapplication;
+package thermostatapplication.devices;
 
 
 

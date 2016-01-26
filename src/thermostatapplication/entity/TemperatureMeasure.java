@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package thermostatapplication;
+package thermostatapplication.entity;
 
+import thermostatapplication.helper.Helper;
 import java.util.Date;
 
 /**
  *
  * @author Ste
  */
-class TemperatureMeasure {
+public class TemperatureMeasure {
     String iName;
     Date iDate;
     float iTemp;

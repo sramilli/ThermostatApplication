@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package thermostatapplication;
+package thermostatapplication.helper;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;

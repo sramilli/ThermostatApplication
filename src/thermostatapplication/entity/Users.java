@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package thermostatapplication;
+package thermostatapplication.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import thermostatapplication.properties.ThermostatProperties;
 
 /**
  *

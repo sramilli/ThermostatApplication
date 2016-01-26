@@ -5,6 +5,18 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.entity.SMS;
+import thermostatapplication.properties.ThermostatProperties;
+import thermostatapplication.helper.Helper;
+import thermostatapplication.states.State;
+import thermostatapplication.devices.Relay;
+import thermostatapplication.devices.Button;
+import thermostatapplication.devices.Led;
+import thermostatapplication.states.ThermostatStateFactory;
+import thermostatapplication.states.ThermostatState;
+import thermostatapplication.entity.Users;
+import thermostatapplication.entity.User;
+import thermostatapplication.entity.Message;
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -26,6 +38,8 @@ import static java.lang.Thread.sleep;
 public class Thermostat implements GpioPinListenerDigital {
 
     private ThermostatState iThermostatState;
+    
+    public static Calendar iRunningSince = Calendar.getInstance();
         
     private Led iHeaterStatusLed;
     private Relay iHeaterRelay;
@@ -109,9 +123,8 @@ public class Thermostat implements GpioPinListenerDigital {
     }
 
     public String getStatus() {
-        
         StringBuffer tResponse = new StringBuffer();
-        tResponse.append("Running since: " + Helper.calToString(ThermostatApplication.iRunningSince) + "\n");
+        tResponse.append("Running since: " + Helper.calToString(this.iRunningSince) + "\n");
         tResponse.append("State: " + this.getThermostatState().getState() + "\n");
         tResponse.append("ProgramDaily: " + this.getProgramTimes() + "\n");
         tResponse.append("Last Temp read: " + TemperatureStore.LastTemperatureReadString);
@@ -384,6 +397,11 @@ public class Thermostat implements GpioPinListenerDigital {
                 iManualTherostat.setInputListener(null);
                 iManualTherostat.close();
                 iManualTherostat = null;
+            }
+            if (iMessageHandler != null){
+                System.out.println("Thermostat: Turning off MessageHandler");
+                iMessageHandler.stop();
+                iMessageHandler = null;
             }
 
         } catch (Throwable ex) {

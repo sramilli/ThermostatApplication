@@ -5,6 +5,10 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.entity.TemperatureMeasure;
+import thermostatapplication.properties.ThermostatProperties;
+import thermostatapplication.helper.Helper;
+import thermostatapplication.devices.AdafruitBMP180;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

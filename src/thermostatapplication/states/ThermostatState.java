@@ -1,4 +1,4 @@
-package thermostatapplication;
+package thermostatapplication.states;
 
 /**
  * States: ON, OFF, MANUAL

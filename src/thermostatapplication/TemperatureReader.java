@@ -5,6 +5,8 @@
  */
 package thermostatapplication;
 
+import thermostatapplication.properties.ThermostatProperties;
+import thermostatapplication.helper.Helper;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;

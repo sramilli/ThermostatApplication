@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package thermostatapplication;
+package thermostatapplication.devices;
 
+import thermostatapplication.devices.Button;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;

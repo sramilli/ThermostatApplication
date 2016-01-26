@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package thermostatapplication;
 
 //import de.pi3g.pi.oled.OLEDDisplay;
+import thermostatapplication.devices.SwitchOFF;
+import thermostatapplication.properties.ThermostatProperties;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +14,6 @@ import java.util.Date;
  */
 public class ThermostatApplication {
 
-    public static Calendar iRunningSince = Calendar.getInstance();
     TemperatureReader iTemperatureReader = null;
     
     public ThermostatApplication() {
@@ -35,39 +31,17 @@ public class ThermostatApplication {
         SwitchOFF iSwitchOFF = new SwitchOFF(ThermostatProperties.SHUTDOWN_BUTTON);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
         Thermostat iThermostat = new Thermostat();
-        //iThermostat.testSendSMS();
-        //iThermostat.testLoopingAT();
-        //iThermostat.testReadAllMessages();
-        //iThermostat.testReadAllMessagesOneByOne();
-       
-        System.out.println("ThermostatProperties.START_READING_TEMPERATURES 1: "+ThermostatProperties.START_READING_TEMPERATURES);
+
         if (ThermostatProperties.START_READING_TEMPERATURES){
             iTemperatureReader = new TemperatureReader("Thermostat"+ThermostatProperties.THERMOSTAT_LOCATION);
             iTemperatureReader.startReadingTemperatures();
         }
         
-            /* TODO ONGOING OLED DISPLAY
-            OLEDDisplay display = null;
-            try {
-                display = new OLEDDisplay();
-                display.drawString("ABCDE!", 0, 0, true);
-                display.drawString("ABCDE!", 1, 10, true);
-                display.drawString("ABCDE!", 2, 20, true);
-                display.drawString("ABCDE!", 15, 30, true);
-                display.drawStringCentered("Hello World!", 25, true);
-                display.update();
-            } catch (IOException ex) {
-            ex.printStackTrace();
-            }
-            ONGOING OLED DISPLAY */
-
         //Holds the application running until it detects the button press
         while (!iSwitchOFF.shutdownPi()) {
             waitABit(5000);
         }
         waitABit(3000);
-        System.out.println("ThermostatProperties.START_READING_TEMPERATURES 2: "+ThermostatProperties.START_READING_TEMPERATURES);
-        System.out.println("Main Application: Prepare to turn Off the system!");
         System.out.println("Main Application: Turning off Thermostat");
         iThermostat.stop();
         if (iTemperatureReader != null){
