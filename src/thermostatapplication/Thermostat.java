@@ -262,6 +262,8 @@ public class Thermostat implements GpioPinListenerDigital {
             } catch (Throwable e) {
                 System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
             }
+            iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+            iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
 
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
