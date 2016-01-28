@@ -88,6 +88,8 @@ public class Thermostat implements GpioPinListenerDigital {
             //iSMSGateway.initialize(this);
             
             iTimer = new Timer(true);
+            iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+            iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
             
             iThermostatState = ThermostatStateFactory.createThermostatState(this, State.OFF);
             
@@ -253,9 +255,9 @@ public class Thermostat implements GpioPinListenerDigital {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
-            iTimer.cancel();
-            iStartTask = null;
-            iStopTask = null;
+            //iTimer.cancel();
+            iStartTask.cancel();
+            iStopTask.cancel();
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
@@ -279,7 +281,7 @@ public class Thermostat implements GpioPinListenerDigital {
                             startDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
-                        iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+
                         iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
                         
                         if (tNow.before(stopDateParse)){
@@ -289,7 +291,7 @@ public class Thermostat implements GpioPinListenerDigital {
                             stopDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         Helper.printCal("Scheduling daily shutdown from: ", stopDateParse);
-                        iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
+
                         iTimer.scheduleAtFixedRate(iStopTask, stopDateParse.getTime(), REPEAT_DAILY);
                         
                         this.getLedBlue().turnOn();
