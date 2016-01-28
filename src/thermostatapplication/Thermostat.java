@@ -256,8 +256,13 @@ public class Thermostat implements GpioPinListenerDigital {
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
             //iTimer.cancel();
-            iStartTask.cancel();
-            iStopTask.cancel();
+            try{
+                iStartTask.cancel();
+                iStopTask.cancel();
+            } catch (Throwable e) {
+                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+            }
+
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
