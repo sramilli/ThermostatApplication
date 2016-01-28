@@ -253,7 +253,7 @@ public class Thermostat implements GpioPinListenerDigital {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
             //reset the timer (if no valid parameter is specified it will just clear it)
-            iTimer = new Timer(true);
+            iTimer.cancel();
             iStartTask = null;
             iStopTask = null;
             this.getLedBlue().turnOff();
