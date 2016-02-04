@@ -88,8 +88,8 @@ public class Thermostat implements GpioPinListenerDigital {
             //iSMSGateway.initialize(this);
             
             iTimer = new Timer(true);
-            iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
-            iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
+            //iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+            //iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
             
             iThermostatState = ThermostatStateFactory.createThermostatState(this, State.OFF);
             
@@ -214,19 +214,13 @@ public class Thermostat implements GpioPinListenerDigital {
                 if (CommandType.ON.equals(tCommand) || CommandType.OFF.equals(tCommand) || CommandType.MANUAL.equals(tCommand)){
                     executeCommand(tCommand, null);
                 } else if (CommandType.STATUS.equals(tCommand)){
-                    //TODO change to user instead of aSMS
-                    //TODO
                     iMessageHandler.sendMessage(new Message(aUser, this.getStatus()));
                 } else if (CommandType.HELP.equals(tCommand)){
                     iMessageHandler.sendMessage(new Message(aUser, HELP_TEXT_USAGE));
                 } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
-                    //TODO !!!!!!!!!!!!!!1
-                    //FINISH REFACTOR!!!!!!!!1
-                    //
                     String[] tSplittedStringt = aSMS.getText().split(" ");
                     if (tSplittedStringt.length >= 2){
                         System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
-                        //TODO complete with name and email
                         Users.addAuthorizedUser(tSplittedStringt[1]);
                     }else {
                         System.out.println("REGISTER_NUMBER command not formatted correctly");
@@ -235,9 +229,6 @@ public class Thermostat implements GpioPinListenerDigital {
                     executeCommand(tCommand, aSMS.getText());
                 }
     }
-    
-            //TODO TODO TODO 
-            //anything to refactor in processReceivedCommand and executeCommand???
     
     public void executeCommand(CommandType aCmd, String aText) {
         //used via SMS
@@ -254,17 +245,18 @@ public class Thermostat implements GpioPinListenerDigital {
         } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
-            //reset the timer (if no valid parameter is specified it will just clear it)
-            //iTimer.cancel();
-            try{
-                iStartTask.cancel();
-                iStopTask.cancel();
-            } catch (Throwable e) {
-                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+
+            if (iStartTask != null && iStopTask != null){
+                try {
+                    iStartTask.cancel();
+                    iStopTask.cancel();
+                } catch (Throwable e) {
+                    System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+                }
             }
             iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
             iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
-
+            
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
@@ -310,7 +302,7 @@ public class Thermostat implements GpioPinListenerDigital {
                     System.out.println("Program daily bad format!");
                 }
             }else {
-                System.out.println("Program daily bad format!");
+                System.out.println("Program daily bad format! Erased previous program");
             }
         }
         
