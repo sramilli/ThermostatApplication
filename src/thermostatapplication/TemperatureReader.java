@@ -31,7 +31,7 @@ public class TemperatureReader {
     
     public static long EVERY_15_SECONDS = 15 * 1000;
     //TODO just for testing. do every 5 minutes
-    public static long EVERY_5_MINUTES = 3 * 60 * 1000;
+    public static long EVERY_5_MINUTES = 5 * 60 * 1000;
     
     public TemperatureReader(String aLocation){
         timerRead = new Timer();
