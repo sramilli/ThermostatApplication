@@ -43,7 +43,7 @@ public class SwitchOFF extends Button implements GpioPinListenerDigital{
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         if (PinState.HIGH.equals(event.getState())){
-            System.out.println("Switch OFF detected!! ");
+            System.out.println("Switch OFF detected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
             //One push shuts down the Pi. Two pushes just exits the java application.
             if (iShutdownPi){
                 iJustTerminateApp = true;

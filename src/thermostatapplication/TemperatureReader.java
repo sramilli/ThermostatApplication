@@ -29,7 +29,7 @@ public class TemperatureReader {
     String iLocation;
     TemperatureStore tTemperatureStore;
     
-    public static long EVERY_1_MINUTE = 15 * 1000;
+    public static long EVERY_1_MINUTE = 1 * 60 * 1000;
     //TODO just for testing. do every 5 minutes
     public static long EVERY_5_MINUTES = 5 * 60 * 1000;
     
