@@ -29,7 +29,7 @@ public class TemperatureReader {
     String iLocation;
     TemperatureStore tTemperatureStore;
     
-    public static long EVERY_15_SECONDS = 15 * 1000;
+    public static long EVERY_1_MINUTE = 15 * 1000;
     //TODO just for testing. do every 5 minutes
     public static long EVERY_5_MINUTES = 5 * 60 * 1000;
     
@@ -43,8 +43,7 @@ public class TemperatureReader {
         Date startMeasureDate = Helper.getNextWholeMinuteDatePlusFiveSec(new Date());
         System.out.println("Start reading temperature at: " + Helper.getDateAsString(startMeasureDate));
         
-        //make three measurement per minute (every 15 sec)
-        timerRead.scheduleAtFixedRate(new TemperatureReaderTimerTask(iLocation, tTemperatureStore), startMeasureDate, EVERY_15_SECONDS);
+        timerRead.scheduleAtFixedRate(new TemperatureReaderTimerTask(iLocation, tTemperatureStore), startMeasureDate, EVERY_1_MINUTE);
                 
         if (ThermostatProperties.PERSIST_TEMPERATURES){
             timerPersister = new Timer();                                                                            

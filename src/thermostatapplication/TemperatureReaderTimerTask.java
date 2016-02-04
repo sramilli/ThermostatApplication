@@ -23,9 +23,7 @@ import java.util.TimerTask;
 public class TemperatureReaderTimerTask extends TimerTask {
 
     AdafruitBMP180 tempSensor;
-    float temp, read1, read2, read3;
-    float averageMinuteTemp;
-    int iteration;
+    float temp;
     Date dateRead;
     String iLocation;
     TemperatureStore iTemperatureStore;
@@ -34,8 +32,6 @@ public class TemperatureReaderTimerTask extends TimerTask {
         System.out.println("TemperatureReaderTimerTask INSTANTIATED!!!");
         tempSensor = new AdafruitBMP180();
         temp = 0;
-        averageMinuteTemp = 0;
-        iteration = 0;
         iLocation = aLocation;
         iTemperatureStore = aTemperatureStore;
     }
@@ -45,51 +41,17 @@ public class TemperatureReaderTimerTask extends TimerTask {
         try {
             temp = tempSensor.readTemperature();
         } catch (Exception ex) {
+            temp = 0;
             ex.printStackTrace();
         }
-         
-        switch (iteration){
-            case 0:
-                //first read
-                dateRead = Helper.resetSecMillsDate(new Date());
-                read1 = temp;
-                System.out.println("TemperatureReaderTimerTask measure 1: " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
-                iteration++;
-                break;
-            case 1:
-                //second read
-                read2 = temp;
-                System.out.println("TemperatureReaderTimerTask measure 2: " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
-                iteration++;
-                break;
-            case 2:
-                //third read
-                read3 = temp;
-                System.out.println("TemperatureReaderTimerTask measure 3: " +Helper.getDateAsString(new Date())+" " + Helper.getTempAsString(temp) + " C"); 
-                iteration++;
-                break;
-            case 3:
-                if (read1 != 0 || read2 != 0 || read3 != 0){
-                    averageMinuteTemp = (read1 + read2 + read3) / 3;  
-                } else averageMinuteTemp = 0;
-                iteration = 0;
-                
-                System.out.println("AverageMinuteTemperature " + Helper.getDateAsString(dateRead) + " " + Helper.getTempAsString(averageMinuteTemp) );
-                iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, dateRead, averageMinuteTemp));
-                if (ThermostatProperties.PERSIST_TEMPERATURES){
-                    storeTemperature(new TemperatureMeasure(iLocation, dateRead, averageMinuteTemp));
-                }
+        dateRead = Helper.resetSecMillsDate(new Date());
+        System.out.println("TemperatureReaderTimerTask measure: " +Helper.getDateAsString(dateRead)+" " + Helper.getTempAsString(temp) + " C");
+        iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, dateRead, temp));
+        if (ThermostatProperties.PERSIST_TEMPERATURES){
+            storeTemperature(new TemperatureMeasure(iLocation, dateRead, temp));
         }
     }
     
-    /*public void updateLastTemperatureRead(TemperatureMeasure aTemperatureMeasure){
-        //TODO UGLY!!!  dont do it like this!
-        //Calendar cal = Calendar.getInstance();
-        //cal.setTime(dateRead);
-        iTemperatureStore.setLastTemperatureRead(aTemperatureMeasure);
-        //ThermostatApplication.lastTemperatureRead = Helper.getTempAsString(averageMinuteTemp) + " C " + Helper.calToString(cal);
-    }*/
-
     private void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
         if (iTemperatureStore.size() < 3000){
             iTemperatureStore.storeTemperature(aTemperatureMeasure);
