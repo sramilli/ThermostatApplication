@@ -250,6 +250,8 @@ public class Thermostat implements GpioPinListenerDigital {
                 try {
                     iStartTask.cancel();
                     iStopTask.cancel();
+                    iStartTask = null;
+                    iStopTask = null;
                 } catch (Throwable e) {
                     System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
                 }
