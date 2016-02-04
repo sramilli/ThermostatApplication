@@ -254,8 +254,7 @@ public class Thermostat implements GpioPinListenerDigital {
                     System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
                 }
             }
-            iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
-            iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
+
             
             this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
@@ -280,6 +279,9 @@ public class Thermostat implements GpioPinListenerDigital {
                             startDateParse.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
+                        
+                        iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
+                        iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
 
                         iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
                         
