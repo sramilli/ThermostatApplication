@@ -53,7 +53,8 @@ public class TemperatureReaderTimerTask extends TimerTask {
     }
     
     private void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
-        if (iTemperatureStore.size() < 3000){
+        // 24 byte each. 1 MB -> 41666 measures.
+        if (iTemperatureStore.size() < 40000){
             iTemperatureStore.storeTemperature(aTemperatureMeasure);
         }else {
             System.out.println("StoreSize ("+iTemperatureStore.size()+") exceeded max size!! Not storing anymore");
