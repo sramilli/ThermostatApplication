@@ -45,7 +45,7 @@ public class TemperatureReader {
         
         timerRead.scheduleAtFixedRate(new TemperatureReaderTimerTask(iLocation, tTemperatureStore), startMeasureDate, EVERY_1_MINUTE);
                 
-        if (ThermostatProperties.PERSIST_TEMPERATURES){
+        if (false){
             timerPersister = new Timer();                                                                            
             timerPersister.scheduleAtFixedRate(new TemperaturePersisterTimerTask(tTemperatureStore), Helper.getNextWholeMinuteDate(new Date()), EVERY_5_MINUTES);
         }
