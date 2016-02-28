@@ -42,8 +42,8 @@ public class Interpreter {
         else if (tText.equalsIgnoreCase(CommandType.STATUS.toString())) return CommandType.STATUS;
         else if (tText.equalsIgnoreCase(CommandType.HELP.toString())) return CommandType.HELP;
         else if (tText.length() >= 8 && (tTemp = tText.substring(0, 8)).equalsIgnoreCase(CommandType.REGISTER_NUMBER.toString())) return CommandType.REGISTER_NUMBER;
-        else if (tText.length() >= 7 && (tTemp = tText.substring(0, 7)).equalsIgnoreCase(CommandType.PROGRAM.toString())) return CommandType.PROGRAM;
         else if (tText.length() >= 12 && (tTemp = tText.substring(0, 12)).equalsIgnoreCase(CommandType.PROGRAM_DAILY.toString())) return CommandType.PROGRAM_DAILY;
+        else if (tText.length() >= 7 && (tTemp = tText.substring(0, 7)).equalsIgnoreCase(CommandType.PROGRAM.toString())) return CommandType.PROGRAM;
         else {
             System.out.println("Interpreter: Command not supported: "+tText);
             return CommandType.NOT_VALID;

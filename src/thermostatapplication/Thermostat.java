@@ -245,8 +245,9 @@ public class Thermostat implements GpioPinListenerDigital {
         } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
-            
             programIgnition(this.getLedBlue(), true, aText, this);
+        }else if (aCmd.equals(CommandType.PROGRAM)){
+            programIgnition(this.getLedBlue(), false, aText, this);
         }
         
         
