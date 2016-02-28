@@ -21,6 +21,7 @@ public enum CommandType {
     HELP("help"),
     REGISTER_NUMBER("register"),
     PROGRAM_DAILY("programDaily"),
+    PROGRAM("program"),
     //multiple word
     //TODO
     PROGRAM_WEEK("programWeekly"),
@@ -45,7 +46,8 @@ public enum CommandType {
             this.equals(STATUS) || 
             this.equals(HELP) || 
             this.equals(REGISTER_NUMBER) ||
-            this.equals(PROGRAM_DAILY))
+            this.equals(PROGRAM_DAILY) ||
+            this.equals(PROGRAM))
             valid = true;
         return valid;
     }

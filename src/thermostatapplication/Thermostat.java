@@ -245,8 +245,23 @@ public class Thermostat implements GpioPinListenerDigital {
         } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
+            
+            programIgnition(this.getLedBlue(), true, aText, this);
+        }
+        
+        
+        else{
+            System.out.println("Thermostat: Command via SMS not supported! ");
+        }
 
-            if (iStartTask != null && iStopTask != null){
+    }
+    
+    private void programIgnition(Led aBlueLed, Boolean dailyRepeat, String aText, Thermostat aThermostat){
+        
+        //TODO refactor and put it in the command
+        aBlueLed.turnOff();
+        
+        if (iStartTask != null && iStopTask != null){
                 try {
                     iStartTask.cancel();
                     iStopTask.cancel();
@@ -257,13 +272,10 @@ public class Thermostat implements GpioPinListenerDigital {
                 }
             }
 
-            
-            this.getLedBlue().turnOff();
             String[] tSplittedStringt = aText.split(" ");
             if (tSplittedStringt.length == 2){
-                String timeInterval = tSplittedStringt[1];
-                //ex. 6:00-8:30
-                String[] tSplittedTime = timeInterval.split("-");
+                String timeInterval = tSplittedStringt[1]; //ex. 6:00-8:30
+                String[] tSplittedTime = timeInterval.split("-"); //ex. 6:00
                 if (tSplittedTime.length == 2){
                     try {Calendar tNow = Helper.getThisInstant();
                         Helper.printCal("Now", tNow);
@@ -282,10 +294,14 @@ public class Thermostat implements GpioPinListenerDigital {
                         }
                         Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
                         
-                        iStartTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.ON_CONDITIONAL);
-                        iStopTask = new ThermostatIgnitionShutdownTimerTask(this, CommandType.OFF_CONDITIONAL);
-
-                        iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
+                        iStartTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
+                        iStopTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.OFF_CONDITIONAL);
+                        
+                        if (dailyRepeat){
+                            iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
+                        } else{
+                            iTimer.schedule(iStartTask, startDateParse.getTime());
+                        }
                         
                         if (tNow.before(stopDateParse)){
                             //schedule OFF from today
@@ -295,9 +311,13 @@ public class Thermostat implements GpioPinListenerDigital {
                         }
                         Helper.printCal("Scheduling daily shutdown from: ", stopDateParse);
 
-                        iTimer.scheduleAtFixedRate(iStopTask, stopDateParse.getTime(), REPEAT_DAILY);
+                        if (dailyRepeat){
+                            iTimer.scheduleAtFixedRate(iStopTask, stopDateParse.getTime(), REPEAT_DAILY);
+                        } else {
+                            iTimer.schedule(iStopTask, stopDateParse.getTime());
+                        }
                         
-                        this.getLedBlue().turnOn();
+                        aBlueLed.turnOn();
                         
                     } catch (ParseException ex) {
                         ex.printStackTrace();
@@ -308,13 +328,6 @@ public class Thermostat implements GpioPinListenerDigital {
             }else {
                 System.out.println("Program daily bad format! Erased previous program");
             }
-        }
-        
-        
-        else{
-            System.out.println("Thermostat: Command via SMS not supported! ");
-        }
-
     }
 
     public Led getHeaterStatusLed() {
