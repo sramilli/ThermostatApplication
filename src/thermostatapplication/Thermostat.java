@@ -69,7 +69,8 @@ public class Thermostat implements GpioPinListenerDigital {
                 + "4) status\r"
                 + "5) help\r"
                 + "6) register +391234512345\r"
-                + "7) ProgramDaily 6:15-7:45\r";
+                + "7) Program 6:15-7:45\r"
+                + "8) ProgramDaily 6:15-7:45\r";
 
     public Thermostat() {
         try {
@@ -226,6 +227,8 @@ public class Thermostat implements GpioPinListenerDigital {
                         System.out.println("REGISTER_NUMBER command not formatted correctly");
                     }
                 } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
+                    executeCommand(tCommand, aSMS.getText());
+                }  else if (CommandType.PROGRAM.equals(tCommand)){
                     executeCommand(tCommand, aSMS.getText());
                 }
     }
