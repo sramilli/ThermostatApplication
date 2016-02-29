@@ -105,16 +105,20 @@ public class Helper {
     }
     
     public static Calendar parseTime(String aTime) throws ParseException{
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
-        Date date = formatter.parse(aTime);
+        Date date;
+        try {
+            DateFormat formatter = new SimpleDateFormat("HH:mm");
+            date = formatter.parse(aTime);
+        }
+        catch (ParseException e){
+                return null;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        
-        Calendar beguinningOfDay = getBeginningOfDay();
-        cal.set(Calendar.YEAR, beguinningOfDay.get(Calendar.YEAR));
-        cal.set(Calendar.MONTH, beguinningOfDay.get(Calendar.MONTH));
-        cal.set(Calendar.DAY_OF_MONTH, beguinningOfDay.get(Calendar.DAY_OF_MONTH));
-        
+        Calendar beginningOfDay = getBeginningOfDay();
+        cal.set(Calendar.YEAR, beginningOfDay.get(Calendar.YEAR));
+        cal.set(Calendar.MONTH, beginningOfDay.get(Calendar.MONTH));
+        cal.set(Calendar.DAY_OF_MONTH, beginningOfDay.get(Calendar.DAY_OF_MONTH));
         return cal;
     }
     

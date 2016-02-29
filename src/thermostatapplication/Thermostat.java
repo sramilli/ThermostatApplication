@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import static java.lang.Thread.sleep;
+import java.util.Date;
 
 /**
  *
@@ -54,6 +55,8 @@ public class Thermostat implements GpioPinListenerDigital {
 
     private Timer iTimer;
     
+    ThermostatIgnitionShutdownTimerTask iStartTaskRepeated;
+    ThermostatIgnitionShutdownTimerTask iStopTaskRepeated;
     ThermostatIgnitionShutdownTimerTask iStartTask;
     ThermostatIgnitionShutdownTimerTask iStopTask;
     
@@ -147,12 +150,12 @@ public class Thermostat implements GpioPinListenerDigital {
     }
     
     public String getProgramTimes(){
-        if (iStartTask == null) return "not active";
+        if (iStartTaskRepeated == null) return "not active";
         DateFormat sdf = new SimpleDateFormat("HH:mm");
         Calendar tLastStart = Calendar.getInstance();
-        tLastStart.setTimeInMillis(iStartTask.scheduledExecutionTime());
+        tLastStart.setTimeInMillis(iStartTaskRepeated.scheduledExecutionTime());
         Calendar tLastStop = Calendar.getInstance();
-        tLastStop.setTimeInMillis(iStopTask.scheduledExecutionTime());
+        tLastStop.setTimeInMillis(iStopTaskRepeated.scheduledExecutionTime());
         return sdf.format(tLastStart.getTime()) + "-" + sdf.format(tLastStop.getTime());
     }
     
@@ -248,9 +251,9 @@ public class Thermostat implements GpioPinListenerDigital {
         } else if (aCmd.equals(CommandType.OFF_CONDITIONAL)) {
             this.turnOffConditionally();
         }else if (aCmd.equals(CommandType.PROGRAM_DAILY)){
-            programIgnition(this.getLedBlue(), true, aText, this);
+            programRepeatedIgnition(aText, this);
         }else if (aCmd.equals(CommandType.PROGRAM)){
-            programIgnition(this.getLedBlue(), false, aText, this);
+            programIgnition(aText, this);
         }
         
         
@@ -260,78 +263,124 @@ public class Thermostat implements GpioPinListenerDigital {
 
     }
     
-    private void programIgnition(Led aBlueLed, Boolean dailyRepeat, String aText, Thermostat aThermostat){
+    private void programRepeatedIgnition(String aText, Thermostat aThermostat){
         
         //TODO refactor and put it in the command
-        aBlueLed.turnOff();
+        iBlueLED.turnOff();
         
+        if (iStartTaskRepeated != null && iStopTaskRepeated != null){
+            try {
+                iStartTaskRepeated.cancel();
+                iStopTaskRepeated.cancel();
+                iStartTaskRepeated = null;
+                iStopTaskRepeated = null;
+            } catch (Throwable e) {
+                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+            }
+        }
+
+        Calendar[] cal = parseStartStopDate(aText);
+        Calendar startDateParsed;
+        Calendar stopDateParsed;
+        if (cal != null){
+            startDateParsed = cal[0];
+            stopDateParsed = cal[1];
+        } else {
+            return;
+        }
+        Helper.printCal("Scheduling daily Ignition from: ", startDateParsed);
+        Helper.printCal("Scheduling daily shutdown from: ", stopDateParsed);
+        iStartTaskRepeated = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
+        iStopTaskRepeated = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.OFF_CONDITIONAL);
+        iTimer.scheduleAtFixedRate(iStartTaskRepeated, startDateParsed.getTime(), REPEAT_DAILY);
+        iTimer.scheduleAtFixedRate(iStopTaskRepeated, stopDateParsed.getTime(), REPEAT_DAILY);
+
+        iBlueLED.turnOn();
+
+    }
+    
+    private void programIgnition(String aText, Thermostat aThermostat){
         if (iStartTask != null && iStopTask != null){
-                try {
-                    iStartTask.cancel();
-                    iStopTask.cancel();
-                    iStartTask = null;
-                    iStopTask = null;
-                } catch (Throwable e) {
-                    System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
-                }
+            try {
+                iStartTask.cancel();
+                iStopTask.cancel();
+                iStartTask = null;
+                iStopTask = null;
+            } catch (Throwable e) {
+                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
             }
+        }
 
-            String[] tSplittedStringt = aText.split(" ");
-            if (tSplittedStringt.length == 2){
-                String timeInterval = tSplittedStringt[1]; //ex. 6:00-8:30
-                String[] tSplittedTime = timeInterval.split("-"); //ex. 6:00
-                if (tSplittedTime.length == 2){
-                    try {Calendar tNow = Helper.getThisInstant();
-                        Helper.printCal("Now", tNow);
+        Calendar[] cal = parseStartStopDate(aText);
+        Calendar startDateParsed;
+        Calendar stopDateParsed;
+        if (cal != null){
+            startDateParsed = cal[0];
+            stopDateParsed = cal[1];
+        } else {
+            return;
+        }
+        Helper.printCal("Scheduling daily Ignition from: ", startDateParsed);
+        Helper.printCal("Scheduling daily shutdown from: ", stopDateParsed);
+        iStartTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
+        iStopTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.OFF_CONDITIONAL);
+        iTimer.schedule(iStartTask, startDateParsed.getTime());
+        iTimer.schedule(iStopTask, stopDateParsed.getTime());
 
-                        Calendar startDateParse = Helper.parseTime(tSplittedTime[0]);
-                        Helper.printCal("startDateParse", startDateParse);
-            
-                        Calendar stopDateParse = Helper.parseTime(tSplittedTime[1]);
-                        Helper.printCal("stopDateParse", stopDateParse);
+        iBlueLED.turnOn();
 
-                        if (tNow.before(startDateParse)){
-                            //schedule ON from today
-                        } else {
-                            //schedule ON from tomorrow
-                            startDateParse.add(Calendar.DAY_OF_MONTH, 1);
-                        }
-                        Helper.printCal("Scheduling daily Ignition from: ", startDateParse);
-                        
-                        iStartTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
-                        iStopTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.OFF_CONDITIONAL);
-                        
-                        if (dailyRepeat){
-                            iTimer.scheduleAtFixedRate(iStartTask, startDateParse.getTime(), REPEAT_DAILY);
-                        } else{
-                            iTimer.schedule(iStartTask, startDateParse.getTime());
-                        }
-                        
-                        if (tNow.before(stopDateParse)){
-                            //schedule OFF from today
-                        } else {
-                            //schedule OFF from tomorrow
-                            stopDateParse.add(Calendar.DAY_OF_MONTH, 1);
-                        }
-                        Helper.printCal("Scheduling daily shutdown from: ", stopDateParse);
+    }
+    
+    /**
+     * 
+     * @param aTimeInterval
+     * @return Calendar[]
+     * 
+     *  cal[0] --> startDate
+     *  cal[1} --> stopDate
+     */
+    private Calendar[] parseStartStopDate(String aTimeInterval){
+        Calendar[] cal = new Calendar[2];
+        String[] tSplittedStringt = aTimeInterval.split(" ");
+        if (tSplittedStringt.length == 2){
+            String timeInterval = tSplittedStringt[1]; //ex. 6:00-8:30
+            String[] tSplittedTime = timeInterval.split("-"); //ex. 6:00
+            if (tSplittedTime.length == 2){
+                try {Calendar tNow = Helper.getThisInstant();
+                    Helper.printCal("Now", tNow);
+                    Calendar startDateParsed = Helper.parseTime(tSplittedTime[0]);
+                    Calendar stopDateParsed = Helper.parseTime(tSplittedTime[1]);
+                    
+                    if (startDateParsed == null || stopDateParsed == null) return null;
 
-                        if (dailyRepeat){
-                            iTimer.scheduleAtFixedRate(iStopTask, stopDateParse.getTime(), REPEAT_DAILY);
-                        } else {
-                            iTimer.schedule(iStopTask, stopDateParse.getTime());
-                        }
-                        
-                        aBlueLed.turnOn();
-                        
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
+                    if (tNow.after(startDateParsed)){
+                        //schedule ON from tomorrow
+                        startDateParsed.add(Calendar.DAY_OF_MONTH, 1);
                     }
-                }else{
-                    System.out.println("Program daily bad format!");
+                    if (tNow.after(stopDateParsed)){
+                        //schedule OFF from tomorrow
+                        stopDateParsed.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+                    Helper.printCal("startDateParse", startDateParsed);
+                    Helper.printCal("stopDateParse", stopDateParsed);
+                    
+                    cal[0] = startDateParsed;
+                    cal[1] = stopDateParsed;
+                    
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                    return null;
                 }
-            }else {
-                System.out.println("Program daily bad format! Erased previous program");
+            } else{
+                System.out.println("Program - parse date bad format!");
+                return null;
             }
+        } else {
+            System.out.println("Program - parse bad format!");
+            return null;
+        }
+
+        return cal;
     }
 
     public Led getHeaterStatusLed() {

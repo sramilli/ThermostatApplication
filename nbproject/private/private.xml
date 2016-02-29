@@ -5,10 +5,13 @@
         <group>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/devices/SwitchOFF.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/TemperatureReader.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/helper/Interpreter.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/TemperatureReaderTimerTask.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/ThermostatApplication.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/Thermostat.java</file>
             <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/SMSGateway.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/CommandType.java</file>
+            <file>file:/C:/Users/Ste/Desktop/Projects/heater/ThermostatApplication/src/thermostatapplication/MessageHandler.java</file>
         </group>
     </open-files>
 </project-private>
