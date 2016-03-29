@@ -55,7 +55,10 @@ class TemperaturePersisterTimerTask extends TimerTask {
         for (TemperatureMeasure tTemp: iStoredTemperatures){
             Document doc = new Document();
             doc.put("Location", tTemp.getLocation());
+            doc.put("Group", tTemp.getGroup());
             doc.put("Date", Helper.getDateAsString(tTemp.getDate()));
+            doc.put("Day", Helper.getDayAsString(tTemp.getDate()));
+            doc.put("Time", Helper.getTimeAsString(tTemp.getDate()));
             doc.put("Temp", Helper.getTempAsString(tTemp.getTemp()));
             documents.add(doc);
             iPersistedTemperatures.add(tTemp);

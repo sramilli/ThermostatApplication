@@ -19,7 +19,9 @@ import java.util.Date;
  */
 public class Helper {
     final static NumberFormat NF = new DecimalFormat("##00.00");
-    final static SimpleDateFormat DF = new SimpleDateFormat("YYYYMMdd-HH:mm");
+    final static SimpleDateFormat DateFormat = new SimpleDateFormat("YYYYMMdd-HH:mm");
+    final static SimpleDateFormat DayFormat = new SimpleDateFormat("YYYYMMdd");
+    final static SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm");
     
     public static Date resetSecMillsDate(Date aDate){
         Calendar cal = Calendar.getInstance();
@@ -87,7 +89,15 @@ public class Helper {
     
     public static String getDateAsString(Date aDate){
         //Fri Jul 17 22:41:00 CEST 2015
-        return DF.format(aDate);
+        return DateFormat.format(aDate);
+    }
+    
+    public static String getDayAsString(Date aDate){
+        return DayFormat.format(aDate);
+    }
+        
+    public static String getTimeAsString(Date aDate){
+        return TimeFormat.format(aDate);
     }
     
     public static String getTempAsString(float aTemp){

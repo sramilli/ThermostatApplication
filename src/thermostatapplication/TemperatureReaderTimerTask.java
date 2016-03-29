@@ -26,13 +26,15 @@ public class TemperatureReaderTimerTask extends TimerTask {
     float temp;
     Date dateRead;
     String iLocation;
+    String iGroup;
     TemperatureStore iTemperatureStore;
 
-    public TemperatureReaderTimerTask(String aLocation, TemperatureStore aTemperatureStore){
+    public TemperatureReaderTimerTask(String aLocation, String aGroup, TemperatureStore aTemperatureStore){
         System.out.println("TemperatureReaderTimerTask INSTANTIATED!!!");
         tempSensor = new AdafruitBMP180();
         temp = 0;
         iLocation = aLocation;
+        iGroup = aGroup;
         iTemperatureStore = aTemperatureStore;
     }
 
@@ -46,9 +48,9 @@ public class TemperatureReaderTimerTask extends TimerTask {
         }
         dateRead = Helper.resetSecMillsDate(new Date());
         System.out.println("TemperatureReaderTimerTask measure: " +Helper.getDateAsString(dateRead)+" " + Helper.getTempAsString(temp) + " C");
-        iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, dateRead, temp));
+        iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, iGroup, dateRead, temp));
         if (ThermostatProperties.PERSIST_TEMPERATURES){
-            storeTemperature(new TemperatureMeasure(iLocation, dateRead, temp));
+            storeTemperature(new TemperatureMeasure(iLocation, iGroup, dateRead, temp));
         }
     }
     

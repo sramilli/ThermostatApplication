@@ -37,6 +37,8 @@ public class ThermostatProperties {
     //TODO  To replace with following
     public static boolean PERSIST_TEMPERATURES = false;
     public static String THERMOMETER_LOCATION = "";
+    //TODO TODO to write in my and Babbo properties THERMOMETER_GROUP
+    public static String THERMOMETER_GROUP = "Ste";
     public static boolean SOFT_SHUTDOWN_ENABLED = false;
     public static boolean PREFER_EMAIL_REPLIES_IF_AVAILABLE = true;
     public static String A = null;

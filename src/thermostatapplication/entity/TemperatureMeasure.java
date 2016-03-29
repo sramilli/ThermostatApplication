@@ -14,11 +14,13 @@ import java.util.Date;
  */
 public class TemperatureMeasure {
     String iLocation;
+    String iGroup;
     Date iDate;
     float iTemp;
 
-    public TemperatureMeasure(String aLocation, Date aDate, float aTemp) {
+    public TemperatureMeasure(String aLocation, String aGroup, Date aDate, float aTemp) {
         iLocation = aLocation;
+        iGroup = aGroup;
         iDate = aDate;
         iTemp = aTemp;
     }
@@ -33,6 +35,14 @@ public class TemperatureMeasure {
 
     public void setLocation(String aLocation) {
         this.iLocation = aLocation;
+    }
+    
+    public String getGroup() {
+        return iGroup;
+    }
+
+    public void setGroup(String aGroup) {
+        this.iGroup = aGroup;
     }
 
     public Date getDate() {
