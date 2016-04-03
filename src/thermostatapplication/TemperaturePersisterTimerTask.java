@@ -15,6 +15,8 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.Document;
 import thermostatapplication.properties.ThermostatProperties;
 //http://mongodb.github.io/mongo-java-driver/3.0/driver/getting-started/quick-tour/
@@ -33,6 +35,10 @@ class TemperaturePersisterTimerTask extends TimerTask {
     TemperatureStore iTemperatureStore;
 
     public TemperaturePersisterTimerTask(TemperatureStore aTemperatureStore) {
+        //disable console logging
+        Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); 
+        mongoLogger.setLevel(Level.SEVERE);
+        
         iTemperatureStore = aTemperatureStore;
         //need to use a new list to freeze it
         iPersistedTemperatures = new ArrayList<TemperatureMeasure>();
