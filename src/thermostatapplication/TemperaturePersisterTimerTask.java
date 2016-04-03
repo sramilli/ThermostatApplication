@@ -35,10 +35,6 @@ class TemperaturePersisterTimerTask extends TimerTask {
     TemperatureStore iTemperatureStore;
 
     public TemperaturePersisterTimerTask(TemperatureStore aTemperatureStore) {
-        //disable console logging
-        Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); 
-        mongoLogger.setLevel(Level.SEVERE);
-        
         iTemperatureStore = aTemperatureStore;
         //need to use a new list to freeze it
         iPersistedTemperatures = new ArrayList<TemperatureMeasure>();
@@ -51,6 +47,10 @@ class TemperaturePersisterTimerTask extends TimerTask {
     }
     
     public void persistDataOnMongolab(){
+        //disable console logging
+        Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); 
+        mongoLogger.setLevel(Level.SEVERE);
+        
         iStoredTemperatures = iTemperatureStore.getTemperatures();
         if (iStoredTemperatures.isEmpty()) return;
         System.out.println("Prepairing to store "+iStoredTemperatures.size()+" Temps in the cloud");
