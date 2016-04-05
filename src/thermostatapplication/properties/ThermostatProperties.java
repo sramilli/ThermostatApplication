@@ -34,11 +34,9 @@ public class ThermostatProperties {
 
     public static boolean START_READING_TEMPERATURES = true;
     public static boolean STORE_TEMPERATURES = false;
-    //TODO  To replace with following
     public static boolean PERSIST_TEMPERATURES = false;
     public static String THERMOMETER_LOCATION = "";
-    //TODO TODO to write in my and Babbo properties THERMOMETER_GROUP
-    public static String THERMOMETER_GROUP = "Ste";
+    public static String THERMOMETER_GROUP = "Unknown";
     public static boolean SOFT_SHUTDOWN_ENABLED = false;
     public static boolean PREFER_EMAIL_REPLIES_IF_AVAILABLE = true;
     public static String A = null;
@@ -56,6 +54,7 @@ public class ThermostatProperties {
             START_READING_TEMPERATURES = new Boolean(prop.getProperty("START_READING_TEMPERATURES"));
             SOFT_SHUTDOWN_ENABLED = new Boolean(prop.getProperty("SOFT_SHUTDOWN_ENABLED"));
             THERMOMETER_LOCATION = prop.getProperty("THERMOMETER_LOCATION");
+            THERMOMETER_GROUP = prop.getProperty("THERMOMETER_GROUP");
             GSM_BAUD_RATE = new Integer(prop.getProperty("gsmBaudRate"));
             GREEN_HEATER_STATUS_LED = new Integer(prop.getProperty("GREEN_HEATER_STATUS_LED"));
             HEATER_RELAY = new Integer(prop.getProperty("HEATER_RELAY"));
@@ -65,7 +64,6 @@ public class ThermostatProperties {
             MODE_BUTTON = new Integer(prop.getProperty("MODE_BUTTON"));
             SHUTDOWN_BUTTON = new Integer(prop.getProperty("SHUTDOWN_BUTTON"));
             MANUAL_THERMOSTAT_INPUT = new Integer(prop.getProperty("MANUAL_THERMOSTAT_INPUT"));
-            //TODO
             BLUE_PROGRAM_LED = new Integer(prop.getProperty("BLUE_PROGRAM_LED"));
             PREFER_EMAIL_REPLIES_IF_AVAILABLE = new Boolean(prop.getProperty("PREFER_EMAIL_REPLIES_IF_AVAILABLE"));
             STORE_TEMPERATURES = new Boolean(prop.getProperty("STORE_TEMPERATURES"));
@@ -77,7 +75,6 @@ public class ThermostatProperties {
             USER_1 = prop.getProperty("USER_1");
             USER_2 = prop.getProperty("USER_2");
             USER_3 = prop.getProperty("USER_3");
-
             System.out.println("Read Prop measureTemps correctly");
         } catch (Throwable ex){
             System.out.println("ERROR READING PROP FILE!!!");
