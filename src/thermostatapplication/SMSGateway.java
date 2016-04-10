@@ -135,13 +135,13 @@ public class SMSGateway implements SerialDataListener{
     public void sendATCommand (){
         System.out.println("---->Sending: AT");
         serial.write("AT\r");
-        waitABit(3000); //TODO tweeka
+        waitABit(1000); //TODO tweeka
     }
     
     public void sendReadAllMessagesCommand(){
         System.out.println("atReadAllMessages:---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
-        waitABit(3000);
+        waitABit(1000);
     }
     
     
@@ -163,7 +163,8 @@ public class SMSGateway implements SerialDataListener{
                 + "4) status\n"
                 + "5) help\n"
                 + "6) register +391234512345\n"
-                + "7) ProgramDaily 6:15-7:45");
+                + "7) ProgramDaily 6:15-7:45"
+                + "8) Program 6:15-7:45");
     }
     
     public void sendSMS(String aNumberRecipient, String aMessage) {
@@ -182,7 +183,7 @@ public class SMSGateway implements SerialDataListener{
         System.out.println("---->Sending: " + aMessage);
         serial.write(aMessage + ctrlZ);
         //this is needed because sending the sms takes time
-        waitABit(4000);
+        waitABit(2000);
         readAnswerAndPrint();
     }
     
@@ -190,7 +191,7 @@ public class SMSGateway implements SerialDataListener{
     //Simple read
     //
     public String readAnswer() {
-        waitABit(3000);
+        waitABit(1000);
         StringBuffer tReply = new StringBuffer();
         while (serial.availableBytes() > 0) {
             tReply.append(serial.read());
@@ -206,7 +207,7 @@ public class SMSGateway implements SerialDataListener{
     public String readAllMessagesRaw() {
         System.out.println("---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
-        waitABit(3000); //TODO tweeka
+        waitABit(1000); //TODO tweeka
         String msgs = readAnswer();
         System.out.println("Raw data from GSM module:\n" + msgs);
         return msgs;
@@ -245,14 +246,14 @@ public class SMSGateway implements SerialDataListener{
     public String readMsgAtCertainPosition(int aPos) {
         System.out.println("---->Sending: AT+CMGR=" + aPos);
         serial.write("AT+CMGR=" + aPos + "\r");
-        waitABit(3000); //TODO tweeka
+        waitABit(1000); //TODO tweeka
         return readAnswer();
     }
     
     public String deleteMsgAtCertainPosition(int aPos) {
         System.out.println("---->Sending: AT+CMGD=" + aPos);
         serial.write("AT+CMGD=" + aPos + "\r");
-        waitABit(3000); //TODO tweeka
+        waitABit(1000); //TODO tweeka
         return readAnswer();
     }
     
