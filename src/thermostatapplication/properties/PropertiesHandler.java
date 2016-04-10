@@ -50,7 +50,12 @@ public class PropertiesHandler {
     }
     
     public String getProperty(String aKey){
-        return iProp.getProperty(aKey);
+        if (aKey == null || "".equals(aKey))
+            return "";
+        String tProp = iProp.getProperty(aKey);
+        if (tProp == null)
+            return "unknown";
+        return tProp;
     }
     
     public void storeProperty(String aKey, String aValue){
