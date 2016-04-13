@@ -340,6 +340,9 @@ public class Thermostat implements GpioPinListenerDigital {
      *  cal[1} --> stopDate
      */
     private Calendar[] parseStartStopDate(String aTimeInterval){
+        if (aTimeInterval == null || "".equals(aTimeInterval)) return null;
+        aTimeInterval = aTimeInterval.trim();
+        aTimeInterval = aTimeInterval.replaceAll("\\s+", " ");
         Calendar[] cal = new Calendar[2];
         String[] tSplittedStringt = aTimeInterval.split(" ");
         if (tSplittedStringt.length == 2){
