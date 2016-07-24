@@ -19,8 +19,8 @@ public class GardenProperties {
     public static int MQTT_QOS_2 = 2;
     public static String SENSOR_DATA_LOGGER_TOPIC = "/anna/balcony/sensor-readings";
     
-    public static String MORNING_WATERING_TIME = "21:15";
-    public static String EVENING_WATERING_TIME = "21:16";
+    public static String MORNING_WATERING_TIME = "23:30";
+    public static String EVENING_WATERING_TIME = "23:33";
     
     public static String TOPIC_PUMP_1 = "/anna/balcony/pump1";
     public static String TOPIC_PUMP_2 = "/anna/balcony/pump2";

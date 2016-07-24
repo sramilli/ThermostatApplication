@@ -53,7 +53,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
         
         iStoredTemperatures = iTemperatureStore.getTemperatures();
         if (iStoredTemperatures.isEmpty()) return;
-        System.out.println("Prepairing to store "+iStoredTemperatures.size()+" Temps in the cloud");
+        System.out.println("Prepairing to persist "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
         MongoClient client = null;
         List<Document> documents = new ArrayList<Document>();
@@ -79,7 +79,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
             //eliminate stored Temps from the collection
             iStoredTemperatures.removeAll(iPersistedTemperatures);
             client.close();
-            System.out.println("Temperatures inserted: "+iPersistedTemperatures.size()+". Exiting");
+            System.out.println("Temperatures persisted on mongolab: "+iPersistedTemperatures.size()+". Exiting");
             iPersistedTemperatures.clear();
         } catch (Throwable e){
             System.out.println("Failed to store Temps in the cloud. Stacktrace:");
