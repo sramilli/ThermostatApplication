@@ -105,6 +105,7 @@ public class Helper {
     }
     
     public static void printCal(String aString, Calendar aCal){
+        //TODO return string instead
         DateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
         System.out.println(aString+" : "+sdf.format(aCal.getTime()));
     }
@@ -115,6 +116,7 @@ public class Helper {
     }
     
     public static Calendar parseTime(String aTime) throws ParseException{
+        //TODO bug if hour > 24
         Date date;
         try {
             DateFormat formatter = new SimpleDateFormat("HH:mm");

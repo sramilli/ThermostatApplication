@@ -38,7 +38,7 @@ public class TemperatureReader {
         timerRead = new Timer();
         iLocation = aLocation;
         iGroup = aGroup;
-        tTemperatureStore = new TemperatureStore();
+        tTemperatureStore = TemperatureStore.getInstance();
     }
     
     public void startReadingTemperatures(){

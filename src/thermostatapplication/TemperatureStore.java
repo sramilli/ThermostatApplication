@@ -16,13 +16,21 @@ import java.util.Collection;
  * @author Ste
  */
 public class TemperatureStore {
+    private static TemperatureStore iInstance = null;
     Collection<TemperatureMeasure> iTemperatures;
     TemperatureMeasure iLastTemperatureMeasure;
     
     //TODO temporary solution
     public static String LastTemperatureReadString = "";
+    
+    public static synchronized TemperatureStore getInstance(){
+        if (iInstance == null){
+            iInstance = new TemperatureStore();
+        }
+        return iInstance;
+    }
 
-    public TemperatureStore(){
+    private TemperatureStore(){
         iTemperatures = new ArrayList<>();
         iLastTemperatureMeasure = null;
     }

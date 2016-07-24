@@ -6,6 +6,7 @@ import thermostatapplication.properties.ThermostatProperties;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import thermostatapplication.properties.GardenProperties;
 
 
 /**
@@ -15,6 +16,7 @@ import java.util.Date;
 public class ThermostatApplication {
 
     TemperatureReader iTemperatureReader = null;
+    Garden iGarden = null;
     
     public ThermostatApplication() {
         super();
@@ -37,9 +39,18 @@ public class ThermostatApplication {
             iTemperatureReader.startReadingTemperatures();
         }
         
+        if (GardenProperties.START_GARDEN_APPLICATION){
+            iGarden = new Garden();
+            new Thread(iGarden).start();
+        }
+
+        
         //Holds the application running until it detects the button press
         while (!iSwitchOFF.shutdownPi()) {
             waitABit(5000);
+        }
+        if (iGarden != null){
+            iGarden.stop();
         }
         waitABit(3000);
         System.out.println("Main Application: Turning off Thermostat");
