@@ -42,7 +42,10 @@ public class ThermostatApplication {
         
         if (GardenProperties.START_GARDEN_APPLICATION){
             iGarden = new Garden();
-            new Thread(iGarden).start();
+            //TODO erase, just for test
+            //new Thread(iGarden).start();
+            iGarden.run();
+            System.out.println("GARDEN started!");
         }
 
         

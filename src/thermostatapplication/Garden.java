@@ -22,7 +22,10 @@ import java.util.logging.Logger;
  *
  * @author Ste
  */
-public class Garden implements Runnable{
+
+//TODO erase, just for test
+//public class Garden implements Runnable{
+public class Garden{
     
     Actuator iActuator;
     Pump iPump1;
@@ -51,7 +54,8 @@ public class Garden implements Runnable{
         iLogger = new SensorDataLogger();
     }
     
-    @Override
+    //TODO erase, just for test
+    //@Override
     public void run() {
         System.out.println("Garden Application Started!");
         scheduleActivationAtHoursOfDay(GardenProperties.MORNING_WATERING_TIME, GardenProperties.EVENING_WATERING_TIME);
