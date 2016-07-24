@@ -49,6 +49,7 @@ public class SensorDataLogger {
         
         try{
             iMqttClient.subscribe(GardenProperties.SENSOR_DATA_LOGGER_TOPIC, GardenProperties.MQTT_QOS_2);
+            System.out.println("SensorDataLogger subscribed to " +GardenProperties.SENSOR_DATA_LOGGER_TOPIC);
         } catch (Exception e){
             e.printStackTrace();
         }

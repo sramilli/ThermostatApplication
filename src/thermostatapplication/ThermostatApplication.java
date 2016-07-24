@@ -16,6 +16,7 @@ import thermostatapplication.properties.GardenProperties;
 public class ThermostatApplication {
 
     TemperatureReader iTemperatureReader = null;
+    Thermostat iThermostat = null;
     Garden iGarden = null;
     
     public ThermostatApplication() {
@@ -32,7 +33,7 @@ public class ThermostatApplication {
         System.out.println("Starting Thermostatapplication at: "+new Date());
         SwitchOFF iSwitchOFF = new SwitchOFF(ThermostatProperties.SHUTDOWN_BUTTON);
         System.out.println("Main Application: SwitchOFF pin opened and initialized!");
-        Thermostat iThermostat = new Thermostat();
+        iThermostat = new Thermostat();
 
         if (ThermostatProperties.START_READING_TEMPERATURES){
             iTemperatureReader = new TemperatureReader(ThermostatProperties.THERMOMETER_LOCATION, ThermostatProperties.THERMOMETER_GROUP);

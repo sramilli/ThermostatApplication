@@ -47,6 +47,7 @@ public class Garden implements Runnable{
         iPump5 = new Pump(GardenProperties.TOPIC_PUMP_5, GardenProperties.CALIBRATION_PUMP_5, GardenProperties.DEFAULT_QUANTITY_PUMP_5);
         iPumps = new ArrayList<>(Arrays.asList(iPump1, iPump2, iPump3, iPump4, iPump5));
         iTimer = new Timer(true);
+        //TODO move to thermostat?
         iLogger = new SensorDataLogger();
     }
     
