@@ -17,16 +17,16 @@ public class GardenProperties {
     public static String SENSOR_LOGGER_CLIENT_ID = "SensorLoggerMqttClient";
     public static String MQTT_BROKER = "tcp://192.168.0.25:1883";
     public static int MQTT_QOS_2 = 2;
-    public static String SENSOR_DATA_LOGGER_TOPIC = "/anna/balcony/sensor-readings";
+    public static String SENSOR_DATA_LOGGER_TOPIC = "/temps";
     
     public static String MORNING_WATERING_TIME = "23:30";
     public static String EVENING_WATERING_TIME = "23:33";
     
-    public static String TOPIC_PUMP_1 = "/anna/balcony/pump1";
-    public static String TOPIC_PUMP_2 = "/anna/balcony/pump2";
-    public static String TOPIC_PUMP_3 = "/anna/balcony/pump3";
-    public static String TOPIC_PUMP_4 = "/anna/balcony/pump4";
-    public static String TOPIC_PUMP_5 = "/anna/balcony/pump5";
+    public static String TOPIC_PUMP_1 = "/pump1";
+    public static String TOPIC_PUMP_2 = "/pump2";
+    public static String TOPIC_PUMP_3 = "/pump3";
+    public static String TOPIC_PUMP_4 = "/pump4";
+    public static String TOPIC_PUMP_5 = "/pump5";
     public static int CALIBRATION_PUMP_1 = 1;
     public static int CALIBRATION_PUMP_2 = 1;
     public static int CALIBRATION_PUMP_3 = 1;
