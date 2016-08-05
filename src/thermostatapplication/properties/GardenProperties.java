@@ -88,5 +88,6 @@ public class GardenProperties {
             System.out.println("ERROR READING GARDEN PROP FILE!!!");
             ex.printStackTrace();
         }
+    }
     
 }
