@@ -35,6 +35,8 @@ public class PropertiesHandler {
         try {
             iInput = new FileInputStream("/home/pi/config.properties");
             iProp.load(iInput);
+            iInput = new FileInputStream("/home/pi/garden.properties");
+            iProp.load(iInput);
             //System.out.println(iProp.getProperty("database"));
 	} catch (IOException ex) {
             ex.printStackTrace();
