@@ -15,7 +15,7 @@ public class GardenProperties {
     
     public static String ACTUATOR_CLIENT_ID = "ActuatorMqttClient";
     public static String SENSOR_LOGGER_CLIENT_ID = "SensorLoggerMqttClient";
-    public static String MQTT_BROKER = "tcp://192.168.1.78:1883";
+    public static String MQTT_BROKER = "tcp://192.168.0.25:1883";
     public static int MQTT_QOS_2 = 2;
     public static String SENSOR_DATA_LOGGER_TOPIC = "/temps";
     

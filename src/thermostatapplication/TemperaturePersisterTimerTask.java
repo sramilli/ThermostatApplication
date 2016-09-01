@@ -46,7 +46,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
         this.persistDataOnMongolab();
     }
     
-    public void persistDataOnMongolab(){
+    public synchronized void persistDataOnMongolab(){
         //disable console logging
         Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); 
         mongoLogger.setLevel(Level.SEVERE);
