@@ -42,13 +42,21 @@ public class TemperatureStore {
         return 0;
     }
     
-    void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
+    synchronized void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
         iTemperatures.add(aTemperatureMeasure);
         System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
     }
 
-    Collection<TemperatureMeasure> getTemperatures() {
-        return iTemperatures;
+    synchronized Collection<TemperatureMeasure> getTemperatures() {
+        Collection<TemperatureMeasure> tTemps = new ArrayList<>(iTemperatures.size());
+        for (TemperatureMeasure t: iTemperatures){
+            tTemps.add(new TemperatureMeasure(t.getLocation(), t.getGroup(), t.getDate(), t.getTemp()));
+        }
+        return tTemps;
+    }
+    
+    synchronized void removeAll(Collection<TemperatureMeasure> aTemps){
+        iTemperatures.removeAll(aTemps);
     }
     
     public void cancel(){

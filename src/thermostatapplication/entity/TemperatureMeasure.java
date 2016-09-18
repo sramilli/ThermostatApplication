@@ -61,4 +61,15 @@ public class TemperatureMeasure {
         this.iTemp = aTemp;
     }
     
+    @Override
+    public boolean equals (Object o){
+        if (o instanceof TemperatureMeasure == false) {return false;}
+        if (iDate == null || iLocation == null || iGroup == null) {return false;}
+        TemperatureMeasure t = (TemperatureMeasure)o;
+        if (iDate.equals(t.getDate()) && iLocation.equalsIgnoreCase(t.getLocation()) && iGroup.equalsIgnoreCase(t.getGroup())) {
+            return true;
+        }
+        return false;
+    }
+    
 }

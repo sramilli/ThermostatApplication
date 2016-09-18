@@ -27,7 +27,7 @@ public class SensorDataLoggerCallback implements MqttCallback{
 
     @Override
     public void connectionLost(Throwable thrwbl) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("SensorDataLoggerCallback - connectionLost . Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SensorDataLoggerCallback implements MqttCallback{
         Date dateRead = Helper.resetSecMillsDate(new Date());
         //TODO witch temperature to store?
         //iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(messageSplitted[2], messageSplitted[1], dateRead, new Float(messageSplitted[3])));
-        if ("TEMP".equals(messageSplitted[0]) || GardenProperties.PERSIST_TEMPERATURES){
+        if ("TEMP".equals(messageSplitted[0]) && GardenProperties.PERSIST_TEMPERATURES){
             storeTemperature(new TemperatureMeasure(messageSplitted[2], messageSplitted[1], dateRead, new Float(messageSplitted[3])));
         }
         

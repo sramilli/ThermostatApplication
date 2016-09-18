@@ -10,7 +10,6 @@ import thermostatapplication.helper.Helper;
 import java.util.TimerTask;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -56,9 +55,9 @@ class TemperaturePersisterTimerTask extends TimerTask {
         System.out.println("Prepairing to persist "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
         MongoClient client = null;
-        List<Document> documents = new ArrayList<Document>();
+        List<Document> documents = new ArrayList<>();
         
-        for (TemperatureMeasure tTemp: iStoredTemperatures){
+        for (TemperatureMeasure tTemp: iStoredTemperatures){ //Exception in thread "Timer-2" java.util.ConcurrentModificationException
             Document doc = new Document();
             doc.put("Location", tTemp.getLocation());      //Location
             doc.put("Group", tTemp.getGroup());         //Group
@@ -77,7 +76,7 @@ class TemperaturePersisterTimerTask extends TimerTask {
             mongoCollection = database.getCollection("dailytemps");
             mongoCollection.insertMany(documents);
             //eliminate stored Temps from the collection
-            iStoredTemperatures.removeAll(iPersistedTemperatures);
+            iTemperatureStore.removeAll(iPersistedTemperatures);
             client.close();
             System.out.println("Temperatures persisted on mongolab: "+iPersistedTemperatures.size()+". Exiting");
             iPersistedTemperatures.clear();
