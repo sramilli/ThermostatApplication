@@ -10,6 +10,7 @@ import thermostatapplication.helper.Helper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
@@ -17,8 +18,8 @@ import java.util.Collection;
  */
 public class TemperatureStore {
     private static TemperatureStore iInstance = null;
-    Collection<TemperatureMeasure> iTemperatures;
-    TemperatureMeasure iLastTemperatureMeasure;
+    private Collection<TemperatureMeasure> iTemperatures;
+    private TemperatureMeasure iLastTemperatureMeasure;
     
     //TODO temporary solution
     public static String LastTemperatureReadString = "";
@@ -31,7 +32,7 @@ public class TemperatureStore {
     }
 
     private TemperatureStore(){
-        iTemperatures = new ArrayList<>();
+        iTemperatures = Collections.synchronizedList(new ArrayList<>());
         iLastTemperatureMeasure = null;
     }
     
@@ -42,21 +43,27 @@ public class TemperatureStore {
         return 0;
     }
     
-    synchronized void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
-        iTemperatures.add(aTemperatureMeasure);
+    void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
+        synchronized (iTemperatures){
+            iTemperatures.add(aTemperatureMeasure);
+        }
         System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
     }
 
-    synchronized Collection<TemperatureMeasure> getTemperatures() {
+    Collection<TemperatureMeasure> getTemperatures() {
         Collection<TemperatureMeasure> tTemps = new ArrayList<>(iTemperatures.size());
-        for (TemperatureMeasure t: iTemperatures){
-            tTemps.add(new TemperatureMeasure(t.getLocation(), t.getGroup(), t.getDate(), t.getTemp()));
+        synchronized (iTemperatures){
+            for (TemperatureMeasure t: iTemperatures){
+                tTemps.add(new TemperatureMeasure(t.getLocation(), t.getGroup(), t.getDate(), t.getTemp()));
+            }
         }
         return tTemps;
     }
     
-    synchronized void removeAll(Collection<TemperatureMeasure> aTemps){
-        iTemperatures.removeAll(aTemps);
+    void removeAll(Collection<TemperatureMeasure> aTemps){
+        synchronized (iTemperatures){
+            iTemperatures.removeAll(aTemps);
+        }
     }
     
     public void cancel(){
