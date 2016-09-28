@@ -54,10 +54,11 @@ class TemperaturePersisterTimerTask extends TimerTask {
         //disable console logging
         //Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); 
         //mongoLogger.setLevel(Level.SEVERE);
-        logger.info("Prepairing to persist [{}] Temps in the cloud", iStoredTemperatures.size());
+
         
         iStoredTemperatures = iTemperatureStore.getTemperatures();
         if (iStoredTemperatures.isEmpty()) return;
+        logger.info("Prepairing to persist [{}] Temps in the cloud", iStoredTemperatures.size());
         //System.out.println("Prepairing to persist "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
         MongoClient client = null;
