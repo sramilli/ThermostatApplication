@@ -26,7 +26,7 @@ public class TemperatureMeasure {
     }
     
     public String toString(){
-        return "Location: "+getLocation()+" Date: "+Helper.getDateAsString(getDate())+" Temp: "+Helper.getTempAsString(getTemp());
+        return "[Location: "+getLocation()+", Date: "+Helper.getDateAsString(getDate())+", Temp: "+Helper.getTempAsString(getTemp())+"]";
     }
 
     public String getLocation() {

@@ -37,7 +37,7 @@ public class SensorDataLoggerCallback implements MqttCallback{
     @Override
     public void messageArrived(String aTopic, MqttMessage aMessage) throws Exception {
         
-        logger.info("Message received. Topic {}. Message {}", aTopic, aMessage);
+        logger.info("Message received. Topic [{}]. Message [{}]", aTopic, aMessage);
         
         //System.out.println("MqttMessage received [ " +aTopic +" " +aMessage.toString()+" ]");
         

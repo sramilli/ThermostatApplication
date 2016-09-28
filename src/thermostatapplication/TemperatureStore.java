@@ -51,10 +51,10 @@ public class TemperatureStore {
         if (this.size() < 40000){
             synchronized (iTemperatures){
                 iTemperatures.add(aTemperatureMeasure);
-                logger.info("Stored temperature: {}", aTemperatureMeasure);
+                logger.info("Stored temperature: {} Store size: [{}]", aTemperatureMeasure, this.size());
             }
         }else {
-            logger.warn("Exceeded max size: {}", this.size());
+            logger.warn("Exceeded max size: [{}]", this.size());
         }
         //System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
     }
