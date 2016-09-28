@@ -12,12 +12,16 @@ import java.util.Date;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Ste
  */
 public class SensorDataLoggerCallback implements MqttCallback{
+    
+    static Logger logger = LoggerFactory.getLogger(SensorDataLoggerCallback.class);
     
     TemperatureStore iTemperatureStore;
             
@@ -33,7 +37,9 @@ public class SensorDataLoggerCallback implements MqttCallback{
     @Override
     public void messageArrived(String aTopic, MqttMessage aMessage) throws Exception {
         
-        System.out.println("MqttMessage received [ " +aTopic +" " +aMessage.toString()+" ]");
+        logger.info("Message received. Topic {}. Message {}", aTopic, aMessage);
+        
+        //System.out.println("MqttMessage received [ " +aTopic +" " +aMessage.toString()+" ]");
         
         String[] messageSplitted = aMessage.toString().trim().split(" ");
         //TEMP Anna Temp_pumps 23.01
@@ -57,11 +63,7 @@ public class SensorDataLoggerCallback implements MqttCallback{
     
     private void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
         // 24 byte each. 1 MB -> 41666 measures.
-        if (iTemperatureStore.size() < 40000){
-            iTemperatureStore.storeTemperature(aTemperatureMeasure);
-        }else {
-            System.out.println("StoreSize ("+iTemperatureStore.size()+") exceeded max size!! Not storing anymore");
-        }
+        iTemperatureStore.storeTemperature(aTemperatureMeasure);
     }
     
 }

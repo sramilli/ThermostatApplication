@@ -12,11 +12,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class TemperatureStore {
+    static Logger logger = LoggerFactory.getLogger(TemperatureStore.class);
     private static TemperatureStore iInstance = null;
     private Collection<TemperatureMeasure> iTemperatures;
     private TemperatureMeasure iLastTemperatureMeasure;
@@ -44,10 +48,15 @@ public class TemperatureStore {
     }
     
     void storeTemperature(TemperatureMeasure aTemperatureMeasure) {
-        synchronized (iTemperatures){
-            iTemperatures.add(aTemperatureMeasure);
+        if (this.size() < 40000){
+            synchronized (iTemperatures){
+                iTemperatures.add(aTemperatureMeasure);
+                logger.info("Stored temperature: {}", aTemperatureMeasure);
+            }
+        }else {
+            logger.warn("Exceeded max size: {}", this.size());
         }
-        System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
+        //System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
     }
 
     Collection<TemperatureMeasure> getTemperatures() {
