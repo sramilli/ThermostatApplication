@@ -30,7 +30,7 @@ public class SensorDataLogger {
         super();
         iConnOpt = new MqttConnectOptions();
         iConnOpt.setCleanSession(true);
-        iConnOpt.setKeepAliveInterval(5 * 60);
+        iConnOpt.setKeepAliveInterval(30 * 60);
         iPersistence = new MemoryPersistence();
     }
 

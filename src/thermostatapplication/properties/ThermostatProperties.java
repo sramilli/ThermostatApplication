@@ -48,6 +48,9 @@ public class ThermostatProperties {
     public static String USER_2 = null;
     public static String USER_3 = null;
     
+    //TODO new to add to Babbo
+    public static boolean BMP280_TEMP_SENSOR_PRESENT_AT_76 = false;
+    
     static {
         try{
             PropertiesHandler prop = PropertiesHandler.getInstance();
@@ -75,6 +78,7 @@ public class ThermostatProperties {
             USER_1 = prop.getProperty("USER_1");
             USER_2 = prop.getProperty("USER_2");
             USER_3 = prop.getProperty("USER_3");
+            BMP280_TEMP_SENSOR_PRESENT_AT_76 = new Boolean(prop.getProperty("BMP280_TEMP_SENSOR_PRESENT_AT_76"));
             System.out.println("Read Prop measureTemps correctly");
         } catch (Throwable ex){
             System.out.println("ERROR READING PROP FILE!!!");
