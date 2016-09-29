@@ -15,15 +15,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import thermostatapplication.devices.BMP280;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Ste
  */
 public class TemperatureReaderTimerTask extends TimerTask {
+    
+    static Logger logger = LoggerFactory.getLogger(TemperatureReaderTimerTask.class);
 
     AdafruitBMP180 tempSensor;
     BMP280 bmp280;
@@ -36,7 +39,7 @@ public class TemperatureReaderTimerTask extends TimerTask {
     private static int BUS_1 = 1;
 
     public TemperatureReaderTimerTask(String aLocation, String aGroup, TemperatureStore aTemperatureStore){
-        System.out.println("TemperatureReaderTimerTask INSTANTIATED!!!");
+        logger.info("TemperatureReaderTimerTask INSTANTIATED");
         tempSensor = new AdafruitBMP180();
         if (ThermostatProperties.BMP280_TEMP_SENSOR_PRESENT_AT_76){
             try {
@@ -48,7 +51,7 @@ public class TemperatureReaderTimerTask extends TimerTask {
                 bmp280.setIIRFilter(BMP280.IIRFilter.SIXTEEN, true);
                 bmp280.setStandbyTime(BMP280.Standby_Time.MS_POINT_5, true);
             } catch (Exception ex) {
-                Logger.getLogger(TemperatureReaderTimerTask.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Error instantiating BMP280");
             }
         }
 
@@ -74,9 +77,9 @@ public class TemperatureReaderTimerTask extends TimerTask {
             ex.printStackTrace();
         }
         dateRead = Helper.resetSecMillsDate(new Date());
-        System.out.println("TemperatureReaderTimerTask measure: " +Helper.getDateAsString(dateRead)+" " + Helper.getTempAsString(temp) + " C");
+        logger.info("Temp measure: [{}], [{}] C", Helper.getDateAsString(dateRead), Helper.getTempAsString(temp));
         if (ThermostatProperties.BMP280_TEMP_SENSOR_PRESENT_AT_76){
-            System.out.println("TemperatureReaderTimerTask measure_2: " +Helper.getDateAsString(dateRead)+" " + Helper.getTempAsString(temp_2) + " C");
+            logger.info("Temp measure_2: [{}], [{}] C", Helper.getDateAsString(dateRead), Helper.getTempAsString(temp_2));
         }
         iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure(iLocation, iGroup, dateRead, temp));
         //iTemperatureStore.setLastTemperatureRead(new TemperatureMeasure("280", iGroup, dateRead, temp_2));

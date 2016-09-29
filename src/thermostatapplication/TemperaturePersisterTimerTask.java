@@ -41,7 +41,6 @@ class TemperaturePersisterTimerTask extends TimerTask {
         iTemperatureStore = aTemperatureStore;
         //need to use a new list to freeze it
         iPersistedTemperatures = new ArrayList<TemperatureMeasure>();
-        //System.out.println("TemperaturePersisterTimerTask instantiated!!!");
         logger.info("TemperaturePersisterTimerTask instantiated");
     }
 
@@ -57,9 +56,11 @@ class TemperaturePersisterTimerTask extends TimerTask {
 
         
         iStoredTemperatures = iTemperatureStore.getTemperatures();
-        if (iStoredTemperatures.isEmpty()) return;
+        if (iStoredTemperatures.isEmpty()){
+            logger.info("Nothing to persist. Exiting");
+            return;
+        }
         logger.info("Prepairing to persist [{}] Temps in the cloud", iStoredTemperatures.size());
-        //System.out.println("Prepairing to persist "+iStoredTemperatures.size()+" Temps in the cloud");
         MongoCollection<Document> mongoCollection = null;
         MongoClient client = null;
         List<Document> documents = new ArrayList<>();
@@ -86,13 +87,11 @@ class TemperaturePersisterTimerTask extends TimerTask {
             iTemperatureStore.removeAll(iPersistedTemperatures);
             client.close();
             logger.info("Temperatures persisted on mongolab: [{}]. Exiting.", iPersistedTemperatures.size());
-            //System.out.println("Temperatures persisted on mongolab: "+iPersistedTemperatures.size()+". Exiting");
             iPersistedTemperatures.clear();
         } catch (Throwable e){
-            System.out.println("Failed to store Temps in the cloud. Stacktrace:");
+            logger.error("Failed to store Temps in the cloud. Stacktrace: [{}]. Exiting.", e);
             iPersistedTemperatures.clear();
             e.printStackTrace();
-            System.out.println("End stacktrace.");
         } finally{
             if (client != null){
                 client.close();

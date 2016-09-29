@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import thermostatapplication.properties.ThermostatProperties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class Users {
+    static Logger logger = LoggerFactory.getLogger(SMS.class);
 
     public static List<User> tUsers;
 
@@ -33,7 +37,7 @@ public class Users {
     
     public static void addAuthorizedUser(String aMobileNr){
         //TODO to complete
-        System.out.println("Authorizing number ["+aMobileNr+"] ");
+        logger.info("Authorizing number [{}] ", aMobileNr);
         tUsers.add(new User(aMobileNr, "", aMobileNr, ""));
     }
     
@@ -44,7 +48,7 @@ public class Users {
     
     public static User getUser(String aID){
         if (aID == null || "".equals(aID)){
-            System.out.println("User not found: invalid parameter!");
+            logger.warn("User not found: invalid parameter [{}] ", aID);
             return null;
         }
         for (User u: tUsers){

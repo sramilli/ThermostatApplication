@@ -13,11 +13,15 @@ import com.pi4j.io.gpio.event.GpioPinListener;
 import com.pi4j.wiringpi.GpioUtil;
 import thermostatapplication.helper.Pi4jHelper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class Button{
+    static Logger logger = LoggerFactory.getLogger(Button.class);
 
     private GpioController gpio = GpioFactory.getInstance();
     private GpioPinDigitalInput iPin;  //TODO final?
@@ -27,8 +31,7 @@ public class Button{
         iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin));
         GpioUtil.setEdgeDetection(aPin, GpioUtil.EDGE_RISING);
         iPin.setDebounce(300);
-        System.out.println("Initialized Button on pin "+aPin);
-        
+        logger.info("Initialized Button on pin [{}]", aPin);
     }
     
     public GpioPinDigitalInput getPin(){

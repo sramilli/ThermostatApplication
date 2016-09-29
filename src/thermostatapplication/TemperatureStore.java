@@ -56,7 +56,6 @@ public class TemperatureStore {
         }else {
             logger.warn("Exceeded max size: [{}]", this.size());
         }
-        //System.out.println("Temperature added to store. Total temperatures: "+iTemperatures.size());
     }
 
     Collection<TemperatureMeasure> getTemperatures() {

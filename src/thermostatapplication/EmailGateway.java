@@ -14,11 +14,15 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 class EmailGateway {
+    static Logger logger = LoggerFactory.getLogger(EmailGateway.class);
     
     private static EmailGateway iInstance = null;
         
@@ -47,7 +51,7 @@ class EmailGateway {
             Message msg = new MimeMessage(session);
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(aEmail));
             msg.setSubject("Status response");
-            System.out.println("SENDING EMAIL: "+aBody);
+            logger.info("SENDING EMAIL:  [{}] ", aBody);
             aBody = aBody.replaceAll("\n", "<br>");
             msg.setContent(aBody, "text/html");
             Transport transport = session.getTransport("smtp");

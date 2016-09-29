@@ -11,11 +11,15 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class SwitchOFF extends Button implements GpioPinListenerDigital{
+    static Logger logger = LoggerFactory.getLogger(SwitchOFF.class);
     
     private boolean iJustTerminateApp = false;
     private boolean iShutdownPi = false;
@@ -43,7 +47,7 @@ public class SwitchOFF extends Button implements GpioPinListenerDigital{
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         if (PinState.HIGH.equals(event.getState())){
-            System.out.println("Switch OFF detected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
+            logger.info("Switch OFF detected");
             //One push shuts down the Pi. Two pushes just exits the java application.
             if (iShutdownPi){
                 iJustTerminateApp = true;

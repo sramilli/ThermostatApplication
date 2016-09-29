@@ -15,8 +15,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 //TODO erase, just for test
 //public class Garden implements Runnable{
 public class Garden{
+    static Logger logger = LoggerFactory.getLogger(Garden.class);
     
     Actuator iActuator;
     Pump iPump1;
@@ -57,7 +59,7 @@ public class Garden{
     //TODO erase, just for test
     //@Override
     public void run() {
-        System.out.println("Garden Application Started!");
+        logger.info("Garden Application Started");
         scheduleActivationAtHoursOfDay(GardenProperties.MORNING_WATERING_TIME, GardenProperties.EVENING_WATERING_TIME);
         iLogger.start();
     }
@@ -73,7 +75,7 @@ public class Garden{
             try {
                 tActivationInstant = Helper.parseTime(hour);
             } catch (ParseException ex) {
-                Logger.getLogger(Garden.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Error scheduling activation hour [{}]", hour);
                 continue;
             }
             if (tActivationInstant != null){

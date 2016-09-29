@@ -12,11 +12,15 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import thermostatapplication.helper.Pi4jHelper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class Led {
+    static Logger logger = LoggerFactory.getLogger(Led.class);
 
     private GpioController gpio = GpioFactory.getInstance();
     private GpioPinDigitalOutput iPin;
@@ -24,13 +28,13 @@ public class Led {
     public Led(int aPin){
         iPin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, PinState.LOW);
         iPin.setShutdownOptions(true, PinState.LOW);
-        System.out.println("Initialized Led on pin "+aPin+".");
+        logger.info("Initialized Led on pin [{}].", aPin);
     }
     
     public Led(int aPin, boolean aInitialStatusHigh){
         GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(Pi4jHelper.getPin(aPin), "PIN "+aPin, getInitialStatus(aInitialStatusHigh));
         pin.setShutdownOptions(true, getInitialStatus(aInitialStatusHigh));
-        System.out.println("Initialized Led on pin "+aPin+".");
+        logger.info("Initialized Led on pin [{}].", aPin);
     }
     
     public void turnOn(){
@@ -44,7 +48,7 @@ public class Led {
     }
     
     public void setValue(boolean aValue){
-        System.out.println("Turn led "+iPin.getName()+ (aValue ? " on." : " off."));
+        logger.info("Turn led [{}]"+ (aValue ? " on." : " off."), iPin.getName());
         iPin.setState(aValue);
     }
     

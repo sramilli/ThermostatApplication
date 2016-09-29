@@ -17,7 +17,7 @@ public class GardenProperties {
     public static String SENSOR_LOGGER_CLIENT_ID = "SensorLoggerMqttClient";
     public static String MQTT_BROKER = "tcp://192.168.0.25:1883";
     public static int MQTT_QOS_2 = 2;
-    public static String SENSOR_DATA_LOGGER_TOPIC = "/temps";
+    public static String SENSOR_DATA_LOGGER_TOPIC_TEMPS = "/temps";
     
     public static String MORNING_WATERING_TIME = "23:30";
     public static String EVENING_WATERING_TIME = "23:33";
@@ -55,7 +55,7 @@ public class GardenProperties {
             SENSOR_LOGGER_CLIENT_ID = prop.getProperty("SENSOR_LOGGER_CLIENT_ID");
             MQTT_BROKER = prop.getProperty("MQTT_BROKER");
             MQTT_QOS_2 = new Integer(prop.getProperty("MQTT_QOS_2"));
-            SENSOR_DATA_LOGGER_TOPIC = prop.getProperty("SENSOR_DATA_LOGGER_TOPIC");
+            SENSOR_DATA_LOGGER_TOPIC_TEMPS = prop.getProperty("SENSOR_DATA_LOGGER_TOPIC");
     
             MORNING_WATERING_TIME = prop.getProperty("MORNING_WATERING_TIME");
             EVENING_WATERING_TIME = prop.getProperty("EVENING_WATERING_TIME");

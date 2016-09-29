@@ -32,11 +32,15 @@ import java.text.SimpleDateFormat;
 import static java.lang.Thread.sleep;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class Thermostat implements GpioPinListenerDigital {
+    static Logger logger = LoggerFactory.getLogger(Thermostat.class);
 
     private ThermostatState iThermostatState;
     
@@ -109,21 +113,20 @@ public class Thermostat implements GpioPinListenerDigital {
         GpioPin tPin = event.getPin();
         if (tPin == iModeButton.getPin()) {
             if (PinState.HIGH.equals(event.getState())) {
-                System.out.println("Thermostat: Mode Button pressed!");
                 this.switchMode();
-                System.out.println("Thermostat: Switched to MODE " + this.getThermostatState().getState());
+                logger.info("Thermostat: Mode Button pressed. Switched to MODE [{}]", this.getThermostatState().getState());
             }
 
         } else if (tPin == iManualTherostat.getPin()) {
             if (PinState.HIGH.equals(event.getState())) {
-                System.out.println("Thermostat: Manual thermostat change ON");
                 this.activateManualThermostat();
+                logger.info("Thermostat: Manual thermostat change ON");
             } else if (PinState.LOW.equals(event.getState())) {
-                System.out.println("Thermostat: Manual thermostat change OFF");
                 this.deActivateManualThermostat();
+                logger.info("Thermostat: Manual thermostat change OFF");
             }
         } else {
-            System.out.println("Thermostat ERROR! Detected a non registered input change");
+            logger.error("Thermostat ERROR! Detected a non registered input change");
         }
 
     }
@@ -181,14 +184,14 @@ public class Thermostat implements GpioPinListenerDigital {
     
     public void switchMode() {
         //Controlled manually by pushing Mode button
-        System.out.print("Switching mode manually: ");
+        logger.info("Switching mode manually");
         iThermostatState.switchState();
     }
 
     private State setMode(State aMode) {
         //Used via SMS
         if (aMode != State.ON && aMode != State.MANUAL && aMode != State.OFF) {
-            System.out.println("Thermostat: setMode error: "+aMode);
+            logger.error("Thermostat: setMode error: [{}]", aMode);
             return aMode;
         }
         
@@ -224,10 +227,10 @@ public class Thermostat implements GpioPinListenerDigital {
                 } else if (CommandType.REGISTER_NUMBER.equals(tCommand)){
                     String[] tSplittedStringt = aSMS.getText().split(" ");
                     if (tSplittedStringt.length >= 2){
-                        System.out.println("REGISTER_NUMBER splitted string: ["+tSplittedStringt[0]+"] ["+tSplittedStringt[1]+"] ");
+                        logger.info("REGISTER_NUMBER splitted string: [{}] [{}]", tSplittedStringt[0], tSplittedStringt[1]);
                         Users.addAuthorizedUser(tSplittedStringt[1]);
                     }else {
-                        System.out.println("REGISTER_NUMBER command not formatted correctly");
+                        logger.error("REGISTER_NUMBER command not formatted correctly");
                     }
                 } else if (CommandType.PROGRAM_DAILY.equals(tCommand)){
                     executeCommand(tCommand, aSMS.getText());
@@ -254,11 +257,8 @@ public class Thermostat implements GpioPinListenerDigital {
             programRepeatedIgnition(aText, this);
         }else if (aCmd.equals(CommandType.PROGRAM)){
             programIgnition(aText, this);
-        }
-        
-        
-        else{
-            System.out.println("Thermostat: Command via SMS not supported! ");
+        }else{
+            logger.error("Thermostat: Command via SMS not supported");
         }
 
     }
@@ -275,7 +275,7 @@ public class Thermostat implements GpioPinListenerDigital {
                 iStartTaskRepeated = null;
                 iStopTaskRepeated = null;
             } catch (Throwable e) {
-                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+                logger.error("Exception cancelling Daily program. Doing nothing.");
             }
         }
 
@@ -288,6 +288,7 @@ public class Thermostat implements GpioPinListenerDigital {
         } else {
             return;
         }
+        //TODO
         Helper.printCal("Scheduling daily Ignition from: ", startDateParsed);
         Helper.printCal("Scheduling daily shutdown from: ", stopDateParsed);
         iStartTaskRepeated = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
@@ -307,7 +308,7 @@ public class Thermostat implements GpioPinListenerDigital {
                 iStartTask = null;
                 iStopTask = null;
             } catch (Throwable e) {
-                System.out.println("Exception cancelling Daily program. Doing nothing. (Happens first time you program it)");
+                logger.error("Exception cancelling Daily program. Doing nothing.");
             }
         }
 
@@ -320,6 +321,7 @@ public class Thermostat implements GpioPinListenerDigital {
         } else {
             return;
         }
+        //TODO
         Helper.printCal("Scheduling daily Ignition from: ", startDateParsed);
         Helper.printCal("Scheduling daily shutdown from: ", stopDateParsed);
         iStartTask = new ThermostatIgnitionShutdownTimerTask(aThermostat, CommandType.ON_CONDITIONAL);
@@ -375,11 +377,11 @@ public class Thermostat implements GpioPinListenerDigital {
                     return null;
                 }
             } else{
-                System.out.println("Program - parse date bad format!");
+                logger.error("Program - parse date bad forma");
                 return null;
             }
         } else {
-            System.out.println("Program - parse bad format!");
+            logger.error("Program - parse bad forma");
             return null;
         }
 
@@ -436,44 +438,44 @@ public class Thermostat implements GpioPinListenerDigital {
                 iTimer.cancel();
             }
             if (iHeaterStatusLed != null) {
-                System.out.println("Thermostat: Turning off Status LED");
+                logger.warn("Thermostat: Turning off Status LED");
                 iHeaterStatusLed.close();
                 iHeaterStatusLed = null;
             }
             if (iHeaterRelay != null) {
-                System.out.println("Thermostat: Turning off Relay");
+                logger.warn("Thermostat: Turning off Relay");
                 iHeaterRelay.close();
                 iHeaterRelay = null;
             }
             if (iGreenLED != null) {
-                System.out.println("Thermostat: Turning off green LED");
+                logger.warn("Thermostat: Turning off green LED");
                 iGreenLED.close();
                 iGreenLED = null;
             }
             if (iYellowLED != null) {
-                System.out.println("Thermostat: Turning off yellow LED");
+                logger.warn("Thermostat: Turning off yellow LED");
                 iYellowLED.close();
                 iYellowLED = null;
             }
             if (iRedLED != null) {
-                System.out.println("Thermostat: Turning off red LED");
+                logger.warn("Thermostat: Turning off red LED");
                 iRedLED.close();
                 iRedLED = null;
             }
             if (iModeButton != null) {
-                System.out.println("Thermostat: Turning off Mode Button");
+                logger.warn("Thermostat: Turning off Mode Button");
                 iModeButton.setInputListener(null);
                 iModeButton.close();
                 iModeButton = null;
             }
             if (iManualTherostat != null) {
-                System.out.println("Thermostat: Turning off manual thermostat input");
+                logger.warn("Thermostat: Turning off manual thermostat input");
                 iManualTherostat.setInputListener(null);
                 iManualTherostat.close();
                 iManualTherostat = null;
             }
             if (iMessageHandler != null){
-                System.out.println("Thermostat: Turning off MessageHandler");
+                logger.warn("Thermostat: Turning off MessageHandler");
                 iMessageHandler.stop();
                 iMessageHandler = null;
             }
@@ -496,10 +498,10 @@ public class Thermostat implements GpioPinListenerDigital {
     public void testRelay() {
         for (int i = 1; i < 8; i++) {
             try {
-                System.out.println("Turning on " + i);
+                logger.info("Turning on [{}]", i);
                 iHeaterRelay.turnOn();
                 sleep(500);
-                System.out.println("Turning off " + i);
+                logger.info("Turning off [{}]", i);
                 iHeaterRelay.turnOff();
                 sleep(500);
             } catch (InterruptedException ex) {

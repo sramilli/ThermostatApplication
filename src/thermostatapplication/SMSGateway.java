@@ -20,12 +20,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class SMSGateway implements SerialDataListener{
-
+    static Logger logger = LoggerFactory.getLogger(SMSGateway.class);
     private static SMSGateway iInstance = null;
     private static MessageHandler iMessageHandler = null;
     
@@ -49,14 +52,14 @@ public class SMSGateway implements SerialDataListener{
     public void initialize() {
 
         iSerialDataListener = this;
-        System.out.println(" ... connect using settings: "+ThermostatProperties.GSM_BAUD_RATE+", N, 8, 1.");
+        logger.info("... connect to serial MODEM using settings: [{}], N, 8, 1.", ThermostatProperties.GSM_BAUD_RATE);
         // create an instance of the serial communications class
         serial = SerialFactory.createInstance();
         serial.open(Serial.DEFAULT_COM_PORT, ThermostatProperties.GSM_BAUD_RATE);
         waitABit(3000);
         
         sendATCommand();
-        System.out.println(readAnswer()); 
+        readAnswer(); 
         // create and register the serial data listener
         /*serial.addListener(new SerialDataListener() {
              @Override
@@ -67,13 +70,13 @@ public class SMSGateway implements SerialDataListener{
                  System.out.print("Resp---->"+event.getData()+"<----");
              
          });}*/
-        System.out.println("Reading all old message present on the SIM at boot");
+        logger.info("Reading all old message present on the SIM at boot");
         List<SMS> tSMSs = this.getAllMessages();
         if (tSMSs.size() > 0){
             printAllMessages(tSMSs);
             deleteAllMessages(tSMSs);
         } else {
-            System.out.println("No message present on the modem at startup");
+            logger.info("No message present on the modem at startup");
         }
         serial.addListener(iSerialDataListener);
     }
@@ -86,14 +89,12 @@ public class SMSGateway implements SerialDataListener{
      public void dataReceived(SerialDataEvent event) {
          // print out the data received to the console
          //http://www.developershome.com/sms/resultCodes3.asp
-         System.out.println("Incoming event arrived from the GSM module!");
+         logger.info("Incoming event arrived from the GSM module");
          String response = event.getData();
          this.removeListener(this);
          //String response = iSMSGateway.readAnswer();
-         System.out.println("");
          if (GSMDataInterpreter.getCommand(response).equals(GSMCommand.MESSAGE_ARRIVED)){
-            System.out.println("A new message has arrived!");
-            System.out.print("AAAAASMSGateway-dataReceived: ---->"+response+"<----");
+            logger.info("Data received:  ---->[{}]<----", response);
             waitABit(3000);
             List<SMS> tSMSs = getAllMessages();
             printAllMessages(tSMSs);
@@ -112,20 +113,20 @@ public class SMSGateway implements SerialDataListener{
     //Collection utility
     //
     public void deleteAllMessages(Collection<SMS> aMessages){
-        System.out.println("Deleting all old messages found at boot");
+        logger.info("Deleting all messages");
         for (SMS tSMS : aMessages) {
-            System.out.println("Delete message "+tSMS);
+            logger.info("Delete message [{}] ", tSMS);
             String tResp = this.deleteMsgAtCertainPosition(tSMS.getPosition());
-            System.out.println("--->"+tResp);
+            logger.info("--->[{}] ", tResp);
         }
-        System.out.println("All messages deleted!");
+        logger.info("All messages deleted");
     }
     
     public void printAllMessages(Collection<SMS> aMessages){
         //print the list
-        System.out.println("List of all messages on the modem ordered by date:");
+        logger.info("List of all messages on the modem ordered by date");
         for (SMS tSMS : aMessages) {
-            System.out.println(tSMS);
+            logger.info("[{}]", tSMS);
         }
     }
     
@@ -133,13 +134,13 @@ public class SMSGateway implements SerialDataListener{
     //Simple send AT command
     //
     public void sendATCommand (){
-        System.out.println("---->Sending: AT");
+        logger.info("---->Sending: AT");
         serial.write("AT\r");
         waitABit(1000); //TODO tweeka
     }
     
     public void sendReadAllMessagesCommand(){
-        System.out.println("atReadAllMessages:---->Sending: AT+CMGL=\"ALL\"");
+        logger.info("atReadAllMessages:---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
         waitABit(1000);
     }
@@ -149,12 +150,12 @@ public class SMSGateway implements SerialDataListener{
     //Send message to user
     //
     public void sendStatusToUser(String aRecipient, String aMessage) {
-        System.out.println("Sending Status message ["+aMessage+"] to recipient ["+aRecipient+"] ");
+        logger.info("Sending Status message [{}] to recipient [{}] ", aMessage, aRecipient);
         sendSMS(aRecipient, aMessage);
     }
     
     public void sendHelpMessageToUser(String aRecipient) {
-        System.out.println("Sendind Help message to ["+aRecipient+"] ");
+        logger.info("Sendind Help message to [{}]", aRecipient);
         sendSMS(aRecipient, 
                 "Examples:\n"
                 + "1) on\n"
@@ -168,19 +169,19 @@ public class SMSGateway implements SerialDataListener{
     }
     
     public void sendSMS(String aNumberRecipient, String aMessage) {
-        System.out.println("---->Sending: AT");
+        logger.info("---->Sending: AT");
         serial.write("AT\r");
         readAnswerAndPrint();
 
-        System.out.println("---->Sending: AT+CMGF=1");
+        logger.info("---->Sending: AT+CMGF=1");
         serial.write("AT+CMGF=1\r");
         readAnswerAndPrint();
 
-        System.out.println("---->Sending: AT+CMGS=\""+aNumberRecipient+"\"");
+        logger.info("---->Sending: AT+CMGS=\"[{}]\"", aNumberRecipient);
         serial.write("AT+CMGS=\""+aNumberRecipient+"\"\r");
         readAnswerAndPrint();
 
-        System.out.println("---->Sending: " + aMessage);
+        logger.info("---->Sending:  [{}]", aMessage);
         serial.write(aMessage + ctrlZ);
         //this is needed because sending the sms takes time
         waitABit(2000);
@@ -196,7 +197,6 @@ public class SMSGateway implements SerialDataListener{
         while (serial.availableBytes() > 0) {
             tReply.append(serial.read());
         }
-        //System.out.println("RAW messages:\n"+tReply.toString());
         return tReply.toString();
     }
     
@@ -205,11 +205,11 @@ public class SMSGateway implements SerialDataListener{
     //Commands + answers
     //
     public String readAllMessagesRaw() {
-        System.out.println("---->Sending: AT+CMGL=\"ALL\"");
+        logger.info("---->Sending: AT+CMGL=\"ALL\"");
         serial.write("AT+CMGL=\"ALL\"\r");
         waitABit(1000); //TODO tweeka
         String msgs = readAnswer();
-        System.out.println("Raw data from GSM module:\n" + msgs);
+        logger.info("Raw data from GSM module:\n [{}]", msgs);
         return msgs;
         /*
          AT+CMGL="ALL"
@@ -244,14 +244,14 @@ public class SMSGateway implements SerialDataListener{
     }
     
     public String readMsgAtCertainPosition(int aPos) {
-        System.out.println("---->Sending: AT+CMGR=" + aPos);
+        logger.info("---->Sending: AT+CMGR=[{}]", aPos);
         serial.write("AT+CMGR=" + aPos + "\r");
         waitABit(1000); //TODO tweeka
         return readAnswer();
     }
     
     public String deleteMsgAtCertainPosition(int aPos) {
-        System.out.println("---->Sending: AT+CMGD=" + aPos);
+        logger.info("---->Sending: AT+CMGD=", aPos);
         serial.write("AT+CMGD=" + aPos + "\r");
         waitABit(1000); //TODO tweeka
         return readAnswer();
@@ -264,9 +264,9 @@ public class SMSGateway implements SerialDataListener{
             reply.append(serial.read());
         }
         if (reply.length() > 0) {
-            System.out.println("//////:\n" + reply + "//////");
+            logger.info("//////:\n [{}] //////", reply);
         } else {
-            System.out.println("<---->NO ANSWER FROM GSM MODULE!");
+            logger.warn("<---->NO ANSWER FROM GSM MODULE!");
         }
         //whaitABit(1000);
     }
@@ -276,7 +276,7 @@ public class SMSGateway implements SerialDataListener{
     //
     public List<SMS> parseAllMessages(String aMessages) {
         //read all messages
-        System.out.println("Start parsing string: start string-->"+aMessages+"<--end string");
+        logger.info("Start parsing string: start string-->[{}]<--end string", aMessages);
         StringTokenizer st = new StringTokenizer(aMessages, "\r\n");
         //parse messages
         List<SMS> tSMSs = new ArrayList<SMS>();
@@ -305,7 +305,7 @@ public class SMSGateway implements SerialDataListener{
                 continue;
             }
         }
-        System.out.println("Parsed "+tSMSs.size()+" smss");
+        logger.info("Parsed [{}] smss", tSMSs.size());
         Collections.sort(tSMSs);
         Collections.reverse(tSMSs);
         return tSMSs;
@@ -344,24 +344,19 @@ public class SMSGateway implements SerialDataListener{
         
     private int parsePosition(String aPosition){
         int tPos = 0;
-        //System.out.println("ParsePosition: "+aPosition);
         tPos = Integer.parseInt(aPosition.substring(aPosition.length()-2).trim());
-        //System.out.println("Parsed position: "+tPos);
         return tPos;
     }
     
     private String parseSender(String aSender){
         String tSender = "";
-        //System.out.println("ParseSender: "+aSender);
         tSender = aSender.replaceAll("\"", "").trim();
-        //System.out.println("Parsed Sender: "+tSender);
         return tSender;
     }
 
     private Date parseDate(String aDate){
         //"15/05/26 22:59:28+08"
         Date tDate = new Date();
-        //System.out.println("ParseDate: "+aDate);
         aDate = aDate.replaceAll("\"", "");
         aDate = aDate.substring(0,14);
         SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm");
@@ -370,7 +365,6 @@ public class SMSGateway implements SerialDataListener{
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
-        //System.out.println("Parsed date: "+tDate);
         return tDate;
     }
     
@@ -379,7 +373,7 @@ public class SMSGateway implements SerialDataListener{
     //
     public void testLoopingAT() {
         for (int i = 0; i < 10; i++) {
-            System.out.println("----Sending: AT (" + i + "), " + new Date().toString());
+            logger.info("----Sending: AT ([{}]), [{}]", i, new Date().toString());
             serial.write("AT\r");
             readAnswerAndPrint();
             waitABit(5000);

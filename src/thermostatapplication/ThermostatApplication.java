@@ -8,13 +8,15 @@ import java.util.Calendar;
 import java.util.Date;
 import thermostatapplication.properties.GardenProperties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Ste
  */
 public class ThermostatApplication {
-
+    static Logger logger = LoggerFactory.getLogger(ThermostatApplication.class);
     TemperatureReader iTemperatureReader = null;
     Thermostat iThermostat = null;
     Garden iGarden = null;
@@ -29,10 +31,9 @@ public class ThermostatApplication {
     }
 
     public void startApp() {
-        
-        System.out.println("Starting Thermostatapplication at: "+new Date());
+        logger.info("Starting Thermostatapplication at: [{}]", new Date());
         SwitchOFF iSwitchOFF = new SwitchOFF(ThermostatProperties.SHUTDOWN_BUTTON);
-        System.out.println("Main Application: SwitchOFF pin opened and initialized!");
+        logger.info("Main Application: SwitchOFF pin opened and initialized");
         iThermostat = new Thermostat();
 
         if (ThermostatProperties.START_READING_TEMPERATURES){
@@ -45,7 +46,7 @@ public class ThermostatApplication {
             //TODO erase, just for test
             //new Thread(iGarden).start();
             iGarden.run();
-            System.out.println("GARDEN started!");
+            logger.info("GARDEN started");
         }
 
         
@@ -57,7 +58,7 @@ public class ThermostatApplication {
             iGarden.stop();
         }
         waitABit(3000);
-        System.out.println("Main Application: Turning off Thermostat");
+        logger.info("Main Application: Turning off Thermostat");
         iThermostat.stop();
         if (iTemperatureReader != null){
             iTemperatureReader.stop();
@@ -71,33 +72,31 @@ public class ThermostatApplication {
         iTemperatureReader = null;
         
         if (iSwitchOFF.justTerminateApp() && ThermostatProperties.SOFT_SHUTDOWN_ENABLED){
-            System.out.println("Just exit the java application");
-            System.out.println("Main Application: Turning off SwitchOff button");
+            logger.info("Just exit the java application");
+            logger.info("Main Application: Turning off SwitchOff button");
             iSwitchOFF.close();
             waitABit(1000);
             iSwitchOFF = null;
         } else {
             try {
-                System.out.println("Main Application: Turning off SwitchOff button");
+                logger.info("Main Application: Turning off SwitchOff button");
                 iSwitchOFF.close();
                 waitABit(1000);
                 iSwitchOFF = null;
-                System.out.println("Shutdown the Pi!");
+                logger.info("Shutdown the Pi");
                 final Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        
-        System.out.println("END");
-
+        logger.info("END");
     }
 
     private void waitABit(int a) {
         try {
             Thread.sleep(a);
         } catch (InterruptedException ex) {
-            System.out.println("waitABit InterruptedException!");
+            logger.warn("waitABit InterruptedException");
             ex.printStackTrace();
         }
     }

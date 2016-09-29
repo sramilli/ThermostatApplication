@@ -13,12 +13,15 @@ import thermostatapplication.entity.Message;
 import static java.lang.Thread.sleep;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class MessageHandler {
-    
+    static Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     private SMSGateway iSMSGateway;
     private EmailGateway iEmailGateway;
     private Thermostat iThermostat;
@@ -33,19 +36,19 @@ public class MessageHandler {
     
     public void sendMessage(Message aMessage){
         if (aMessage == null || (aMessage.getUser() == null)){
-            System.out.println("MessageController sendMessage doing nothing. Message invalid");
+            logger.warn("sendMessage doing nothing. Message invalid:  [{}] ", aMessage);
             return;
         }
         User tUser = aMessage.getUser();
         if (tUser == null) {
-            System.out.println("USER == null!");
+            logger.warn("sendMessage doing nothing. user invalid:  [{}] ", tUser);
             return;
         }
         if (ThermostatProperties.PREFER_EMAIL_REPLIES_IF_AVAILABLE && tUser.hasValidEmail() && ThermostatProperties.A != null && ThermostatProperties.B != null){
             try {
                 sendEmailMessage(aMessage);
             } catch (RuntimeException e){
-                System.out.println("Sending Email failed, trying to send sms instead");
+                logger.warn("Sending Email failed, trying to send sms instead");
                 if (tUser.hasValidMobileNr()){
                     sendSMSMessage(aMessage);
                 }
@@ -60,11 +63,11 @@ public class MessageHandler {
             CommandType tCommand = CommandParser.parse(tSMS);
             User tUser = Users.getUser(tSMS.getSender());
             if (tSMS.isDateValid() && Users.isAuthorized(tUser) && tCommand != null && tCommand.isActive()) {
-                System.out.println("Date Valid & User Authorized & Command is active. Executing: -------> " + tSMS);
+                logger.info("Date Valid & User Authorized & Command is active. Executing:  [{}] ", tSMS);
                 iThermostat.processReceivedCommand(tCommand, tUser, tSMS);
                 break; //execute only last command
             } else {
-                System.out.println("SMS discarded: " + tSMS);
+                logger.warn("SMS discarded: [{}] ", tSMS);
             }
         }
     } 
@@ -83,7 +86,7 @@ public class MessageHandler {
     
     public void stop(){
         if (iSMSGateway != null) {
-            System.out.println("MessageHandler: Turning off SMSGateway");
+            logger.warn("MessageHandler: Turning off SMSGateway");
             waitABit(3000);
             iSMSGateway.stop();
             iSMSGateway = null;

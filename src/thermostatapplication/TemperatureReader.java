@@ -17,12 +17,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
  * @author Ste
  */
 public class TemperatureReader {
+    static Logger logger = LoggerFactory.getLogger(TemperatureReader.class);
 
     Timer timerRead = null;
     Timer timerPersister = null;
@@ -43,7 +47,7 @@ public class TemperatureReader {
     
     public void startReadingTemperatures(){
         Date startMeasureDate = Helper.getNextWholeMinuteDatePlusFiveSec(new Date());
-        System.out.println("Start reading temperature at: " + Helper.getDateAsString(startMeasureDate));
+        logger.info("Start reading temperature at: [{}] ", Helper.getDateAsString(startMeasureDate));
         
         timerRead.scheduleAtFixedRate(new TemperatureReaderTimerTask(iLocation, iGroup, tTemperatureStore), startMeasureDate, EVERY_1_MINUTE);
                 

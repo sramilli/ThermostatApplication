@@ -10,11 +10,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class SMS implements Comparable{
+    static Logger logger = LoggerFactory.getLogger(SMS.class);
 
     private int iPosition;
     private String iHeader;
@@ -96,7 +100,7 @@ public class SMS implements Comparable{
         Date beginInterval = new Date(now.getTime()-  3 * 60 * 60 * 1000);
         Date endInterval = new Date(now.getTime()+  3 * 60 * 60 * 1000);
         if (iDate.before(beginInterval) || iDate.after(endInterval)){
-            System.out.println("Date of the message "+iPosition+" is not valid! [Date]: "+now+" [Message Date]: "+iDate);
+            logger.info("Date of the message [{}] is not valid! Date: [{}] Message Date: [{}] ", iPosition, now, iDate);
             return false;
         }else
             return true;

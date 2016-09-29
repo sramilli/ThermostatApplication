@@ -12,12 +12,15 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import thermostatapplication.helper.Pi4jHelper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Ste
  */
 public class Relay {
-    
+    static Logger logger = LoggerFactory.getLogger(Relay.class);
     /*private GPIOPin iRelay;
     private boolean iInitialStatus = true;*/
     
@@ -40,8 +43,8 @@ public class Relay {
     }
     
     public void setValue(boolean aValue){
-        System.out.println("Turn relay "+ (!aValue ? "on." : "off."));
         pin.setState(aValue);
+        logger.info("Turn relay "+ (!aValue ? "on." : "off."));
     }
     
     public void close(){
