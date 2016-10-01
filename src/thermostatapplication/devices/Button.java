@@ -9,6 +9,7 @@ package thermostatapplication.devices;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.event.GpioPinListener;
 import com.pi4j.wiringpi.GpioUtil;
 import thermostatapplication.helper.Pi4jHelper;
@@ -38,6 +39,9 @@ public class Button{
         System.out.println(iPin.getProperties());
         System.out.println(iPin.getPullResistance());
         System.out.println(iPin.getShutdownOptions());
+        System.out.println(iPin.isPullResistance(PinPullResistance.OFF));
+        System.out.println(iPin.isPullResistance(PinPullResistance.PULL_UP));
+        System.out.println(iPin.isPullResistance(PinPullResistance.PULL_DOWN));
         System.out.println("-----------------------");
     }
     

@@ -18,6 +18,7 @@ import thermostatapplication.entity.Users;
 import thermostatapplication.entity.User;
 import thermostatapplication.entity.Message;
 import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
@@ -116,6 +117,9 @@ public class Thermostat implements GpioPinListenerDigital {
         System.out.println(tPin.getProperties());
         System.out.println(tPin.getPullResistance());
         System.out.println(tPin.getShutdownOptions());
+        System.out.println(tPin.isPullResistance(PinPullResistance.OFF));
+        System.out.println(tPin.isPullResistance(PinPullResistance.PULL_UP));
+        System.out.println(tPin.isPullResistance(PinPullResistance.PULL_DOWN));
         System.out.println("-----------------------");
         if (tPin == iModeButton.getPin()) {
             if (PinState.HIGH.equals(event.getState())) {
