@@ -111,6 +111,12 @@ public class Thermostat implements GpioPinListenerDigital {
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         GpioPin tPin = event.getPin();
+        System.out.println("-----------------------");
+        System.out.println(tPin.getMode());
+        System.out.println(tPin.getProperties());
+        System.out.println(tPin.getPullResistance());
+        System.out.println(tPin.getShutdownOptions());
+        System.out.println("-----------------------");
         if (tPin == iModeButton.getPin()) {
             if (PinState.HIGH.equals(event.getState())) {
                 this.switchMode();
