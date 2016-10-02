@@ -29,7 +29,7 @@ public class Button{
     
     public Button(int aPin){
 
-        iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin));
+        iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin), PinPullResistance.PULL_DOWN);
         GpioUtil.setEdgeDetection(aPin, GpioUtil.EDGE_RISING);
         iPin.setDebounce(300);
         //TODO test
