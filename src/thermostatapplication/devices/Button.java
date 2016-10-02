@@ -30,6 +30,10 @@ public class Button{
     public Button(int aPin){
 
         iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin));
+        System.out.println("-------------------------");
+        System.out.println("PullResistance: "+iPin.getPullResistance());
+        System.out.println("-------------------------");
+
         GpioUtil.setEdgeDetection(aPin, GpioUtil.EDGE_RISING);
         iPin.setDebounce(300);
     }
