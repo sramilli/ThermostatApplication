@@ -29,20 +29,9 @@ public class Button{
     
     public Button(int aPin){
 
-        iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin), PinPullResistance.PULL_DOWN);
+        iPin = gpio.provisionDigitalInputPin(Pi4jHelper.getPin(aPin));
         GpioUtil.setEdgeDetection(aPin, GpioUtil.EDGE_RISING);
         iPin.setDebounce(300);
-        //TODO test
-        logger.info("Initialized Button on pin [{}]", aPin);
-        System.out.println("-----------------------");
-        System.out.println(iPin.getMode());
-        System.out.println(iPin.getProperties());
-        System.out.println(iPin.getPullResistance());
-        System.out.println(iPin.getShutdownOptions());
-        System.out.println(iPin.isPullResistance(PinPullResistance.OFF));
-        System.out.println(iPin.isPullResistance(PinPullResistance.PULL_UP));
-        System.out.println(iPin.isPullResistance(PinPullResistance.PULL_DOWN));
-        System.out.println("-----------------------");
     }
     
     public GpioPinDigitalInput getPin(){
