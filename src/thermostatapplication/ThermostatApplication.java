@@ -36,7 +36,9 @@ public class ThermostatApplication {
         logger.info("Main Application: SwitchOFF pin opened and initialized");
         iThermostat = new Thermostat();
 
-        if (ThermostatProperties.START_READING_TEMPERATURES){
+        //TODO
+        //if (ThermostatProperties.START_READING_TEMPERATURES)
+        if (false){
             iTemperatureReader = new TemperatureReader(ThermostatProperties.THERMOMETER_LOCATION, ThermostatProperties.THERMOMETER_GROUP);
             iTemperatureReader.startReadingTemperatures();
         }
