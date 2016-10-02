@@ -112,6 +112,10 @@ public class Thermostat implements GpioPinListenerDigital {
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         GpioPin tPin = event.getPin();
+        System.out.println("--------------handleGpioPinDigitalStateChangeEvent---------");
+        System.out.println(event.getPin());
+        System.out.println(event.getSource());
+        System.out.println(event.toString());
         System.out.println("-----------------------");
         System.out.println(tPin.getMode());
         System.out.println(tPin.getProperties());
